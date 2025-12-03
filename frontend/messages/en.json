@@ -1,0 +1,24 @@
+{
+  "Home": {
+    "title": "NextJS i18n Tutorial",
+    "description": "Tutorial of how to manipulate i18n based on route path or domain with  Nextjs v15",
+    "heroTitle": "Learn Live From <highlight>Industry Experts</highlight><subtext>Anytime, Anywhere</subtext>",
+    "heroSubtitle": " Interactive live webinars on coding, marketing, design, AI, and 20+ more categories – with verified certifications and lifetime access to recordings.",
+    "features": {
+      "live": "Live Interactive Sessions",
+      "experts": "Industry Expert Instructors",
+      "certificates": "Verified Certificates",
+      "community": "Global Community Access"
+    }
+  },
+  "Step1": {
+    "title": "Step 1 Title",
+    "EXPLANATION_PARAGRAPH1": "lorem ipsum"
+  },
+  "Step2": {
+    "title": "Step 2 Title",
+    "EXPLANATION_PARAGRAPH1": "lorem ipsum",
+    "EXPLANATION_PARAGRAPH2": "lorem ipsum",
+    "EXPLANATION_PARAGRAPH3": "lorem ipsum"
+  }
+}
