@@ -101,7 +101,7 @@ const MainBanner = () => {
           <div className="lg:col-span-6 col-span-12 xl:block hidden ">
             <div className="flex justify-end min-w-[100px] h-[calc(100vh-100px)] overflow-hidden">
               <Image
-                src="/images/front-pages/background/hero3.png"
+                src="/images/front-pages/background/hero.png"
                 alt="banner"
                 className=""
                 width={500}
