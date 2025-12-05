@@ -8,7 +8,7 @@ import { Highlights } from "@/app/components/front-pages/homepage/Highlights";
 import OurTeam from "@/app/components/front-pages/homepage/OurTeam";
 import { Packages } from "@/app/components/front-pages/homepage/Packages";
 import { PaymentOptions } from "@/app/components/front-pages/homepage/Payments";
-import PurchaseTemp from "@/app/components/front-pages/homepage/PurchaseTemp";
+import PurchaseTemp from "@/app/components/front-pages/homepage/CtaSection";
 import React from "react";
 import type { Metadata } from "next";
 

@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import FrontEndBreadcrumb from "@/app/(main)/layout/shared/breadcrumb/FrontBreadcrumb";
 import GalleryPortfolio from "@/app/components/front-pages/portfolio/GalleryPortfolio";
-import PurchaseTemp from "@/app/components/front-pages/homepage/PurchaseTemp";
+import PurchaseTemp from "@/app/components/front-pages/homepage/CtaSection";
 export const metadata: Metadata = {
   title: "Front-Portfolio",
 };

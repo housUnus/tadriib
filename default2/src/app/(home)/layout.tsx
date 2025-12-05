@@ -4,6 +4,7 @@
 import AnnouncementBar from "../components/front-pages/layout/AnnouncementBar";
 import FrontHeader from "../components/front-pages/layout/Header";
 import { Footer } from "../components/front-pages/layout/Footer";
+import { Customizer } from "../(main)/layout/shared/customizer/Customizer";
  
 export default function HomeLayout({
   children,
@@ -20,6 +21,7 @@ export default function HomeLayout({
         <section>{children}</section>
         {/* Footer */}
         <Footer />
+        <Customizer />
       {/* </ThemeProvider> */}
     </div>
   );

@@ -1,87 +1,142 @@
 "use client";
+
+import { motion } from "framer-motion";
 import Link from "next/link";
-import React from "react";
 import { Icon } from "@iconify/react";
+import { easeInOut } from "framer-motion";
+
 const Feature = [
   {
-    icon: "tabler:chart-bubble",
-    title: "Expert Advisor",
-    subtitle: "Suspendisse vestibulum eu erat ac scelerisque.",
-    bgcolor: "bg-lighterror",
-    color: "text-error",
-  },
-  {
-    icon: "tabler:building-store",
-    title: "Effective Support",
-    subtitle: "Suspendisse vestibulum eu erat ac scelerisque.",
+    icon: "solar:diploma-verified-broken",
+    title: "Certification Prep",
+    subtitle: "Guidance to pass recognized professional exams.",
     bgcolor: "bg-lightprimary",
     color: "text-primary",
   },
   {
-    icon: "material-symbols:category-outline",
-    title: "Low Fees",
-    subtitle: "Suspendisse vestibulum eu erat ac scelerisque.",
+    icon: "solar:square-academic-cap-broken",
+    title: "Fellowship Support",
+    subtitle: "Steps and mentorship to qualify for fellowships.",
     bgcolor: "bg-lightsuccess",
     color: "text-success",
   },
   {
-    icon: "material-symbols:earthquake",
-    title: "Loan Facility",
-    subtitle: "Suspendisse vestibulum eu erat ac scelerisque.",
+    icon: "mdi:progress-star",
+    title: "Skill Tracks",
+    subtitle: "Clear learning paths to improve your expertise.",
+    bgcolor: "bg-lightwarning",
+    color: "text-warning",
+  },
+  {
+    icon: "solar:clock-circle-broken",
+    title: "24/7 Access",
+    subtitle: "Learn at your own pace, anytime and anywhere you want.",
     bgcolor: "bg-lightgray dark:bg-darkgray",
     color: "text-dark dark:text-white",
   },
 ];
 
+// Soft continuous float animation for feature cards
+const floatAnim = {
+  animate: {
+    y: [0, -6, 0],
+  },
+  transition: {
+    duration: 4,
+    repeat: Infinity,
+    ease: easeInOut,
+  },
+};
+
 const OurClients = () => {
   return (
-    <>
-      <div className="lg:py-24 py-12 dark:bg-dark">
-        <div className="container-1218 mx-auto">
-          <div className="grid grid-cols-12 gap-7">
-            <div className="lg:col-span-5 col-span-12">
-              <h2 className="sm:text-44 text-3xl font-bold leading-12! text-darklink dark:text-white">
-                Over 45,000 clients and counting.
-              </h2>
-              <p className="text-base leading-8 text-ld opacity-80 py-6">
-                Pellentesque varius semper odio non pretium. Nullam sagittis
-                neque orci, eu elementum enim.
-              </p>
+    <motion.div
+      // Very subtle whole-section fade + slight float
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="lg:py-24 py-12 dark:bg-dark"
+    >
+      <div className="container-1218 mx-auto">
+        <div className="grid grid-cols-12 gap-7">
+
+          {/* LEFT SIDE */}
+          <div className="lg:col-span-5 col-span-12">
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="sm:text-44 text-3xl font-bold text-darklink dark:text-white"
+            >
+              Earn certifications that advance your career.
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-base leading-7 text-ld opacity-75 py-6"
+            >
+              Get clear guidance and structured support to prepare for top
+              certifications and fellowship programs.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               <Link
                 href={"/"}
-                className="text-darklink dark:text-white text-sm font-bold underline decoration-2 underline-offset-[6px] text-primary-ld"
+                className="text-darklink dark:text-white text-sm font-semibold underline decoration-2 underline-offset-[6px]"
               >
-                Request a Callback
+                Explore Paths
               </Link>
-            </div>
-            <div className="lg:col-span-7 col-span-12 lg:ps-5 ">
-              <div className="grid grid-cols-12 md:gap-12 gap-6">
-                {Feature.map((item, index) => (
-                  <div className="md:col-span-6 col-span-12" key={index}>
-                    <div
-                      className={`h-12 w-12 shrink-0 flex items-center justify-center rounded-tw ${item.bgcolor}`}
-                    >
-                      <Icon
-                    icon={item.icon}
-                    className={`${item.color}`}
-                    height={24}
-                  />
-                    </div>
-                    <h4 className="font-bold text-darklink dark:text-white py-5 text-2xl">
-                      {item.title}
-                    </h4>
-                    <p className="text-base text-ld opacity-80 md:pt-2 leading-6">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                ))}
-           
-              </div>
+            </motion.div>
+          </div>
+
+          {/* RIGHT SIDE — FEATURES */}
+          <div className="lg:col-span-7 col-span-12 lg:ps-5">
+            <div className="grid grid-cols-12 md:gap-12 gap-6">
+              {Feature.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.55,
+                    delay: index * 0.1,
+                  }}
+                  viewport={{ once: true }}
+                  className="md:col-span-6 col-span-12"
+                >
+                  {/* FLOATING ICON */}
+                  <motion.div
+                    animate={floatAnim.animate}
+                    transition={floatAnim.transition}
+                    className={`h-12 w-12 shrink-0 flex items-center justify-center rounded-tw ${item.bgcolor}`}
+                  >
+                    <Icon icon={item.icon} className={item.color} height={24} />
+                  </motion.div>
+
+                  <h4 className="font-bold text-darklink dark:text-white py-4 text-xl">
+                    {item.title}
+                  </h4>
+                  <p className="text-base text-ld opacity-70 leading-6">
+                    {item.subtitle}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </div>
+
         </div>
       </div>
-    </>
+    </motion.div>
   );
 };
 

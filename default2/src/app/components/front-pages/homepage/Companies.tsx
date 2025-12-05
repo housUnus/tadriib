@@ -25,11 +25,19 @@ const Companies = () => {
     <>
       <div className="dark:bg-dark">
         <div className="container-1218 mx-auto ">
-          <div className="border-ld border-t lg:pt-14 pt-7">
-            <div className="flex flex-wrap md:justify-between justify-center  items-center gap-4">
+          <div className="lg:py-14 py-7">
+            <div className="mb-3 sm:mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-darklink dark:text-white mb-2 sm:mb-3">
+                Trusted By
+              </h2>
+              <p className="text-base text-gray-600 dark:text-gray-300">
+                Proudly partnering with trusted accredited institutions, we bring you the seal of expert & high quality knowledge.
+              </p>
+            </div>
+            <div className="flex flex-wrap md:justify-between justify-center items-center gap-4 py-5">
               {companies.map((item, index) => (
                 <div key={index} className="h-9 w-fit flex flex-col items-center justify-center">
-                  <Image src={item.img} alt="company" width={140} height={20} className="h-fit w-fit"/>
+                  <Image src={item.img} alt="company" width={140} height={20} className="h-fit w-fit" />
                 </div>
               ))}
             </div>

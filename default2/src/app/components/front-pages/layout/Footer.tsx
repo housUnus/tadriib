@@ -10,34 +10,39 @@ import {
 } from "@/components/ui/tooltip";
 
 export const Footer = () => {
-  const navLinks1 = [
-    { key: "link1", title: "Cards", link: "/widgets/cards" },
-    { key: "link2", title: "Pricing", link: "/theme-pages/pricing" },
-    { key: "link3", title: "Account Settings", link: "/theme-pages/account-settings" },
-    { key: "link4", title: "FAQ", link: "/theme-pages/faq" },
-    { key: "link5", title: "Casl", link: "/theme-pages/casl" },
+  const company_details = [
+    "Saudi Arabia, Jeddah . ص.ب -11592",
+    "Phone : 0126529126 | 0535530307",
+    "Mobile :00966535530307",
+    "Email : info@fin.com.sa"
   ];
 
-  const navLinks2 = [
-    { key: "link1", title: "Banners", link: "/widgets/banners" },
-    { key: "link2", title: "Charts", link: "/widgets/charts" },
-    { key: "link3", title: "Headless Radio", link: "/headless-form/radiogroup" },
-    { key: "link4", title: "Gallery", link: "/apps/user-profile/gallery" },
-    { key: "link5", title: "Buttons", link: "/ui-components/buttons" },
+  const legal_links = [
+    { name: "About us", link: "/about-us", icon: null },
+    { name: "Terms of Service", link: "/terms-of-service", icon: null },
+    { name: "Privacy Policy", link: "/privacy-policy", icon: null },
+    { name: "Cookie Policy", link: "/cookie-policy", icon: null },
+    { name: "Help Center", link: "/help", icon: null },
+    { name: "Contact Support", link: "/contact", icon: null },
+    { name: "Blog", link: "/blog", icon: null },
+    { name: "For Business", link: "/for-business", icon: null },
   ];
 
-  const navLinks3 = [
-    { key: "link1", title: "Form Layouts", link: "/forms/form-layouts" },
-    { key: "link2", title: "Tables", link: "/tables/basic" },
-    { key: "link3", title: "React Table", link: "/react-tables/basic" },
-    { key: "link4", title: "Form Elements", link: "/forms/form-elements" },
-    { key: "link5", title: "Validation", link: "/forms/form-validation" },
+  const certifications = [
+   { name: "FMAA", link: "/certifications/fmaa", icon: null },
+   { name: "CPA", link: "/certifications/cpa", icon: null },
+   { name: "CMA", link: "/certifications/cma", icon: null },
+   { name: "ACCA", link: "/certifications/acca", icon: null },
+   { name: "CAT", link: "/certifications/cat", icon: null },
+   { name: "CFM", link: "/certifications/cfm", icon: null },
+   { name: "CIA", link: "/certifications/cia", icon: null },
+   { name: "PMP", link: "/certifications/pmp", icon: null },
   ];
 
   return (
     <div className="bg-sky">
       <div className="container-1218 mx-auto">
-        <div className="border-b border-darkborder lg:py-24 py-12">
+        <div className="border-b border-darkborder lg:py-16 py-8">
           <div className="grid grid-cols-12 gap-7">
             {/* Column 1 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
@@ -49,29 +54,25 @@ export const Footer = () => {
                 height={40}
               />
               <div className="flex flex-col gap-4">
-                {navLinks1.map((item) => (
-                  <Link
-                    key={item.key}
-                    href={item.link}
-                    className="text-sm text-lightmuted hover:text-primary block"
-                  >
-                    {item.title}
-                  </Link>
+                {company_details.map((item) => (
+                  <p key={item} className="text-sm text-lightmuted">
+                    {item}
+                  </p>
                 ))}
               </div>
             </div>
 
             {/* Column 2 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
-              <h4 className="text-base text-white font-semibold mb-8">Features</h4>
+              <h4 className="text-base text-white font-semibold mb-8">Company</h4>
               <div className="flex flex-col gap-4">
-                {navLinks2.map((item) => (
+                {legal_links.map((item) => (
                   <Link
-                    key={item.key}
+                    key={item.name}
                     href={item.link}
                     className="text-sm text-lightmuted hover:text-primary block"
                   >
-                    {item.title}
+                    {item.name}
                   </Link>
                 ))}
               </div>
@@ -79,15 +80,15 @@ export const Footer = () => {
 
             {/* Column 3 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
-              <h4 className="text-base text-white font-semibold mb-8">Resources</h4>
+              <h4 className="text-base text-white font-semibold mb-8">Certifications</h4>
               <div className="flex flex-col gap-4">
-                {navLinks3.map((item) => (
+                {certifications.map((item) => (
                   <Link
-                    key={item.key}
+                    key={item.name}
                     href={item.link}
                     className="text-sm text-lightmuted hover:text-primary block"
                   >
-                    {item.title}
+                    {item.name}
                   </Link>
                 ))}
               </div>
@@ -154,7 +155,7 @@ export const Footer = () => {
 
       {/* Bottom Footer */}
       <div className="container-1218 mx-auto">
-        <div className="flex md:justify-between justify-center items-center flex-wrap md:py-10 py-8">
+        <div className="flex justify-center items-center flex-wrap md:py-6 py-3">
           <div className="flex items-center gap-3">
             <Image
               src="/images/front-pages/background/white-icon-logo.svg"
@@ -163,19 +164,9 @@ export const Footer = () => {
               width={24}
             />
             <p className="text-base text-lightmuted">
-              All rights reserved by MatDash.
+              All rights reserved by The Trainer.
             </p>
           </div>
-
-          <p className="text-base text-lightmuted flex items-center gap-1 md:pt-0 pt-3">
-            Produced by{" "}
-            <Link
-              className="text-white text-primary-ld hover:text-primary"
-              href="https://adminmart.com/"
-            >
-              Adminmart
-            </Link>
-          </p>
         </div>
       </div>
     </div>

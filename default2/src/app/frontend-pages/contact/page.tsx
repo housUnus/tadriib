@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import ContactMap from "@/app/components/front-pages/contactus/ContactMap";
 import ContactForm from "@/app/components/front-pages/contactus/ContactForm";
-import PurchaseTemp from "@/app/components/front-pages/homepage/PurchaseTemp";
+import PurchaseTemp from "@/app/components/front-pages/homepage/CtaSection";
 import FrontEndBreadcrumb from "@/app/(main)/layout/shared/breadcrumb/FrontBreadcrumb";
 
 export const metadata: Metadata = {

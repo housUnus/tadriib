@@ -35,6 +35,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
 
   const { setIsCollapse, isCollapse, isLayout, setActiveMode, activeMode } =
     useContext(CustomizerContext);
+  console.log("🚀 ~ Header ~ activeMode:", activeMode)
 
   const [mobileMenu, setMobileMenu] = useState("");
 

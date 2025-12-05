@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PurchaseTemp from "@/app/components/front-pages/homepage/PurchaseTemp";
+import PurchaseTemp from "@/app/components/front-pages/homepage/CtaSection";
 import { BlogProvider } from "@/app/context/BlogContext";
 import FrontEndBreadcrumb from "@/app/(main)/layout/shared/breadcrumb/FrontBreadcrumb";
 import BlogDetailData from "@/app/components/front-pages/blog/detail";
