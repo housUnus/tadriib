@@ -4,12 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const defaultWords = [
-  "Project Management",
-  "Accounting & Finance",
+  "Accounting",
   "Human Resources",
+  "Finance",
+  "Project Management",
   "IT & Cloud",
   "Cybersecurity",
   "Business Analysis",
+  "Safety & Security",
 ];
 
 export default function RotatingWords({words = defaultWords, duration=3000, className=""}) {
@@ -24,7 +26,7 @@ export default function RotatingWords({words = defaultWords, duration=3000, clas
   }, []);
 
   return (
-    <span className="relative inline-block overflow-hidden h-18 w-full sm:w-2xl">
+    <span className="relative inline-block overflow-hidden sm:h-18 h-12 w-full sm:w-2xl">
   <AnimatePresence mode="wait">
     <motion.span
       key={index}

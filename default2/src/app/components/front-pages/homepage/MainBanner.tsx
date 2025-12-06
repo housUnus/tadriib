@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import RotatingWords from "./RotatingaWords";
+import RotatingWords from "./RotatingWords";
 
 const MainBanner = () => {
   const userImg = [
@@ -34,7 +34,7 @@ const MainBanner = () => {
         <div className="grid grid-cols-12 gap-7 items-center">
           {/* Left Section */}
           <div className="xl:col-span-6 col-span-12 lg:text-start text-center">
-            <h1 className="lg:text-56 text-4xl text-darklink dark:text-white lg:leading-16 leading-[50px]">
+            <h1 className="lg:text-56 text-2xl sm:text-4xl text-darklink dark:text-white lg:leading-16 leading-[50px]">
               <b>Become an Expert in</b><RotatingWords />
             </h1>
 

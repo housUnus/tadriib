@@ -313,7 +313,7 @@ export default function Core({}) {
               <button
                 key={category.name}
                 onClick={() => setActiveCategory(category.name)}
-                className={`min-w-[45%] md:min-w-0 group flex-shrink-0 relative h-9 overflow-hidden
+                className={`min-w-[45%] md:min-w-0 group shrink-0 relative h-9 overflow-hidden
                    rounded-full px-2 sm:px-3 leading-none font-semibold text-xs sm:text-sm 
                    flex items-center justify-center transition-transform duration-300 hover:scale-102
                   ${
@@ -323,14 +323,8 @@ export default function Core({}) {
                   }`}
               >
                 <div className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                  <span className="hidden sm:inline">{category.name}</span>
-                  <span className="sm:hidden">
-                    {category.name.length > 8
-                      ? category.name.substring(0, 8) + "..."
-                      : category.name}
-                  </span>
+                  <span className="inline">{category.name}</span>
                 </div>
-
                 {/* Hover gradient effect */}
                 <div
                   className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}

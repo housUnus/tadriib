@@ -59,6 +59,7 @@
     "date-fns": "^4.1.0",
     "devextreme": "22.2.6",
     "devextreme-react": "^25.1.6",
+    "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "html-to-image": "^1.11.13",
     "i18next": "^23.12.2",
