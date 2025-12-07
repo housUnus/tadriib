@@ -1,4 +1,4 @@
-import OrderTable from '@/app/components/react-tables/order-datatable/page'
+import OrderTable from '@/app/components/react-tables/order-datatable'
 import BreadcrumbComp from '../../layout/shared/breadcrumb/BreadcrumbComp'
 import { Metadata } from 'next'
 
