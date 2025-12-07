@@ -7,7 +7,7 @@ import React, { useContext, useState } from 'react'
 import Link from 'next/link'
 import { ProductContext } from '@/app/context/Ecommercecontext/index'
 import { useParams } from 'next/navigation'
-import { ProductType } from '@/app/(main)/types/apps/eCommerce'
+import { ProductType } from '@/app/[locale]/(main)/types/apps/eCommerce'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Icon } from '@iconify/react/dist/iconify.js'
 

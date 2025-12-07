@@ -6,7 +6,7 @@ import BillsAddress from "./BillsAddress";
 import Thankyou from "./Thankyou";
 import { ProductContext } from '@/app/context/Ecommercecontext/index';
 import { sum } from 'lodash';
-import { ProductType } from '@/app/(main)/types/apps/eCommerce';
+import { ProductType } from '@/app/[locale]/(main)/types/apps/eCommerce';
 
 const ProductCheckout = () => {
   const [activeTab, setActiveTab] = useState(0);

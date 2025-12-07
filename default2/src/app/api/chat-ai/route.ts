@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatHistory } from "./chat-history/history";
-import { Message } from "@/app/(main)/types/apps/ai-chat";
+import { Message } from "@/app/[locale]/(main)/types/apps/ai-chat";
 
 let ChatList: Message[] = [];
 

@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, useState, useEffect } from 'react';
 
-import { NotesType } from '@/app/(main)/types/apps/notes';
+import { NotesType } from '@/app/[locale]/(main)/types/apps/notes';
 import useSWR from 'swr';
 import { deleteFetcher, getFetcher, postFetcher, putFetcher } from '@/app/api/globalFetcher';
 

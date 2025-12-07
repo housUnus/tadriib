@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { TicketType } from "@/app/(main)/types/apps/ticket";
+import { TicketType } from "@/app/[locale]/(main)/types/apps/ticket";
 import { useRouter } from "next/navigation";
 import { isValid, format } from "date-fns";
 import { Card } from "@/components/ui/card";

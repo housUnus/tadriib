@@ -1,7 +1,7 @@
 'use  client'
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
-import { BlogType } from "../../../../(main)/types/apps/blog";
+import { BlogType } from "../../../../[locale]/(main)/types/apps/blog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

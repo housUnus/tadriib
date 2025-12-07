@@ -1,5 +1,5 @@
 "use client";
-import FullLogo from "@/app/(main)/layout/shared/logo/FullLogo";
+import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";

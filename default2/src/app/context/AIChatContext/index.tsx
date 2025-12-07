@@ -10,7 +10,7 @@ import React, {
 import useSWR from "swr";
 import { getFetcher, postFetcher } from "@/app/api/globalFetcher";
 import { sendMessageToGemini } from "@/app/api/chat-ai/gemini";
-import { ChatAIMessage, ChatSession } from "@/app/(main)/types/apps/ai-chat";
+import { ChatAIMessage, ChatSession } from "@/app/[locale]/(main)/types/apps/ai-chat";
 
 type ChatAIContextType = {
     chatList: ChatAIMessage[];

@@ -1,4 +1,4 @@
-import Logo from "@/app/(main)/layout/shared/logo/Logo";
+import Logo from "@/app/[locale]/(main)/layout/shared/logo/Logo";
 import Link from "next/link";
 import React from "react";
 

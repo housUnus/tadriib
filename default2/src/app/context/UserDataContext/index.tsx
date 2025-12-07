@@ -1,7 +1,7 @@
 'use client'
 import React, { createContext, useState, useEffect } from 'react';
 
-import { PostType, profiledataType } from '@/app/(main)/types/apps/userProfile';
+import { PostType, profiledataType } from '@/app/[locale]/(main)/types/apps/userProfile';
 import { getFetcher, postFetcher } from '@/app/api/globalFetcher';
 import useSWR from 'swr';
 

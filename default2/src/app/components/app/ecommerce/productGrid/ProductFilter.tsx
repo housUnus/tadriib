@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React, { useContext } from "react";
-import { ProductFiterType } from "../../../../(main)/types/apps/eCommerce";
+import { ProductFiterType } from "../../../../[locale]/(main)/types/apps/eCommerce";
 import { ProductContext } from "@/app/context/Ecommercecontext/index";
 import { MdCheck } from "react-icons/md";
 

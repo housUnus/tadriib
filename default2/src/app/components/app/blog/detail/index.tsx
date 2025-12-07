@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { uniqueId } from "lodash";
 import type {
   BlogType,
-} from "../../../../(main)/types/apps/blog";
+} from "../../../../[locale]/(main)/types/apps/blog";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import BlogComment from "./BlogCommnets";

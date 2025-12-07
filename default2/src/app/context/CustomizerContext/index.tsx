@@ -48,7 +48,7 @@ export const CustomizerContextProvider: React.FC<CustomizerContextProps> = ({ ch
   // Set attributes immediately
   useEffect(() => {
     document.documentElement.setAttribute("class", activeMode);
-    document.documentElement.setAttribute("dir", activeDir);
+    // document.documentElement.setAttribute("dir", activeDir);
     document.documentElement.setAttribute('data-color-theme', activeTheme);
     document.documentElement.setAttribute("data-layout", activeLayout);
     document.documentElement.setAttribute("data-boxed-layout", isLayout);

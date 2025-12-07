@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import { TicketType } from '@/app/(main)/types/apps/ticket'
+import { TicketType } from '@/app/[locale]/(main)/types/apps/ticket'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import {

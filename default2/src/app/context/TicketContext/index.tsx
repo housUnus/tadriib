@@ -2,7 +2,7 @@
 'use client'
 import React, { createContext, useState, useEffect } from 'react';
 
-import { TicketType } from '@/app/(main)/types/apps/ticket';
+import { TicketType } from '@/app/[locale]/(main)/types/apps/ticket';
 import useSWR from 'swr';
 import { deleteFetcher, getFetcher, postFetcher } from '@/app/api/globalFetcher';
 

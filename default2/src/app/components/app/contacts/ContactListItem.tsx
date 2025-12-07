@@ -25,7 +25,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { ContactType } from '@/app/(main)/types/apps/contact'
+import { ContactType } from '@/app/[locale]/(main)/types/apps/contact'
 import Image from 'next/image'
 import { Icon } from '@iconify/react'
 import SimpleBar from 'simplebar-react'

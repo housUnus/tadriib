@@ -1,5 +1,5 @@
 
-import type { EmailType } from '@/app/(main)/types/apps/email';
+import type { EmailType } from '@/app/[locale]/(main)/types/apps/email';
 import { sub } from 'date-fns';
 import { NextResponse } from 'next/server';
 

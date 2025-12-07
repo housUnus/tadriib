@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import OrderSummary from "./OrderSummary";
-import { ProductType } from "@/app/(main)/types/apps/eCommerce";
+import { ProductType } from "@/app/[locale]/(main)/types/apps/eCommerce";
 import { ProductContext } from '@/app/context/Ecommercecontext/index';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 

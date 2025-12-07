@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { IconMenu2 } from "@tabler/icons-react";
 import Link from "next/link";
-import FullLogo from "@/app/(main)/layout/shared/logo/FullLogo";
+import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import Navigation from "./Navigation";
 
 const MobileMenu = () => {

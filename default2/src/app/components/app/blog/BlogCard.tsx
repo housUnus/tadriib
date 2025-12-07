@@ -2,7 +2,7 @@
 import { format } from "date-fns";
 import { GoDot } from "react-icons/go";
 import { Icon } from "@iconify/react";
-import { BlogPostType } from "@/app/(main)/types/apps/blog";
+import { BlogPostType } from "@/app/[locale]/(main)/types/apps/blog";
 import Link from "next/link";
 import Image from "next/image";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";

@@ -1,5 +1,5 @@
 import { Chance } from "chance";
-import { TodoCategory } from "@/app/(main)/types/apps/kanban";
+import { TodoCategory } from "@/app/[locale]/(main)/types/apps/kanban";
 const chance = new Chance();
 
 export const KanbanData: TodoCategory[] = [

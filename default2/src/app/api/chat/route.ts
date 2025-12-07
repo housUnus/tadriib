@@ -1,5 +1,5 @@
 import { Chance } from 'chance';
-import type { ChatsType } from '@/app/(main)/types/apps/chat';
+import type { ChatsType } from '@/app/[locale]/(main)/types/apps/chat';
 import { sub } from 'date-fns';
 import { uniqueId } from 'lodash';
 import { NextResponse } from 'next/server';

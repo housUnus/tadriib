@@ -1,7 +1,7 @@
 "use client";
 import { Icon } from "@iconify/react";
 import React, { useState, useContext, useEffect } from "react";
-import { NotesType } from "../../../(main)/types/apps/notes";
+import { NotesType } from "../../../[locale]/(main)/types/apps/notes";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import {

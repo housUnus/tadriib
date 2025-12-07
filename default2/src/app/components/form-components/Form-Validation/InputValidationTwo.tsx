@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import CardBox from "../../shared/CardBox";
-import FullLogo from "@/app/(main)/layout/shared/logo/FullLogo";
+import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

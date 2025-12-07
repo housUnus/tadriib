@@ -1,8 +1,7 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from 'next-intl';
 
-// ✅ Shadcn UI imports
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -28,6 +27,9 @@ const MainBanner = () => {
     { tech: "/images/front-pages/certifications/cpa.png", tooltip: "CPA" },
   ];
 
+  const t = useTranslations('Hero');
+  const rotatingWords = t.raw('rotatingWords') as string[];
+
   return (
     <div className="bg-lightgray dark:bg-darkgray">
       <div className="container-1218 mx-auto sm:pt-10! pt-13! xl:pb-8! pb-15!">
@@ -35,7 +37,7 @@ const MainBanner = () => {
           {/* Left Section */}
           <div className="xl:col-span-6 col-span-12 lg:text-start text-center">
             <h1 className="lg:text-56 text-2xl sm:text-4xl text-darklink dark:text-white lg:leading-16 leading-[50px]">
-              <b>Become an Expert in</b><RotatingWords />
+              <b>{t('hero1')}</b><RotatingWords words={rotatingWords}/>
             </h1>
 
             <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">

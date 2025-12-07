@@ -1,6 +1,6 @@
 
 import { Chance } from 'chance';
-import { TicketType } from '@/app/(main)/types/apps/ticket';
+import { TicketType } from '@/app/[locale]/(main)/types/apps/ticket';
 import { NextResponse } from 'next/server';
 
 const chance = new Chance();

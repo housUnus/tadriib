@@ -42,7 +42,6 @@ export default async function LocaleLayout({
 }) {
   // Ensure that the incoming `locale` is valid
   const { locale } = await params;
-  console.log("🚀 ~ locale:", locale)
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }

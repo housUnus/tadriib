@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import SimpleBar from 'simplebar-react'
-import FullLogo from '@/app/(main)/layout/shared/logo/FullLogo'
+import FullLogo from '@/app/[locale]/(main)/layout/shared/logo/FullLogo'
 import { ChatAIContext } from '@/app/context/AIChatContext'
 import {
   ChatHistoryItem,
   ChatSession,
-} from '@/app/(main)/types/apps/ai-chat'
+} from '@/app/[locale]/(main)/types/apps/ai-chat'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {

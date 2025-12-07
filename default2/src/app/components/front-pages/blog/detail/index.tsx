@@ -7,7 +7,7 @@ import { GoDot } from "react-icons/go";
 import { Icon } from "@iconify/react";
 import { format } from "date-fns";
 import { uniqueId } from "lodash";
-import type { BlogType } from "../../../../(main)/types/apps/blog";
+import type { BlogType } from "../../../../[locale]/(main)/types/apps/blog";
 import CardBox from "@/app/components/shared/CardBox";
 import Image from "next/image";
 

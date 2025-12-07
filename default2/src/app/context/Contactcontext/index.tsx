@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
-import { ContactType } from '../../(main)/types/apps/contact'
+import { ContactType } from '../../[locale]/(main)/types/apps/contact'
 import useSWR from 'swr';
 import { deleteFetcher, getFetcher, postFetcher, putFetcher } from '@/app/api/globalFetcher';
 

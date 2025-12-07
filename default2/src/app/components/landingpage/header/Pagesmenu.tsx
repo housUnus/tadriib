@@ -2,7 +2,7 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
-import * as AppsData from "@/app/(main)/layout/vertical/header/Data";
+import * as AppsData from "@/app/[locale]/(main)/layout/vertical/header/Data";
 import { IconChevronDown } from "@tabler/icons-react";
 import {
   DropdownMenu,

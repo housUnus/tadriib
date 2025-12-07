@@ -1,4 +1,4 @@
-import { ChatHistoryItem } from "@/app/(main)/types/apps/ai-chat";
+import { ChatHistoryItem } from "@/app/[locale]/(main)/types/apps/ai-chat";
 
 export const chatHistory: ChatHistoryItem[] = [
   {

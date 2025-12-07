@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { demosMegamenu, appsMegamenu, FrontMenu } from "../Data";
-import * as AppsData from "@/app/(main)/layout/vertical/header/Data";
+import * as AppsData from "@/app/[locale]/(main)/layout/vertical/header/Data";
 import {
   Accordion,
   AccordionItem,

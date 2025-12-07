@@ -1,4 +1,4 @@
-import { InvoiceList } from '@/app/(main)/types/apps/invoice'
+import { InvoiceList } from '@/app/[locale]/(main)/types/apps/invoice'
 
 import { NextResponse } from 'next/server'
 

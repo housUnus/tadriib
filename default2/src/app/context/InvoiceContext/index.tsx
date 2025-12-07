@@ -1,6 +1,6 @@
 'use client'
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { InvoiceList, order } from '@/app/(main)/types/apps/invoice';
+import { InvoiceList, order } from '@/app/[locale]/(main)/types/apps/invoice';
 
 import useSWR from 'swr';
 import { deleteFetcher, getFetcher, postFetcher, putFetcher } from '@/app/api/globalFetcher';

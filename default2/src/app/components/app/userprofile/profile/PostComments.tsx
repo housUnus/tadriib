@@ -7,7 +7,7 @@ import {
   CommentDataType,
   Reply,
   ProfileType,
-} from "../../../../(main)/types/apps/userProfile";
+} from "../../../../[locale]/(main)/types/apps/userProfile";
 import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

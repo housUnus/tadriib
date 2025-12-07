@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from '@/components/ui/button'
-import FullLogo from "@/app/(main)/layout/shared/logo/FullLogo";
+import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
 

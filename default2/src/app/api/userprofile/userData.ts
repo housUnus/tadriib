@@ -1,9 +1,9 @@
 
 import { Chance } from 'chance';
-import { PostType } from '@/app/(main)/types/apps/userProfile';
+import { PostType } from '@/app/[locale]/(main)/types/apps/userProfile';
 import { uniqueId } from "lodash";
 import { sub } from 'date-fns';
-import { userType } from '@/app/(main)/types/apps/users';
+import { userType } from '@/app/[locale]/(main)/types/apps/users';
 
 const chance = new Chance();
 

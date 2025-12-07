@@ -7,7 +7,7 @@ import { format } from 'date-fns'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import SimpleBar from 'simplebar-react'
-import { ProductType } from '@/app/(main)/types/apps/eCommerce'
+import { ProductType } from '@/app/[locale]/(main)/types/apps/eCommerce'
 import { ProductContext } from '@/app/context/Ecommercecontext'
 import { Card } from '@/components/ui/card'
 import {

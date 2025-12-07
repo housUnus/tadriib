@@ -12,7 +12,7 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { useRouter } from 'next/navigation'
 import { BlogContext } from '@/app/context/BlogContext'
-import { BlogPostType } from '@/app/(main)/types/apps/blog'
+import { BlogPostType } from '@/app/[locale]/(main)/types/apps/blog'
 import PlaceholdersInput from '@/app/components/animatedComponents/AnimatedInputPlaceholder'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'

@@ -13,7 +13,7 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { last } from "lodash";
 import { formatDistanceToNowStrict } from "date-fns";
-import { ChatsType } from "@/app/(main)/types/apps/chat";
+import { ChatsType } from "@/app/[locale]/(main)/types/apps/chat";
 import SimpleBar from "simplebar-react";
 import { ChatContext } from "@/app/context/ChatContext/index";
 

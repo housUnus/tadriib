@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import FullLogo from "@/app/(main)/layout/shared/logo/FullLogo";
+import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import PagesMenu from "./Pagesmenu";
 import DemosMenu from "./DemosMenu";
 import MobileDrawer from "./MobileDrawer";

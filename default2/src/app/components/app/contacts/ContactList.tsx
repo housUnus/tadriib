@@ -1,6 +1,6 @@
 "use client";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
-import { ContactType } from "@/app/(main)/types/apps/contact";
+import { ContactType } from "@/app/[locale]/(main)/types/apps/contact";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";

@@ -4,7 +4,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { InvoiceContext } from '@/app/context/InvoiceContext'
-import FullLogo from '@/app/(main)/layout/shared/logo/FullLogo'
+import FullLogo from '@/app/[locale]/(main)/layout/shared/logo/FullLogo'
 import { Icon } from '@iconify/react'
 import { Calendar } from '@/components/ui/calendar'
 import {

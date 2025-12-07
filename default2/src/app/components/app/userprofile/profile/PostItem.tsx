@@ -8,7 +8,7 @@ import PostComments from "./PostComments";
 import {
   Comment as CommentType,
   PostType,
-} from "../../../../(main)/types/apps/userProfile";
+} from "../../../../[locale]/(main)/types/apps/userProfile";
 import { Card } from "@/components/ui/card";
 import { TooltipProvider, TooltipContent, TooltipTrigger, Tooltip } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";

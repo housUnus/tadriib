@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect } from 'react'
 
-import { ProductType } from '@/app/(main)/types/apps/eCommerce'
+import { ProductType } from '@/app/[locale]/(main)/types/apps/eCommerce'
 import {
   deleteFetcher,
   getFetcher,

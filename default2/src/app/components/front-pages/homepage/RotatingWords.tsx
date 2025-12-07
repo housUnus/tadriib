@@ -3,18 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const defaultWords = [
-  "Accounting",
-  "Human Resources",
-  "Finance",
-  "Project Management",
-  "IT & Cloud",
-  "Cybersecurity",
-  "Business Analysis",
-  "Safety & Security",
-];
-
-export default function RotatingWords({words = defaultWords, duration=3000, className=""}) {
+export default function RotatingWords({words, duration=3000, className=""}: {words: string[], duration?: number, className?: string}) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
