@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import PaginationTable from "@/app/components/react-tables/pagination/page";
+import PaginationTable from "@/app/components/react-tables/pagination";
 
 export const metadata: Metadata = {
     title: "Pagination Table",

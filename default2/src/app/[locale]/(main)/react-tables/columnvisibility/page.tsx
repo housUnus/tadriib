@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import ReactColumnVisibilityTable from "@/app/components/react-tables/column-visiblity/page";
+import ReactColumnVisibilityTable from "@/app/components/react-tables/column-visiblity";
 
 
 export const metadata: Metadata = {

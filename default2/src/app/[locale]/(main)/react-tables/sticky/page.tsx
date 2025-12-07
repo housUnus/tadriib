@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import StickyTable from "@/app/components/react-tables/sticky/page";
+import StickyTable from "@/app/components/react-tables/sticky";
 
 
 export const metadata: Metadata = {

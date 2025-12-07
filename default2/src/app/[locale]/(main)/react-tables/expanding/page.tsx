@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import ExpandingTable from "@/app/components/react-tables/expanding/page";
+import ExpandingTable from "@/app/components/react-tables/expanding";
 
 export const metadata: Metadata = {
     title: "Expanding Table",

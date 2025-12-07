@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import FilteringTable from "@/app/components/react-tables/filtering/page";
+import FilteringTable from "@/app/components/react-tables/filtering";
 
 export const metadata: Metadata = {
   title: "Filter Table",

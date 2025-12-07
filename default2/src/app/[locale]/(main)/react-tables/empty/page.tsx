@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import EmptyTable from "@/app/components/react-tables/empty/page";
+import EmptyTable from "@/app/components/react-tables/empty";
 
 export const metadata: Metadata = {
     title: "Empty Table",

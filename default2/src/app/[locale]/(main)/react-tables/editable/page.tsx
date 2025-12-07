@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import Editable from "@/app/components/react-tables/editable/page";
+import Editable from "@/app/components/react-tables/editable";
 
 export const metadata: Metadata = {
     title: "Editable Table",

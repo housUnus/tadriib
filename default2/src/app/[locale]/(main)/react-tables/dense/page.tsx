@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import DenseTable from "@/app/components/react-tables/dense/page";
+import DenseTable from "@/app/components/react-tables/dense";
 
 
 export const metadata: Metadata = {

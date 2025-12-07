@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import ReactEditable from "@/app/components/react-tables/row-selection/page";
+import ReactEditable from "@/app/components/react-tables/row-selection";
 
 export const metadata: Metadata = {
     title: "Row Selection Table",

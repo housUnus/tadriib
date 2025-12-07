@@ -1,7 +1,7 @@
 import React from "react";
 import BreadcrumbComp from "@/app/[locale]/(main)/layout/shared/breadcrumb/BreadcrumbComp";
 import { Metadata } from "next";
-import SortingTable from "@/app/components/react-tables/sorting/page";
+import SortingTable from "@/app/components/react-tables/sorting";
 
 
 export const metadata: Metadata = {
