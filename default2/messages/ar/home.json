@@ -2,16 +2,15 @@
   "Hero": {
     "hero1": "احترف مجال",
     "rotatingWords": [
-      "المحاسبة",
-      "الموارد البشرية",
-      "المالية",
-      "إدارة المشاريع",
-      "تقنية المعلومات والسحابة",
-      "الأمن السيبراني",
-      "تحليل الأعمال",
-      "السلامة والأمن"
+      "محاسبة",
+      "Human Resources",
+      "Finance",
+      "Project Management",
+      "IT & Cloud",
+      "Cybersecurity",
+      "Business Analysis",
+      "Safety & Security"
     ],
-    "description":"Get"
-    
+    "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation."
   }
 }
