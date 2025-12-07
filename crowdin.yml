@@ -1,0 +1,3 @@
+files:
+  - source: /default2/messages/en/*.json
+    translation: /default2/messages/%language%/*.json
