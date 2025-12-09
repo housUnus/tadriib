@@ -51,7 +51,7 @@ const ClientReviews = () => {
 
   return (
     <div className="lg:pt-24 pt-14 pb-14 dark:bg-dark">
-      <div className="container-1218 mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-12 gap-7 items-center">
           <div className="lg:col-span-5 col-span-12">
             <h2 className="sm:text-44 text-3xl font-bold leading-12! text-darklink dark:text-white">

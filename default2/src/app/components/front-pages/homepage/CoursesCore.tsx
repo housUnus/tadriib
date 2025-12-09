@@ -355,7 +355,7 @@ export default function Core({}) {
       {/* Horizontal Scrollable Webinars */}
       <_Carousel items={filteredWebinars} />
       {/* View All Button */}
-      <div className="text-center mt-6 sm:mt-7">
+      <div className="text-center mt-6 sm:mt-7 ">
         <Button
           variant="outline"
           size="lg"

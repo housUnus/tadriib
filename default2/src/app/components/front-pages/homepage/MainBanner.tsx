@@ -27,22 +27,24 @@ const MainBanner = () => {
     { tech: "/images/front-pages/certifications/cpa.png", tooltip: "CPA" },
   ];
 
-  const t = useTranslations('Hero');
+  const t = useTranslations('Home');
   const rotatingWords = t.raw('rotatingWords') as string[];
 
   return (
     <div className="bg-lightgray dark:bg-darkgray">
-      <div className="container-1218 mx-auto sm:pt-10! pt-13! xl:pb-8! pb-15!">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-2xl sm:py-20! py-20!">
         <div className="grid grid-cols-12 gap-7 items-center">
           {/* Left Section */}
           <div className="xl:col-span-6 col-span-12 lg:text-start text-center">
             <h1 className="lg:text-56 text-2xl sm:text-4xl text-darklink dark:text-white lg:leading-16 leading-[50px]">
-              <b>{t('hero1')}</b><RotatingWords words={rotatingWords}/>
+              <b>{t('hero1')}</b>
+              <div className="">
+                <RotatingWords words={rotatingWords}/>
+              </div>
             </h1>
 
             <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-              Get ready for globally recognized certifications with detailed guides,
-              study plans, and expert-approved preparation.
+              {t('description')}
             </p>
 
             {/* User avatars */}
@@ -61,7 +63,7 @@ const MainBanner = () => {
                 ))}
               </div>
               <h5 className="text-base text-ld font-medium opacity-80 md:pt-0 pt-3">
-                52,589+ learners used our platform
+                52,589+ {t('learners')}
               </h5>
             </div>
 
@@ -91,23 +93,23 @@ const MainBanner = () => {
             {/* Login Button */}
             <div className="flex lg:justify-start justify-center gap-2">
               <Button asChild className="px-6! font-bold sm:w-fit w-full bg-primary text-white hover:bg-primary/90" >
-                <Link href="/auth/auth2/login">Get Started</Link>
+                <Link href="/auth/auth2/login">{t('getStarted')}</Link>
               </Button>
               <Button asChild className="px-6! font-bold sm:w-fit w-full bg-success text-white hover:bg-success/90" >
-                <Link href="/auth/auth2/login">Browser Courses</Link>
+                <Link href="/auth/auth2/login">{t('browseCourses')}</Link>
               </Button>
             </div>
           </div>
 
           {/* Right Section - Banner Image */}
           <div className="lg:col-span-6 col-span-12 xl:block hidden ">
-            <div className="flex justify-end min-w-[100px] h-[calc(100vh-100px)] overflow-hidden">
+            <div className="flex justify-end min-w-[100px] overflow-hidden">
               <Image
                 src="/images/front-pages/background/hero.png"
                 alt="banner"
                 className=""
-                width={500}
-                height={400}
+                width={400}
+                height={300}
               />
             </div>
           </div>

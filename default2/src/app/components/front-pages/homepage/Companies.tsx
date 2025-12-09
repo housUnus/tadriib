@@ -24,7 +24,7 @@ const Companies = () => {
   return (
     <>
       <div className="dark:bg-dark">
-        <div className="container-1218 mx-auto ">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:py-14 py-7">
             <div className="mb-3 sm:mb-4">
               <h2 className="text-3xl md:text-4xl font-bold text-darklink dark:text-white mb-2 sm:mb-3">

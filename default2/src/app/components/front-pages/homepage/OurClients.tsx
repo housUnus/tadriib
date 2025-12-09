@@ -52,8 +52,10 @@ const OurClients = () => {
   return (
     <motion.div
       // Very subtle whole-section fade + slight float
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={false}
+      whileInView={{
+        scale: [1, 1.01, 1],
+      }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       viewport={{ once: true }}
       className="lg:py-24 py-12 dark:bg-dark"
@@ -64,9 +66,11 @@ const OurClients = () => {
           {/* LEFT SIDE */}
           <div className="lg:col-span-5 col-span-12">
             <motion.h2
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              initial={false}
+              whileInView={{
+                scale: [1, 1.01, 1],
+              }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
               className="sm:text-44 text-3xl font-bold text-darklink dark:text-white"
             >
@@ -74,7 +78,7 @@ const OurClients = () => {
             </motion.h2>
 
             <motion.p
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 1, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.1 }}
               viewport={{ once: true }}
@@ -85,7 +89,7 @@ const OurClients = () => {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 1 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
@@ -105,7 +109,7 @@ const OurClients = () => {
               {Feature.map((item, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 1, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: 0.55,

@@ -1,0 +1,17 @@
+{
+  "i18n-ally.enabled": true,
+
+  "i18n-ally.localesPaths": [
+    "default2/messages",
+  ],
+
+  "i18n-ally.namespace": true,
+  "i18n-ally.pathMatcher": "{locale}/{namespace}.json",
+
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "en",
+  "i18n-ally.enabledFrameworks": ["general"],
+
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.locales": ["en", "ar"]
+}

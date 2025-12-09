@@ -27,7 +27,7 @@ const page = () => {
       {/* <ContactBar /> */}
       <Highlights />
       <ClientReviews />
-      <Companies />
+      {/* <Companies /> */}
       {/* <Packages /> */}
       {/* <FAQ/> */}
       <CtaSection/>

@@ -20,7 +20,7 @@ const floatingCerts = [
   },
   {
     name: "6 Sigma",
-    image: "/6sigma.png",
+    image: "6sigma.png",
     position: "top-[8%] right-[20%]",
     rotate: "rotate-6",
     delay: "0,7s",
@@ -72,7 +72,7 @@ export default function CtaSection() {
   return (
     <section className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#635bff" }}>
       {floatingCerts.map((cert, index) => (
-        <div key={index} className={`absolute ${cert.position} ${cert.rotate} hidden md:block z-0`}>
+        <div key={index} className={`absolute ${cert.position} ${cert.rotate} scale-[0.6] sm:scale-[0.8] md:scale-100 z-0`}>
           <div className="animate-bounce" style={{ animationDuration: "3s", animationDelay: cert.delay }}>
             <Image
             src={`/images/front-pages/certifications/${cert.image}` || "/placeholder.svg"}

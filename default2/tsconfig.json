@@ -33,9 +33,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.jsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "src/components/common/Carousel/index.jsx", "src/components/common/Carousel/index.jsx"  ],
   "exclude": [
     "node_modules"
   ]

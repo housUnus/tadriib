@@ -19,16 +19,7 @@ export default function _Carousel({
   return (
     <Carousel
       className="w-full"
-      opts={{
-        align: "start",
-        slidesToScroll: 1,
-        loop: true,
-      }}
-      plugins={[
-        Autoplay({
-          delay: 5000,
-        }),
-      ]}
+      
     >
       <CarouselContent className={contentClassName}>
         {items?.map((item, index) => (

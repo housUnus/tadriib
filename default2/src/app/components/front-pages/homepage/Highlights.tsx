@@ -1,5 +1,57 @@
 "use client";
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+
+type Category = {
+  title: string;
+  icon: string;
+  text: string;
+  bg: string;
+};
+
+const Line = ({ elements }: { elements: Category[] }) => {
+  return (
+    <div className="flex">
+      {elements.map((item, index) => (
+        <div
+          key={index}
+          className={`py-5 px-8 mx-3 rounded-2xl flex gap-3 items-center ${item.bg}`}
+        >
+          <Icon
+            icon={item.icon}
+            className={`text-2xl shrink-0 ${item.text}`}
+          />
+          <p
+            className={`text-15 font-semibold whitespace-nowrap ${item.text}`}
+          >
+            {item.title}
+          </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function LineContainer({ elements, direction, duration }: { elements: Category[], direction: string, duration: number }) {
+  const distance = direction === "left" ? "-100%" : "100%";
+  return (
+    <div className="relative overflow-hidden mb-3">
+      {/* Marquee */}
+      <motion.div
+        className="relative w-fit flex"
+        initial={{ x: direction === "left" ? "0%" : "-100%" }}
+        animate={{ x: distance }}
+        transition={{ duration: duration, ease: "linear", repeat: Infinity }}
+      >
+        <Line elements={[...elements, ...elements]} />
+        <div className={`absolute left-full top-0`}>
+          <Line elements={elements} />
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 export const Highlights = () => {
 
   const Categories1 = [
@@ -22,12 +74,6 @@ export const Highlights = () => {
       text: "text-primary",
     },
     {
-      icon: "tabler:businessplan",
-      title: "Secretarial & Office Management",
-      bg: "bg-lightwarning",
-      text: "text-warning",
-    },
-    {
       icon: "tabler:chart-bar",
       title: "Accounting & Finance",
       bg: "bg-lightsuccess",
@@ -45,12 +91,7 @@ export const Highlights = () => {
       bg: "bg-lighterror",
       text: "text-error",
     },
-    {
-      icon: "tabler:shopping-cart",
-      title: "Marketing & Sales",
-      bg: "bg-lightwarning",
-      text: "text-warning",
-    },
+
   ];
 
   const Categories2 = [
@@ -86,7 +127,7 @@ export const Highlights = () => {
     },
     {
       icon: "tabler:shield-check",
-      title: "Audit, Risk, Governance & Compliance",
+      title: "Audit, Governance & Compliance",
       bg: "bg-lighterror",
       text: "text-error",
     },
@@ -136,22 +177,10 @@ export const Highlights = () => {
       text: "text-dark",
     },
     {
-      icon: "tabler:heart-handshake",
-      title: "Nonprofit Sector",
-      bg: "bg-lightpurple",
-      text: "text-purple",
-    },
-    {
       icon: "tabler:sparkles",
       title: "Innovation & Digital Transformation",
       bg: "bg-lightprimary",
       text: "text-primary",
-    },
-    {
-      icon: "tabler:gavel",
-      title: "Law",
-      bg: "bg-lightgray",
-      text: "text-dark",
     },
     {
       icon: "tabler:brain",
@@ -165,8 +194,8 @@ export const Highlights = () => {
   return (
     <>
       <div className="dark:bg-dark">
-        <div className="container-1218 mx-auto ">
-          <div className="text-center mb-8 sm:mb-12  lg:pt-24 pt-12 ">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 lg:pt-24 pt-12 ">
             <h2 className="text-3xl md:text-4xl font-bold text-darklink dark:text-white mb-3 sm:mb-4">
               Explore Categories
             </h2>
@@ -175,84 +204,9 @@ export const Highlights = () => {
             </p>
           </div>
           <div className="rounded-md overflow-hidden">
-            <div className="marquee1-group flex gap-6">
-              {[0, 1, 2, 3].map((item, index) => {
-                return (
-                  <div key={index} className="flex gap-6 mb-6">
-                    {Categories1.map((item) => {
-                      return (
-                        <div
-                          key={item.title}
-                          className={`py-5 px-8 rounded-2xl flex gap-3 items-center ${item.bg}`}
-                        >
-                          <Icon
-                            icon={item.icon}
-                            className={`text-2xl shrink-0 ${item.text}`}
-                          />
-                          <p
-                            className={`text-15 font-semibold whitespace-nowrap ${item.text}`}
-                          >
-                            {item.title}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="marquee2-group flex gap-6">
-              {[0, 1, 2, 3, 4, 5].map((feature, index) => {
-                return (
-                  <div key={index} className="flex gap-6 mb-6">
-                    {Categories2.map((item) => {
-                      return (
-                        <div
-                          key={item.title}
-                          className={`py-5 px-8 rounded-2xl flex gap-3 items-center ${item.bg}`}
-                        >
-                          <Icon
-                            icon={item.icon}
-                            className={`text-2xl shrink-0 ${item.text}`}
-                          />
-                          <p
-                            className={`text-15 font-semibold whitespace-nowrap ${item.text}`}
-                          >
-                            {item.title}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="marquee1-group flex gap-6">
-              {[0, 1, 2, 3].map((item, index) => {
-                return (
-                  <div key={index} className="flex gap-6 mb-6">
-                    {Categories3.map((item) => {
-                      return (
-                        <div
-                          key={item.title}
-                          className={`py-5 px-8 rounded-2xl flex gap-3 items-center ${item.bg}`}
-                        >
-                          <Icon
-                            icon={item.icon}
-                            className={`text-2xl shrink-0 ${item.text}`}
-                          />
-                          <p
-                            className={`text-15 font-semibold whitespace-nowrap ${item.text}`}
-                          >
-                            {item.title}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
+            <LineContainer elements={Categories1} direction="left" duration={90} />
+            <LineContainer elements={Categories2} direction="right" duration={150} />
+            <LineContainer elements={Categories3} direction="left" duration={80} />
           </div>
         </div>
       </div>
