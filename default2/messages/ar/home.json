@@ -1,8 +1,8 @@
 {
-  "Hero": {
+  "Home": {
     "hero1": "Become an Expert In",
     "rotatingWords": [
-      "محاسبة",
+      "Accounting",
       "Human Resources",
       "Finance",
       "Project Management",
@@ -11,6 +11,9 @@
       "Business Analysis",
       "Safety & Security"
     ],
-    "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation."
+    "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation.",
+    "learners": "learners used our platform",
+    "getStarted": "Get Started",
+    "browseCourses": "Browse Courses"
   }
 }
