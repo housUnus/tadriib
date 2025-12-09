@@ -33,14 +33,14 @@ const Line = ({ elements }: { elements: Category[] }) => {
 }
 
 export function LineContainer({ elements, direction, duration }: { elements: Category[], direction: string, duration: number }) {
-  const distance = direction === "left" ? "-100%" : "100%";
+  const multiplier = direction === "left" ? -1 : 1;
   return (
     <div className="relative overflow-hidden mb-3">
       {/* Marquee */}
       <motion.div
         className="relative w-fit flex"
-        initial={{ x: direction === "left" ? "0%" : "-100%" }}
-        animate={{ x: distance }}
+        initial={{ x: "0%" }}
+        animate={{ x: `${multiplier * 50}%` }}
         transition={{ duration: duration, ease: "linear", repeat: Infinity }}
       >
         <Line elements={[...elements, ...elements]} />
@@ -205,7 +205,7 @@ export const Highlights = () => {
           </div>
           <div className="rounded-md overflow-hidden">
             <LineContainer elements={Categories1} direction="left" duration={90} />
-            <LineContainer elements={Categories2} direction="right" duration={150} />
+            <LineContainer elements={Categories2} direction="left" duration={60} />
             <LineContainer elements={Categories3} direction="left" duration={80} />
           </div>
         </div>
