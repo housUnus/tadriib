@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Icon } from "@iconify/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useTranslations } from "next-intl";
 
 const userReview = [
   {
@@ -12,25 +13,26 @@ const userReview = [
     title: "Jenny Wilson",
     subtitle: "CEO & Head of Comp Inc.",
     review:
-      "This template is great, UI-rich and up-to-date. Although it is pretty much complete, I suggest to improve a bit of documentation. Thanks & Highly recommended!",
+      "من افضل الدورات اللي حضرتها شكراً لكل القائمين علي المنصه دقه في العمل تصوير احترافي سهوله في الشرح تدريب على الاختبار الدولي",
   },
   {
     img: "/images/profile/user-3.jpg",
     title: "Josh Cui",
     subtitle: "CEO & Head of Comp Inc.",
     review:
-      "This template is great, UI-rich and up-to-date. Although it is pretty much complete, I suggest to improve a bit of documentation. Thanks & Highly recommended!",
+      "تجربة متميزة، بدءًا من المحتوى التعليمي المتقن وصولًا إلى المرونة في متابعة الدروس وتطبيقها. كانت سببًا رئيسيًا في تعزيز مهاراتي المهنية .",
   },
   {
     img: "/images/profile/user-4.jpg",
     title: "Eminson Mendoza",
     subtitle: "CEO & Head of Comp Inc.",
     review:
-      "This template is great, UI-rich and up-to-date. Although it is pretty much complete, I suggest to improve a bit of documentation. Thanks & Highly recommended!",
+      "أشكر المركز لتقديم هذه البرامج المهمة في مواضيع إدارة المخاطر وحوكمة الشركات وغسيل الأموال والمطابقة والإلتزام",
   },
 ];
 
 const ClientReviews = () => {
+  const t = useTranslations("home");
   const [currentSlide, setCurrentSlide] = useState(0);
   const totalSlides = userReview.length;
 
@@ -55,10 +57,10 @@ const ClientReviews = () => {
         <div className="grid grid-cols-12 gap-7 items-center">
           <div className="lg:col-span-5 col-span-12">
             <h2 className="sm:text-44 text-3xl font-bold leading-12! text-darklink dark:text-white">
-              Words from customers.
+              {t('wordsFromCustomers')}
             </h2>
             <p className="text-base leading-8 sm:py-6 text-ld opacity-80">
-              Pellentesque varius semper odio non pretium.
+              {t('discoverHowPeopleFromAll')}
             </p>
             {/* Custom Arrow & Counter Container */}
             <div className="flex  items-center md:mt-0 mt-4  gap-4 custom-controls">
@@ -77,7 +79,7 @@ const ClientReviews = () => {
               />
             </div>
           </div>
-          <div className="lg:col-span-7 col-span-12">
+          <div className="lg:col-span-7 col-span-12" dir="rtl">
             <div className="slider-container client-reviews lg:ps-6">
               <Slider ref={sliderRef} {...settings}>
                 {userReview.map((item, index) => (

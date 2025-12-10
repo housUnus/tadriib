@@ -1,4 +1,5 @@
 import { Award, BadgeCheck, GraduationCap } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 const certificates = [
   {
@@ -46,6 +47,7 @@ const certificates = [
 ]
 
 function CertificateCard({ cert }: { cert: (typeof certificates)[0] }) {
+  const t = useTranslations("home")
   return (
     <div className="group bg-white rounded-xl p-3 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer">
       <div className="relative h-48 rounded-md overflow-hidden">
@@ -65,24 +67,24 @@ function CertificateCard({ cert }: { cert: (typeof certificates)[0] }) {
       </div>
       <div className="pt-3 pb-1 px-1">
         <h3 className="font-semibold text-slate-800 text-sm leading-tight">{cert.name}</h3>
-        <p className="text-slate-500 text-xs mt-1.5">{cert.subscribers.toLocaleString()} Subscribers</p>
+        <p className="text-slate-500 text-xs mt-1.5">{cert.subscribers.toLocaleString()} {t("subscribers")}</p>
       </div>
     </div>
   )
 }
 
 export function CertificatesSection() {
+  const t = useTranslations("home")
   return (
     <>
       <section className="py-10 md:py-14 bg-[#0a2540]">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3">
-              Obtain globally recognized <span className="text-[#635bff] italic">professional certificates</span>
+              {t("obtainGloballyRecognized")} <span className="text-primary ">{t("professionalCertificates")}</span>
             </h2>
             <p className="text-slate-300 text-base leading-relaxed max-w-3xl mx-auto">
-              Our training center has been offering a distinguished range of qualifying courses for local and
-              international professional certifications in various fields.
+              {t('ourTrainingCenter')}
             </p>
           </div>
 
@@ -95,7 +97,7 @@ export function CertificatesSection() {
       </section>
 
       {/* Purple banner with certificate icons and link */}
-      <section className="bg-[#635bff] py-4">
+      <section className="bg-primary py-4">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <div className="flex -space-x-3">
@@ -110,13 +112,13 @@ export function CertificatesSection() {
               </div>
             </div>
             <p className="text-white text-sm md:text-base">
-              Explore all our professional certifications and find the right path for your career.
+             {t('exploreCertificates')}
             </p>
             <a
               href="#"
               className="text-white font-medium underline underline-offset-4 hover:text-white/80 transition-colors"
             >
-              View all certificates
+              {t('viewAllCertificates')}
             </a>
           </div>
         </div>

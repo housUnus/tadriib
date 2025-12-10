@@ -3,15 +3,17 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Heart, PenTool, LayoutGrid, Award, Star, Lightbulb } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 const stats = [
-  { value: "11", label: "CERTIFICATIONS" },
-  { value: "128", label: "COURSES" },
-  { value: "18016", label: "STUDENTS" },
-  { value: "1123", label: "SUCCESS STORIES" },
+  { value: "11", labelKey: "states.certifications" },
+  { value: "128", labelKey: "states.courses" },
+  { value: "18016", labelKey: "states.students" },
+  { value: "1123", labelKey: "states.successStories" },
 ]
 
 export function StatsSection() {
+  const t = useTranslations("home")
   return (
     <section className="w-full py-16 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +28,7 @@ export function StatsSection() {
               viewport={{ once: true }}
               className="text-3xl md:text-4xl lg:text-[42px] text-primary max-w-lg"
             >
-              Building a professional career has never been easier
+              {t('buildProfessionalCareer')}
             </motion.h2>
 
             <motion.div
@@ -37,10 +39,10 @@ export function StatsSection() {
               className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10"
             >
               {stats.map((stat) => (
-                <div key={stat.label} className="text-left">
+                <div key={stat.labelKey} className="text-left">
                   <p className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">{stat.value}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground font-medium tracking-wide mt-1">
-                    {stat.label}
+                  <p className="text-xs md:text-sm text-muted-foreground font-medium tracking-wide mt-1 uppercase">
+                    {t(stat.labelKey)}
                   </p>
                 </div>
               ))}
@@ -55,13 +57,13 @@ export function StatsSection() {
               className="flex flex-wrap gap-4"
             >
               <Button size="lg">
-                BROWSE ALL CERTIFICATES
+                {t('browseAllCertificates')}
               </Button>
               <Button
                 variant="outline"
                 size="lg"
               >
-                BROWSE ALL COURSES
+                {t('browseAllCourses')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </motion.div>

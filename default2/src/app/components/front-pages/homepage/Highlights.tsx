@@ -1,15 +1,77 @@
 "use client";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 type Category = {
-  title: string;
+  titleKey: string;
   icon: string;
   text: string;
   bg: string;
 };
 
+const Categories1 = [
+  {
+    icon: "tabler:users-group",
+    titleKey: "categories.management.title",
+    bg: "bg-lightprimary",
+    text: "text-primary",
+  },
+  {
+    icon: "tabler:building-community",
+    titleKey: "categories.realEstate.title",
+    bg: "bg-lightgray",
+    text: "text-dark",
+  },
+  {
+    icon: "tabler:database",
+    titleKey: "categories.dataManagement.title",
+    bg: "bg-lightprimary",
+    text: "text-primary",
+  },
+  {
+    icon: "tabler:chart-bar",
+    titleKey: "categories.accounting.title",
+    bg: "bg-lightsuccess",
+    text: "text-success",
+  },
+  {
+    icon: "tabler:road",
+    titleKey: "categories.skillsDevelopment.title",
+    bg: "bg-lightprimary",
+    text: "text-primary",
+  },
+  {
+    icon: "tabler:alert-triangle",
+    titleKey: "categories.safety.title",
+    bg: "bg-lighterror",
+    text: "text-error",
+  },
+];
+
+const Categories2 = [
+  { icon: "tabler:badge", titleKey: "categories.humanResources.title", bg: "bg-lightinfo", text: "text-info" },
+  { icon: "tabler:wallet", titleKey: "categories.islamicFinance.title", bg: "bg-lightsuccess", text: "text-success" },
+  { icon: "tabler:megaphone", titleKey: "categories.media.title", bg: "bg-lightpurple", text: "text-purple" },
+  { icon: "tabler:calendar-check", titleKey: "categories.projectManagement.title", bg: "bg-lightinfo", text: "text-info" },
+  { icon: "tabler:building", titleKey: "categories.publicSector.title", bg: "bg-lightinfo", text: "text-info" },
+  { icon: "tabler:shield-check", titleKey: "categories.audit.title", bg: "bg-lighterror", text: "text-error" },
+  { icon: "tabler:tools", titleKey: "categories.engineering.title", bg: "bg-lightwarning", text: "text-warning" },
+  { icon: "tabler:umbrella", titleKey: "categories.insurance.title", bg: "bg-lightinfo", text: "text-info" },
+];
+
+const Categories3 = [
+  { icon: "tabler:language", titleKey: "categories.languages.title", bg: "bg-lightwarning", text: "text-warning" },
+  { icon: "tabler:leaf", titleKey: "categories.environment.title", bg: "bg-lightsuccess", text: "text-success" },
+  { icon: "tabler:checkup-list", titleKey: "categories.quality.title", bg: "bg-lightpurple", text: "text-purple" },
+  { icon: "tabler:device-desktop", titleKey: "categories.it.title", bg: "bg-lightprimary", text: "text-primary" },
+  { icon: "tabler:box-seam", titleKey: "categories.supplyChain.title", bg: "bg-lightgray", text: "text-dark" },
+  { icon: "tabler:sparkles", titleKey: "categories.innovation.title", bg: "bg-lightprimary", text: "text-primary" },
+  { icon: "tabler:brain", titleKey: "categories.ai.title", bg: "bg-lightpurple", text: "text-purple" },
+];
+
 const Line = ({ elements }: { elements: Category[] }) => {
+  const t = useTranslations("home");
   return (
     <div className="flex">
       {elements.map((item, index) => (
@@ -24,7 +86,7 @@ const Line = ({ elements }: { elements: Category[] }) => {
           <p
             className={`text-15 font-semibold whitespace-nowrap ${item.text}`}
           >
-            {item.title}
+            {t(item.titleKey)}
           </p>
         </div>
       ))}
@@ -54,142 +116,7 @@ export function LineContainer({ elements, direction, duration }: { elements: Cat
 
 export const Highlights = () => {
 
-  const Categories1 = [
-    {
-      icon: "tabler:users-group",
-      title: "Management & Leadership",
-      bg: "bg-lightprimary",
-      text: "text-primary",
-    },
-    {
-      icon: "tabler:building-community",
-      title: "Real Estate",
-      bg: "bg-lightgray",
-      text: "text-dark",
-    },
-    {
-      icon: "tabler:database",
-      title: "Data Management & Business Intelligence",
-      bg: "bg-lightprimary",
-      text: "text-primary",
-    },
-    {
-      icon: "tabler:chart-bar",
-      title: "Accounting & Finance",
-      bg: "bg-lightsuccess",
-      text: "text-success",
-    },
-    {
-      icon: "tabler:road",
-      title: "Skills Development",
-      bg: "bg-lightprimary",
-      text: "text-primary",
-    },
-    {
-      icon: "tabler:alert-triangle",
-      title: "Safety & Security",
-      bg: "bg-lighterror",
-      text: "text-error",
-    },
-
-  ];
-
-  const Categories2 = [
-    {
-      icon: "tabler:badge",
-      title: "Human Resources",
-      bg: "bg-lightinfo",
-      text: "text-info",
-    },
-    {
-      icon: "tabler:wallet",
-      title: "Islamic Finance & Banking",
-      bg: "bg-lightsuccess",
-      text: "text-success",
-    },
-    {
-      icon: "tabler:megaphone",
-      title: "Media & Public Relations",
-      bg: "bg-lightpurple",
-      text: "text-purple",
-    },
-    {
-      icon: "tabler:calendar-check",
-      title: "Project Management",
-      bg: "bg-lightinfo",
-      text: "text-info",
-    },
-    {
-      icon: "tabler:building",
-      title: "Public Sector & Government Affairs",
-      bg: "bg-lightinfo",
-      text: "text-info",
-    },
-    {
-      icon: "tabler:shield-check",
-      title: "Audit, Governance & Compliance",
-      bg: "bg-lighterror",
-      text: "text-error",
-    },
-    {
-      icon: "tabler:tools",
-      title: "Engineering & Maintenance",
-      bg: "bg-lightwarning",
-      text: "text-warning",
-    },
-    {
-      icon: "tabler:umbrella",
-      title: "Insurance",
-      bg: "bg-lightinfo",
-      text: "text-info",
-    },
-  ];
-
-  const Categories3 = [
-    {
-      icon: "tabler:language",
-      title: "Languages",
-      bg: "bg-lightwarning",
-      text: "text-warning",
-    },
-    {
-      icon: "tabler:leaf",
-      title: "Environment & Sustainability",
-      bg: "bg-lightsuccess",
-      text: "text-success",
-    },
-    {
-      icon: "tabler:checkup-list",
-      title: "Quality & Productivity",
-      bg: "bg-lightpurple",
-      text: "text-purple",
-    },
-    {
-      icon: "tabler:device-desktop",
-      title: "Information Technology",
-      bg: "bg-lightprimary",
-      text: "text-primary",
-    },
-    {
-      icon: "tabler:box-seam",
-      title: "Warehousing, Procurement & Supply Chain",
-      bg: "bg-lightgray",
-      text: "text-dark",
-    },
-    {
-      icon: "tabler:sparkles",
-      title: "Innovation & Digital Transformation",
-      bg: "bg-lightprimary",
-      text: "text-primary",
-    },
-    {
-      icon: "tabler:brain",
-      title: "Artificial Intelligence",
-      bg: "bg-lightpurple",
-      text: "text-purple",
-    },
-  ];
-
+  const t = useTranslations("home");
 
   return (
     <>
@@ -197,10 +124,10 @@ export const Highlights = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 lg:pt-24 pt-12 ">
             <h2 className="text-3xl md:text-4xl font-bold text-darklink dark:text-white mb-3 sm:mb-4">
-              Explore Categories
+              {t('exploreCategories')}
             </h2>
             <p className="text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4 sm:px-0">
-              Find the training path that fits your goals across a wide range of professional fields
+              {t('findTheTrainingPath')}
             </p>
           </div>
           <div className="rounded-md overflow-hidden">

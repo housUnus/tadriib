@@ -1,16 +1,20 @@
 {
-  "Home": {
-    "hero1": "احترف مجال",
-    "rotatingWords": [
-      "محاسبة",
-      "Human Resources",
-      "Finance",
-      "Project Management",
-      "IT & Cloud",
-      "Cybersecurity",
-      "Business Analysis",
-      "Safety & Security"
-    ],
-    "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation."
-  }
+  "hero1": "احترف مجال",
+  "rotatingWords": [
+    "Accounting",
+    "Human Resources",
+    "Finance",
+    "Project Management",
+    "IT & Cloud",
+    "Cybersecurity",
+    "Business Analysis",
+    "Safety & Security"
+  ],
+  "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation.",
+  "learners": "learners used our platform",
+  "getStarted": "Get Started",
+  "browseCourses": "Browse Courses",
+  "subscribers": "subscribers",
+  "professional-certificates": "Professional Certificates",
+  "obtain-globally-recognized": "Obtain Globally Recognized"
 }

@@ -2,9 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Users, Clock, ArrowRight, Star, Info, LucideFileQuestionMark } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 
 function CourseCard({ item }) {
+  const t = useTranslations("home");
   const course = item;
   return (
     <div className="w-full">
@@ -16,8 +18,8 @@ function CourseCard({ item }) {
         <CardContent className="p-0 h-full flex flex-col relative">
           {/* Featured Badge */}
           <div className="absolute top-2 sm:top-3 left-3 sm:left-4 z-10">
-            <Badge className={`bg-success text-white border-0 text-xs`}>
-              FREE
+            <Badge className={`bg-success text-white border-0 text-xs uppercase`}>
+              {t('free')}
             </Badge>
           </div>
 
@@ -37,7 +39,7 @@ function CourseCard({ item }) {
               <Badge
                 className={`border border-gray-300 bg-white text-gray-500 text-xs`}
               >
-                Most Taken
+                {t('mostTaken')}
               </Badge>
               {/* <div
                 className={`px-2 py-1 rounded-full text-xs font-medium ${availability.bgColor} ${availability.color}`}
@@ -51,12 +53,12 @@ function CourseCard({ item }) {
               {course.title}
             </h3>
             <h3 className="font-bold mb-2">
-              {course.price} SAR 
-              <span className="line-through font-normal text-gray-500 text-xs mx-1"> {course.originalPrice} SAR</span>
+              {course.price} <span className="uppercase">{t('sar')}</span>
+              <span className="line-through font-normal text-gray-500 text-xs mx-1"> {course.originalPrice} <span className="uppercase">{t('sar')}</span></span>
             </h3>
             <div className="flex items-center justify-between mb-3 sm:mb-4 text-sm text-gray-500">
               <div className="flex items-center gap-2 ">
-                {course.total_taken} students
+                {course.total_taken} {t('students')}
               </div>
 
               <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
@@ -72,13 +74,13 @@ function CourseCard({ item }) {
                 className="w-full bg-secondary text-white border-0 group/btn text-sm sm:text-base py-2 sm:py-3"
                 disabled={course.availablePlaces === 0}
               >
-                <span>Details</span>
+                <span>{t('details')}</span>
               </Button>
               <Button
                 className="w-full bg-primary text-white border-0 group/btn text-sm sm:text-base py-2 sm:py-3"
                 disabled={course.availablePlaces === 0}
               >
-                <span>Buy Now</span>
+                <span>{t('buyNow')}</span>
               </Button>
             </div>
           </div>

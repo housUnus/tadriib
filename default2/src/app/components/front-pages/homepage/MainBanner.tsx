@@ -27,7 +27,7 @@ const MainBanner = () => {
     { tech: "/images/front-pages/certifications/cpa.png", tooltip: "CPA" },
   ];
 
-  const t = useTranslations('Home');
+  const t = useTranslations('home');
   const rotatingWords = t.raw('rotatingWords') as string[];
 
   return (

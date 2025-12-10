@@ -4,33 +4,34 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { easeInOut } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const Feature = [
   {
     icon: "solar:diploma-verified-broken",
-    title: "Certification Prep",
-    subtitle: "Guidance to pass recognized professional exams.",
+    titleKey: "feature.certificationPrep.title",
+    subtitleKey: "feature.certificationPrep.subtitle",
     bgcolor: "bg-lightprimary",
     color: "text-primary",
   },
   {
     icon: "solar:square-academic-cap-broken",
-    title: "Fellowship Support",
-    subtitle: "Steps and mentorship to qualify for fellowships.",
+    titleKey: "feature.fellowshipSupport.title",
+    subtitleKey: "feature.fellowshipSupport.subtitle",
     bgcolor: "bg-lightsuccess",
     color: "text-success",
   },
   {
     icon: "mdi:progress-star",
-    title: "Skill Tracks",
-    subtitle: "Clear learning paths to improve your expertise.",
+    titleKey: "feature.skillTracks.title",
+    subtitleKey: "feature.skillTracks.subtitle",
     bgcolor: "bg-lightwarning",
     color: "text-warning",
   },
   {
     icon: "solar:clock-circle-broken",
-    title: "24/7 Access",
-    subtitle: "Learn at your own pace, anytime and anywhere you want.",
+    titleKey: "feature.access247.title",
+    subtitleKey: "feature.access247.subtitle",
     bgcolor: "bg-lightgray dark:bg-darkgray",
     color: "text-dark dark:text-white",
   },
@@ -49,6 +50,7 @@ const floatAnim = {
 };
 
 const OurClients = () => {
+  const t = useTranslations("home")
   return (
     <motion.div
       // Very subtle whole-section fade + slight float
@@ -74,7 +76,7 @@ const OurClients = () => {
               viewport={{ once: true }}
               className="sm:text-44 text-3xl font-bold text-darklink dark:text-white"
             >
-              Earn certifications that advance your career.
+              {t('EearnCertifications')}
             </motion.h2>
 
             <motion.p
@@ -84,8 +86,7 @@ const OurClients = () => {
               viewport={{ once: true }}
               className="text-base leading-7 text-ld opacity-75 py-6"
             >
-              Get clear guidance and structured support to prepare for top
-              certifications and fellowship programs.
+              {t('GetGuidance')}
             </motion.p>
 
             <motion.div
@@ -98,7 +99,7 @@ const OurClients = () => {
                 href={"/"}
                 className="text-darklink dark:text-white text-sm font-semibold underline decoration-2 underline-offset-[6px]"
               >
-                Explore Paths
+                {t('explorePaths')}
               </Link>
             </motion.div>
           </div>
@@ -128,10 +129,10 @@ const OurClients = () => {
                   </motion.div>
 
                   <h4 className="font-bold text-darklink dark:text-white py-4 text-xl">
-                    {item.title}
+                    {t(item.titleKey)}
                   </h4>
                   <p className="text-base text-ld opacity-70 leading-6">
-                    {item.subtitle}
+                    {t(item.subtitleKey)}
                   </p>
                 </motion.div>
               ))}

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Plus } from "lucide-react";
 import { useState } from "react";
 import _Carousel from "@/components/common/Carousel";
+import { useTranslations } from "next-intl";
 
-const webinars = [
+const courses = [
   // Development
   {
     id: 1,
@@ -262,46 +263,45 @@ const webinars = [
 const categories = [
   {
     name: "All",
-    count: webinars.length
+    count: courses.length
   },
   {
     name: "Development",
-    count: webinars.filter((w) => w.category === "Development").length,
+    count: courses.filter((w) => w.category === "Development").length,
   },
   {
     name: "Design",
-    count: webinars.filter((w) => w.category === "Design").length,
+    count: courses.filter((w) => w.category === "Design").length,
   },
   {
     name: "Marketing",
-    count: webinars.filter((w) => w.category === "Marketing").length,
+    count: courses.filter((w) => w.category === "Marketing").length,
   },
   {
     name: "Data Science",
-    count: webinars.filter((w) => w.category === "Data Science").length,
+    count: courses.filter((w) => w.category === "Data Science").length,
   },
   {
     name: "AI & Machine Learning",
-    count: webinars.filter((w) => w.category === "AI & Machine Learning")
+    count: courses.filter((w) => w.category === "AI & Machine Learning")
       .length,
   },
   {
     name: "Cybersecurity",
-    count: webinars.filter((w) => w.category === "Cybersecurity").length,
+    count: courses.filter((w) => w.category === "Cybersecurity").length,
   },
   {
     name: "Cloud Computing",
-    count: webinars.filter((w) => w.category === "Cybersecurity").length,
+    count: courses.filter((w) => w.category === "Cybersecurity").length,
   },
 ];
-Core
 export default function Core({}) {
   const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredWebinars =
+  const t = useTranslations("home")
+  const filteredCourses =
     activeCategory === "All"
-      ? webinars
-      : webinars.filter((webinar) => webinar.category === activeCategory);
+      ? courses
+      : courses.filter((webinar) => webinar.category === activeCategory);
 
   return (
     <>
@@ -338,29 +338,29 @@ export default function Core({}) {
             ))}
             {/* Show More/Less Button */}
             <Link
-              href="/webinars"
+              href="/courses"
               className="rounded-full h-9 px-2 sm:px-3 font-semibold text-xs
                sm:text-sm transition-transform duration-300 hover:scale-102 text-gray-700 border
               border-gray-300 flex items-center justify-center"
             >
               <div className="relative z-10 flex items-center gap-1.5 sm:gap-2">
                 <Plus className="w-3 sm:w-4 h-3 sm:h-4" />
-                <span className="hidden sm:inline">12 More</span>
+                <span className="hidden sm:inline">12 {t('more')}</span>
                 <span className="sm:hidden">+12</span>
               </div>
             </Link>
           </div>
         </div>
       </div>
-      {/* Horizontal Scrollable Webinars */}
-      <_Carousel items={filteredWebinars} />
+      {/* Horizontal Scrollable Courses */}
+      <_Carousel items={filteredCourses} />
       {/* View All Button */}
       <div className="text-center mt-6 sm:mt-7 ">
         <Button
           variant="outline"
           size="lg"
         >
-          View All Quizzes
+          {t('viewAllQuizzes')}
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>

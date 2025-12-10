@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 
 const floatingCerts = [
@@ -69,6 +70,7 @@ const floatingCerts = [
 ]
 
 export default function CtaSection() {
+  const t = useTranslations("home")
   return (
     <section className="relative py-24 md:py-32 overflow-hidden" style={{ backgroundColor: "#635bff" }}>
       {floatingCerts.map((cert, index) => (
@@ -88,10 +90,10 @@ export default function CtaSection() {
       {/* Center content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 max-w-4xl mx-auto leading-tight">
-          Advance your career with globally recognized professional certifications.
+         {t('advanceYourCareer')}
         </h2>
         <p className="text-white/80 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-          Join thousands of professionals who have transformed their careers with our expert-led certification programs.
+          {t('joinThousandsOfProfessionals')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
@@ -99,10 +101,10 @@ export default function CtaSection() {
             size="lg"
             className="border-white text-white bg-transparent hover:bg-white hover:text-[#635bff] px-8 py-6 text-lg rounded-lg"
           >
-            Get Started
+            {t('getStarted')}
           </Button>
           <Button size="lg" className="bg-white text-[#635bff] hover:bg-white/90 px-8 py-6 text-lg rounded-lg">
-            Start Teaching
+            {t('startTeaching')}
           </Button>
         </div>
       </div>
