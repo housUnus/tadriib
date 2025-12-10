@@ -1,20 +1,136 @@
 {
-  "hero1": "احترف مجال",
+  "hero1": "كن خبيراً في",
   "rotatingWords": [
-    "Accounting",
-    "Human Resources",
-    "Finance",
-    "Project Management",
-    "IT & Cloud",
-    "Cybersecurity",
-    "Business Analysis",
-    "Safety & Security"
+    "المحاسبة",
+    "الموارد البشرية",
+    "المالية",
+    "إدارة المشروعات",
+    "تكنولوجيا المعلومات والسحابة",
+    "الأمن الحاسوبي",
+    "تحليل الأعمال التجارية",
+    "السلامة والأمن"
   ],
-  "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation.",
-  "learners": "learners used our platform",
-  "getStarted": "Get Started",
-  "browseCourses": "Browse Courses",
-  "subscribers": "subscribers",
-  "professional-certificates": "Professional Certificates",
-  "obtain-globally-recognized": "Obtain Globally Recognized"
+  "description": "استعد للحصول على شهادات معترف بها عالميا مع أدلة مفصلة، وخطط دراسية، وإعدادات معتمدة من الخبراء.",
+  "learners": "المتعلمون استخدموا منصة عملنا",
+  "getStarted": "ابدأ",
+  "browseCourses": "استعراض الدورات",
+  "subscribers": "المشتركون",
+  "professionalCertificates": "الشهادات المهنية",
+  "obtainGloballyRecognized": "الحصول على الاعتراف العالمي",
+  "viewAllCertificates": "عرض جميع الشهادات",
+  "exploreCertificates": "استكشف جميع شهاداتنا المهنية و ابحث عن المسار الصحيح لحياتك المهنية.",
+  "ourTrainingCenter": "ويقدم مركزنا التدريبي طائفة متميزة من الدورات المؤهلة للحصول على شهادات مهنية محلية ودولية في مختلف الميادين.",
+  "EearnCertifications": "احصل على شهادات تقدم حياتك الوظيفية.",
+  "GetGuidance": "الحصول على توجيه واضح ودعم منظم للتحضير لإصدار الشهادات العليا وبرامج الزمالات.",
+  "explorePaths": "استكشاف المسارات",
+  "feature": {
+    "certificationPrep": {
+      "title": "إعداد الشهادة",
+      "subtitle": "توجيه اجتياز الامتحانات المهنية المعترف بها."
+    },
+    "fellowshipSupport": {
+      "title": "دعم الزمالات",
+      "subtitle": "الخطوات والإرشادات اللازمة للتأهل للزمالات."
+    },
+    "skillTracks": {
+      "title": "مسارات المهارات",
+      "subtitle": "مسح مسارات التعلم لتحسين خبرتك."
+    },
+    "access247": {
+      "title": "24/7 الوصول",
+      "subtitle": "تعلم بالوتيرة الخاصة بك، في أي وقت وفي أي مكان تريد."
+    }
+  },
+  "buildProfessionalCareer": "بناء حياة مهنية لم يكن أبدا أسهل",
+  "states": {
+    "certifications": "الشهادات",
+    "courses": "الدورات",
+    "students": "الطلاب",
+    "success": "نجاح",
+    "successStories": "قصص النجاح"
+  },
+  "browseAllCertificates": "قم بتشغيل جميع المراكز",
+  "browseAllCourses": "قم بتدوين جميع الرسائل",
+  "featuredCourses": "الدورات المميزة",
+  "challengeYourselfWithExpertly": "تحدّي نفسك بتقييمات مصنوعة ببراعة مصممة للتحقق من مهاراتك وتحسينها",
+  "viewAllQuizzes": "عرض جميع الاختبارات",
+  "more": "المزيد",
+  "free": "مجاني",
+  "mostTaken": "الأكثر استلاما",
+  "students": "طالبا",
+  "sar": "ريال",
+  "details": "التفاصيل",
+  "buyNow": "اشتري الآن",
+  "findTheTrainingPath": "ابحث عن مسار التدريب الذي يناسب أهدافك عبر مجموعة واسعة من المجالات المهنية",
+  "exploreCategories": "استكشاف التصنيفات",
+  "categories": {
+    "management": {
+      "title": "الإدارة والقيادة"
+    },
+    "realEstate": {
+      "title": "العَقَار"
+    },
+    "dataManagement": {
+      "title": "إدارة البيانات واستخبارات الأعمال التجارية"
+    },
+    "accounting": {
+      "title": "المحاسبة والمالية"
+    },
+    "skillsDevelopment": {
+      "title": "تطوير المهارات"
+    },
+    "safety": {
+      "title": "السلامة والأمن"
+    },
+    "humanResources": {
+      "title": "الموارد البشرية"
+    },
+    "islamicFinance": {
+      "title": "المالية والمصارف الإسلامية"
+    },
+    "media": {
+      "title": "الإعلام والعلاقات العامة"
+    },
+    "projectManagement": {
+      "title": "إدارة المشاريع"
+    },
+    "publicSector": {
+      "title": "القطاع العام والشؤون الحكومية"
+    },
+    "audit": {
+      "title": "مراجعة الحسابات والإدارة والامتثال"
+    },
+    "engineering": {
+      "title": "الهندسة والصيانة"
+    },
+    "insurance": {
+      "title": "التأمين"
+    },
+    "languages": {
+      "title": "اللغات"
+    },
+    "environment": {
+      "title": "البيئة والاستدامة"
+    },
+    "quality": {
+      "title": "الجودة والإنتاجية"
+    },
+    "it": {
+      "title": "تكنولوجيا المعلومات"
+    },
+    "supplyChain": {
+      "title": "المستودعات والمشتريات وسلسلة الإمدادات"
+    },
+    "innovation": {
+      "title": "الابتكار والتحويل الرقمي"
+    },
+    "ai": {
+      "title": "الذكاء الاصطناعي"
+    }
+  },
+  "wordsFromCustomers": "كلمات من العملاء.",
+  "discoverHowPeopleFromAll": "اكتشف كيف أن الناس من جميع مناحي الحياة يكتسبون مهارات جديدة ويحققون أهدافهم مع منهاجنا.",
+  "advanceYourCareer": "تقدم في حياتك المهنية بشهادات مهنية معترف بها عالمياً.",
+  "joinThousandsOfProfessionals": "انضم إلى آلاف المهنيين الذين غيروا حياتهم الوظيفية في برامجنا التي يقودها الخبراء.",
+  "startTeaching": "بدء التدريس"
 }
