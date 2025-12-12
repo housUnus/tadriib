@@ -86,7 +86,7 @@ const ClientReviews = () => {
                   <div key={index} className="px-1" >
                     <p className="sm:text-2xl text-xl text-ld text-center">{item.review}</p>
                     <div className="flex justify-between pt-10 rtl:flex-row-reverse">
-                      <div className="flex gap-4 items-center">
+                      <div className="flex gap-4 items-center rtl:flex-row-reverse">
                         <Image
                           src={item.img}
                           alt="review"
