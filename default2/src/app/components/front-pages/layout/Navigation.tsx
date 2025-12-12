@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge"; // <-- Shadcn Badge import
+import { useTranslations } from "next-intl";
 
 const FrontNav = [
   {
@@ -39,6 +40,7 @@ const FrontNav = [
 
 const Navigation = () => {
   const pathname = usePathname();
+  const t = useTranslations("home");
 
   return (
     <ul className="flex xl:flex-row flex-col xl:gap-9 gap-6 xl:items-center">

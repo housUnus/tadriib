@@ -8,8 +8,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useTranslations } from "next-intl";
 
 export const Footer = () => {
+
+  const t = useTranslations("home");
+
   const company_details = [
     "Saudi Arabia, Jeddah . ص.ب -11592",
     "Phone : 0126529126 | 0535530307",
@@ -18,14 +22,14 @@ export const Footer = () => {
   ];
 
   const legal_links = [
-    { name: "About us", link: "/about-us", icon: null },
-    { name: "Terms of Service", link: "/terms-of-service", icon: null },
-    { name: "Privacy Policy", link: "/privacy-policy", icon: null },
-    { name: "Cookie Policy", link: "/cookie-policy", icon: null },
-    { name: "Help Center", link: "/help", icon: null },
-    { name: "Contact Support", link: "/contact", icon: null },
-    { name: "Blog", link: "/blog", icon: null },
-    { name: "For Business", link: "/for-business", icon: null },
+    { nameKey: "aboutUs", link: "/about-us", icon: null },
+    { nameKey: "ternsOfService", link: "/terms-of-service", icon: null },
+    { nameKey: "privacyPolicy", link: "/privacy-policy", icon: null },
+    { nameKey: "cookiePolicy", link: "/cookie-policy", icon: null },
+    { nameKey: "helpCenter", link: "/help", icon: null },
+    { nameKey: "contactSupport", link: "/contact", icon: null },
+    { nameKey: "blog", link: "/blog", icon: null },
+    { nameKey: "forBusiness", link: "/for-business", icon: null },
   ];
 
   const certifications = [
@@ -64,15 +68,15 @@ export const Footer = () => {
 
             {/* Column 2 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
-              <h4 className="text-base text-white font-semibold mb-8">Company</h4>
+              <h4 className="text-base text-white font-semibold mb-8">{t('company')}</h4>
               <div className="flex flex-col gap-4">
                 {legal_links.map((item) => (
                   <Link
-                    key={item.name}
+                    key={item.nameKey}
                     href={item.link}
                     className="text-sm text-lightmuted hover:text-primary block"
                   >
-                    {item.name}
+                    {t(item.nameKey)}
                   </Link>
                 ))}
               </div>
@@ -80,7 +84,7 @@ export const Footer = () => {
 
             {/* Column 3 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
-              <h4 className="text-base text-white font-semibold mb-8">Certifications</h4>
+              <h4 className="text-base text-white font-semibold mb-8 capitalize">{t('certifications')}</h4>
               <div className="flex flex-col gap-4">
                 {certifications.map((item) => (
                   <Link
@@ -96,7 +100,7 @@ export const Footer = () => {
 
             {/* Column 4 */}
             <div className="lg:col-span-3 sm:col-span-6 col-span-12">
-              <h4 className="text-base text-white font-semibold mb-8">Follow us</h4>
+              <h4 className="text-base text-white font-semibold mb-8">{t('followUs')}</h4>
               <div className="flex items-center gap-5">
                 <TooltipProvider>
                   <Tooltip>
@@ -164,7 +168,7 @@ export const Footer = () => {
               width={24}
             />
             <p className="text-base text-lightmuted">
-              All rights reserved by The Trainer.
+              {t('allRightsReservedTo')}.
             </p>
           </div>
         </div>

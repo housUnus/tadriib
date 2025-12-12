@@ -5,9 +5,12 @@ import { Button } from '@/components/ui/button'
 import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
+import { Language } from "@/app/[locale]/(main)/layout/vertical/header/Language";
+import { useTranslations } from "next-intl";
 
 const FrontHeader = () => {
   const [isSticky, setIsSticky] = useState(true);
+  const t = useTranslations("home");
   // useEffect(() => {
   //   const handleScroll = () => {
   //     if (window.scrollY > 50) {
@@ -43,8 +46,9 @@ const FrontHeader = () => {
             Log in
           </Button> */}
           {/* Login Button */}
+          <Language />
           <Button asChild className="font-bold xl:flex hidden">
-            <Link href='/auth/auth1/login'>Login</Link>
+            <Link href='/auth/auth1/login'>{t('login')}</Link>
           </Button>
           <MobileMenu />
         </div>

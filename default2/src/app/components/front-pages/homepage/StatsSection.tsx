@@ -64,7 +64,7 @@ export function StatsSection() {
                 size="lg"
               >
                 {t('browseAllCourses')}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 rtl:rotate-180" />
               </Button>
             </motion.div>
           </div>

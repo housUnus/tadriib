@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "../css/globals.css";
-import "../../utils/i18n";
 import NextTopLoader from "nextjs-toploader";
 import { CustomizerContextProvider } from "../context/CustomizerContext";
 import { ThemeProvider } from "@/components/theme-provider";

@@ -79,13 +79,13 @@ const ClientReviews = () => {
               />
             </div>
           </div>
-          <div className="lg:col-span-7 col-span-12" dir="rtl">
+          <div className="lg:col-span-7 col-span-12">
             <div className="slider-container client-reviews lg:ps-6">
               <Slider ref={sliderRef} {...settings}>
                 {userReview.map((item, index) => (
                   <div key={index} className="px-1" >
-                    <p className="sm:text-2xl text-xl text-ld">{item.review}</p>
-                    <div className="flex justify-between pt-10">
+                    <p className="sm:text-2xl text-xl text-ld text-center">{item.review}</p>
+                    <div className="flex justify-between pt-10 rtl:flex-row-reverse">
                       <div className="flex gap-4 items-center">
                         <Image
                           src={item.img}
@@ -93,7 +93,7 @@ const ClientReviews = () => {
                           className="h-14 w-14 rounded-full"
                           height={56}
                           width={56}
-                        />
+                        /> 
                         <div>
                           <h6 className="text-xl font-bold mb-1">
                             {item.title}
@@ -103,7 +103,7 @@ const ClientReviews = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="ms-auto">
+                      <div className="">
                         <span className="h-12 w-12 rounded-full bg-primary flex justify-center items-center">
                           <Image
                             src="/images/front-pages/background/quotes.svg"

@@ -132,5 +132,23 @@
   "discoverHowPeopleFromAll": "Discover how people from all walks of life are gaining new skills and achieving their goals with our platform.",
   "advanceYourCareer": "Advance your career with globally recognized professional certifications.",
   "joinThousandsOfProfessionals": "Join thousands of professionals who have transformed their careers with our expert-led certification programs.",
-  "startTeaching": "Start Teaching"
+  "startTeaching": "Start Teaching",
+  "followUs": "Follow us",
+  "allRightsReservedTo": "All rights reserved to",
+  "company": "Company",
+  "legalLinks": {
+    "aboutUs": "About us",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "helpCenter": "Help Center",
+    "contactSupport": "Contact Support",
+    "blog": "Blog",
+    "forBusiness": "For Business"
+  },
+  "lang": {
+    "english": "English",
+    "arabic": "Arabic",
+    "french": "French"
+  },
+  "login": "Login"
 }
