@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import { Share2, ChevronDown, PanelRightClose, PanelRightOpen, Trophy } from "lucide-react"
+import { PanelRightClose, PanelRightOpen, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { VideoContent } from "./contents/Video"
 import { QuizContent } from "./contents/Quiz"
@@ -10,7 +10,6 @@ import { AssignmentContent } from "./contents/Assignement"
 import { ContentTabs } from "./ContentTabs"
 import type { ContentItem, Course } from "@/lib/data/course-data"
 import { calculateProgress } from "@/lib/data/course-data"
-import { ApexOptions } from "apexcharts"
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts"
 import Link from "next/link"
 
@@ -137,7 +136,7 @@ export function MainContent({
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         {/* Video/Content Player */}
-        <div className={"bg-background p-6"}>{renderContent()}</div>
+        <div className={"bg-background p-2"}>{renderContent()}</div>
 
         <div className="mt-4">
           <ContentTabs activeTab={activeTab} onTabChange={setActiveTab} />

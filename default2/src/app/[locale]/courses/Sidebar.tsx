@@ -2,12 +2,13 @@
 
 import type React from "react"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { Course, ContentItem, Section } from "@/lib/data/course-data"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface CourseSidebarProps {
   course: Course
@@ -35,6 +36,7 @@ export function CourseSidebar({
 }: CourseSidebarProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>(course.sections.map((s) => s.id))
   const [searchQuery, setSearchQuery] = useState("")
+  const isMobile = useIsMobile()
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) =>
@@ -66,10 +68,16 @@ export function CourseSidebar({
 
   const displayExpandedSections = searchQuery.trim() ? filteredSections.map((s) => s.id) : expandedSections
 
+  useEffect(() => {
+    if (isMobile) {
+      onClose()
+    }
+  }, [isMobile])
+
   if (!isOpen) return null
 
   return (
-    <aside className="w-80 shrink-0 border-l border-border bg-card h-full overflow-hidden flex flex-col">
+    <aside className="w-80 shrink-0 border-l border-border bg-card h-full overflow-hidden flex flex-col z-10">
       {/* Header */}
       <div className="shrink-0 border-b border-border p-4">
         <div className="flex items-center justify-between">
