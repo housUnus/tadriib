@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
+import { Language } from "@/app/[locale]/(main)/layout/vertical/header/Language";
 
 export const Footer = () => {
 
@@ -22,25 +23,25 @@ export const Footer = () => {
   ];
 
   const legal_links = [
-    { nameKey: "aboutUs", link: "/about-us", icon: null },
-    { nameKey: "ternsOfService", link: "/terms-of-service", icon: null },
-    { nameKey: "privacyPolicy", link: "/privacy-policy", icon: null },
-    { nameKey: "cookiePolicy", link: "/cookie-policy", icon: null },
-    { nameKey: "helpCenter", link: "/help", icon: null },
-    { nameKey: "contactSupport", link: "/contact", icon: null },
-    { nameKey: "blog", link: "/blog", icon: null },
-    { nameKey: "forBusiness", link: "/for-business", icon: null },
+    { nameKey: "legalLinks.aboutUs", link: "/about-us", icon: null },
+    { nameKey: "legalLinks.termsOfService", link: "/terms-of-service", icon: null },
+    { nameKey: "legalLinks.privacyPolicy", link: "/privacy-policy", icon: null },
+    { nameKey: "legalLinks.cookiePolicy", link: "/cookie-policy", icon: null },
+    { nameKey: "legalLinks.helpCenter", link: "/help", icon: null },
+    { nameKey: "legalLinks.contactSupport", link: "/contact", icon: null },
+    { nameKey: "legalLinks.blog", link: "/blog", icon: null },
+    { nameKey: "legalLinks.forBusiness", link: "/for-business", icon: null },
   ];
 
   const certifications = [
-   { name: "FMAA", link: "/certifications/fmaa", icon: null },
-   { name: "CPA", link: "/certifications/cpa", icon: null },
-   { name: "CMA", link: "/certifications/cma", icon: null },
-   { name: "ACCA", link: "/certifications/acca", icon: null },
-   { name: "CAT", link: "/certifications/cat", icon: null },
-   { name: "CFM", link: "/certifications/cfm", icon: null },
-   { name: "CIA", link: "/certifications/cia", icon: null },
-   { name: "PMP", link: "/certifications/pmp", icon: null },
+    { name: "FMAA", link: "/certifications/fmaa", icon: null },
+    { name: "CPA", link: "/certifications/cpa", icon: null },
+    { name: "CMA", link: "/certifications/cma", icon: null },
+    { name: "ACCA", link: "/certifications/acca", icon: null },
+    { name: "CAT", link: "/certifications/cat", icon: null },
+    { name: "CFM", link: "/certifications/cfm", icon: null },
+    { name: "CIA", link: "/certifications/cia", icon: null },
+    { name: "PMP", link: "/certifications/pmp", icon: null },
   ];
 
   return (
@@ -151,6 +152,9 @@ export const Footer = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+              </div>
+              <div className="">
+                <Language isHeader={false} />
               </div>
             </div>
           </div>

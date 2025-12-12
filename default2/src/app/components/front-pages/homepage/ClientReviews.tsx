@@ -9,23 +9,23 @@ import { useTranslations } from "next-intl";
 
 const userReview = [
   {
-    img: "/images/profile/user-2.jpg",
-    title: "Jenny Wilson",
-    subtitle: "CEO & Head of Comp Inc.",
+    img: "/images/avatars/avatar-w-2.png",
+    title: "نورة العنيزي",
+    subtitle: "مديرة موارد بشورية",
     review:
       "من افضل الدورات اللي حضرتها شكراً لكل القائمين علي المنصه دقه في العمل تصوير احترافي سهوله في الشرح تدريب على الاختبار الدولي",
   },
   {
-    img: "/images/profile/user-3.jpg",
-    title: "Josh Cui",
-    subtitle: "CEO & Head of Comp Inc.",
+    img: "/images/avatars/avatar-m-1.png",
+    title: "محمد احمد",
+    subtitle: "مصمم ويب",
     review:
       "تجربة متميزة، بدءًا من المحتوى التعليمي المتقن وصولًا إلى المرونة في متابعة الدروس وتطبيقها. كانت سببًا رئيسيًا في تعزيز مهاراتي المهنية .",
   },
   {
-    img: "/images/profile/user-4.jpg",
-    title: "Eminson Mendoza",
-    subtitle: "CEO & Head of Comp Inc.",
+    img: "/images/avatars/avatar-m-2.png",
+    title: "احمد الغالي",
+    subtitle: "محاسب",
     review:
       "أشكر المركز لتقديم هذه البرامج المهمة في مواضيع إدارة المخاطر وحوكمة الشركات وغسيل الأموال والمطابقة والإلتزام",
   },
@@ -63,7 +63,7 @@ const ClientReviews = () => {
               {t('discoverHowPeopleFromAll')}
             </p>
             {/* Custom Arrow & Counter Container */}
-            <div className="flex  items-center md:mt-0 mt-4  gap-4 custom-controls">
+            <div className="flex items-center md:mt-0 mt-4  gap-4 custom-controls">
               <PrevArrow
                 onClick={() =>
                   sliderRef.current && sliderRef.current.slickPrev()
@@ -86,23 +86,6 @@ const ClientReviews = () => {
                   <div key={index} className="px-1" >
                     <p className="sm:text-2xl text-xl text-ld text-center">{item.review}</p>
                     <div className="flex justify-between pt-10 rtl:flex-row-reverse">
-                      <div className="flex gap-4 items-center rtl:flex-row-reverse">
-                        <Image
-                          src={item.img}
-                          alt="review"
-                          className="h-14 w-14 rounded-full"
-                          height={56}
-                          width={56}
-                        /> 
-                        <div>
-                          <h6 className="text-xl font-bold mb-1">
-                            {item.title}
-                          </h6>
-                          <p className="text-15 font-medium text-ld opacity-50">
-                            {item.subtitle}
-                          </p>
-                        </div>
-                      </div>
                       <div className="">
                         <span className="h-12 w-12 rounded-full bg-primary flex justify-center items-center">
                           <Image
@@ -113,6 +96,23 @@ const ClientReviews = () => {
                             style={{ width: "auto", height: "auto" }}
                           />
                         </span>
+                      </div>
+                      <div className="flex gap-2 items-center flex-row-reverse">
+                        <Image
+                          src={item.img}
+                          alt="review"
+                          className="h-14 w-14 rounded-full"
+                          height={56}
+                          width={56}
+                        /> 
+                        <div className="text-center">
+                          <h6 className="text-xl font-bold mb-1">
+                            {item.title}
+                          </h6>
+                          <p className="text-15 font-medium text-ld opacity-50">
+                            {item.subtitle}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
