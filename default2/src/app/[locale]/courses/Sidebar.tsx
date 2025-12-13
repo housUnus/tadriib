@@ -77,7 +77,7 @@ export function CourseSidebar({
   if (!isOpen) return null
 
   return (
-    <aside className="w-80 shrink-0 border-l border-border bg-card h-full overflow-hidden flex flex-col z-10">
+    <aside className="w-80 shrink-0 border-l border-border bg-card h-full overflow-hidden flex flex-col lg:static lg:z-auto lg:max-w-none fixed right-0 top-0 bottom-0 z-50 max-w-[85vw]">
       {/* Header */}
       <div className="shrink-0 border-b border-border p-4">
         <div className="flex items-center justify-between">

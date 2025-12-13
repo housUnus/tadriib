@@ -37,8 +37,8 @@ export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDia
       <DialogTrigger asChild>
         {trigger || (
           <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Review and Submit
-            <Send className="ml-2 h-4 w-4" />
+            <span className="hidden md:block">Review and Submit</span>
+            <Send className="md:ml-2 h-4 w-4" />
           </Button>
         )}
       </DialogTrigger>

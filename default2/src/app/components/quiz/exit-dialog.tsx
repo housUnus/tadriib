@@ -37,7 +37,7 @@ export function ExitDialog({ stats, onConfirmExit }: ExitDialogProps) {
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
           <LogOut className="mr-2 h-4 w-4" />
-          Exit
+          <span className="hidden md:block">Exit</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -1,14 +1,24 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { CourseSidebar } from "./Sidebar"
 import { MainContent } from "./MainContent"
 import { mockCourse, type ContentItem, type Course } from "@/lib/data/course-data"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export default function CoursePlayerPage() {
   const [course, setCourse] = useState<Course>(mockCourse)
   const [activeContentId, setActiveContentId] = useState<string>(mockCourse.sections[0].contents[0].id)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  const isMobile = useIsMobile()
+
+
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false)
+    }
+  }, [isMobile])
 
   // Flatten all content items for navigation
   const allContents = useMemo(() => {
@@ -45,7 +55,7 @@ export default function CoursePlayerPage() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden relative">
       <main className="flex-1 overflow-hidden">
         <MainContent
           course={course}

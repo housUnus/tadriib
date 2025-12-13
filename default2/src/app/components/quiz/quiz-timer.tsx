@@ -10,7 +10,7 @@ interface QuizTimerProps {
   compact?: boolean
 }
 
-export function QuizTimer({ initialSeconds = 10800, compact = false }: QuizTimerProps) {
+export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -35,7 +35,7 @@ export function QuizTimer({ initialSeconds = 10800, compact = false }: QuizTimer
     return (
       <div
         className={cn(
-          "flex items-center gap-2 rounded-lg px-2 py-0 transition-all duration-300",
+          "flex items-center gap-1 md:gap-2 rounded-lg px-2 py-0 transition-all duration-300",
           isPaused && "bg-amber-500/5",
         )}
       >

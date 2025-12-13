@@ -35,7 +35,6 @@ export function QuizSidebarRight({ stats, fontSize, onFontSizeChange, onCollapse
         <ScrollArea className="h-full">
           <div className="space-y-4 p-4">
             <div className="space-y-2">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Tools</span>
               <FontSizeControl fontSize={fontSize} onFontSizeChange={onFontSizeChange} />
             </div>
 
