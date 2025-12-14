@@ -74,11 +74,11 @@ export function QuestionDisplay({
             className={cn(isFlagged && "bg-violet-600 text-white hover:bg-violet-700")}
           >
             <Flag className={cn("mr-2 h-4 w-4", isFlagged && "fill-current")} />
-            {isFlagged ? "Flagged" : "Flag for Later"}
+            <span className="hidden md:block">{isFlagged ? "Flagged" : "Flag for Later"}</span>
           </Button>
           <Button variant="outline" size="sm" onClick={onClearAnswer}>
             <RotateCcw className="mr-2 h-4 w-4" />
-            Clear Response
+            <span className="hidden md:block">Clear Response</span>
           </Button>
         </div>
         <Button onClick={onSaveAndNext} className="bg-primary text-primary-foreground hover:bg-primary/90">

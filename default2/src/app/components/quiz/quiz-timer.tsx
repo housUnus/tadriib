@@ -59,7 +59,7 @@ export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerP
           )}
         </Button>
         {isPaused && (
-          <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
+          <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400 hidden md:block">
             Paused
           </span>
         )}

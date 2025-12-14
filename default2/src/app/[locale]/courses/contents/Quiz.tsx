@@ -140,8 +140,8 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
         {/* Mobile overlay layout */}
         <div className="lg:hidden h-full flex flex-col">
           {/* Main content always full width on mobile */}
-          <ScrollArea className="flex-1">
-            <div className="p-4">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            <div className="p-4 min-w-0 w-full">
               <QuestionDisplay
                 question={currentQuestion}
                 selectedAnswer={state.answers[currentQuestion.id]}
@@ -153,7 +153,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
                 onSaveAndNext={saveAndNext}
               />
             </div>
-          </ScrollArea>
+          </div>
 
           {/* Left sidebar overlay */}
           {leftSidebarOpen && (

@@ -20,7 +20,7 @@ export function SidebarExpandButton({ side, onClick }: SidebarExpandButtonProps)
         onClick={onClick}
         className={cn(
           "h-10 w-8 border bg-card shadow-md transition-all hover:w-10 hover:bg-accent",
-          isLeft ? "rounded-l-none rounded-r-lg border-l-0" : "rounded-l-lg rounded-r-none border-r-0",
+          isLeft ? "rounded-l-none rounded-r-lg border-l-0 text-primary" : "rounded-l-lg rounded-r-none border-r-0 text-primary",
         )}
         title={isLeft ? "Show questions panel" : "Show overview panel"}
       >

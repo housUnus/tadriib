@@ -27,7 +27,7 @@ export function QuizHeader({ testName, sectionName, stats, onExit, onSubmit }: Q
 
   return (
     <header className="border-b bg-card">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:items-center">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:items-center px-3">
         {/* Left section with breadcrumb */}
         <div className="flex items-center justify-between col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 text-sm font-medium">
@@ -37,20 +37,20 @@ export function QuizHeader({ testName, sectionName, stats, onExit, onSubmit }: Q
           </div>
         </div>
           {/* Center section with timer and calculator */}
-          <div className="md:col-start-2 flex justify-center">
-            <div className="flex items-center gap-2 rounded-lg border bg-background px-3 py-1.5">
-              <Clock className="h-4 w-4 text-muted-foreground" />
+          <div className="md:col-start-2 flex justify-center mx-3">
+            <div className="flex items-center gap-2 rounded-lg border bg-background px-2 py-1.5">
+              <Clock className="h-4 w-4 text-muted-foreground hidden md:block" />
               <QuizTimer compact />
             </div>
           </div>
-        <div className="flex justify-center md:justify-end items-center">
+        <div className="flex justify-end items-center">
           <CalculatorDialog variant="icon" />
           <ExitDialog stats={stats} onConfirmExit={onExit || (() => { })} />
           <ReviewSubmitDialog stats={stats} onSubmit={onSubmit} />
         </div>
       </div>
 
-      <div className="px-4 pb-2 pt-2">
+      <div className="px-3 pb-2 pt-2">
         <div className="flex items-center gap-3">
           <Progress value={progress} className="h-2 flex-1" />
           <span className="text-xs font-medium text-muted-foreground">
