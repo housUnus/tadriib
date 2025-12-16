@@ -43,7 +43,7 @@ export function QuizHeader({ testName, sectionName, stats, onExit, onSubmit }: Q
               <QuizTimer compact />
             </div>
           </div>
-        <div className="flex justify-end items-center">
+        <div className="flex justify-end items-center md:gap-2">
           <CalculatorDialog variant="icon" />
           <ExitDialog stats={stats} onConfirmExit={onExit || (() => { })} />
           <ReviewSubmitDialog stats={stats} onSubmit={onSubmit} />

@@ -8,18 +8,26 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import CourseCard from "../CourseCard/index";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
 
 export default function _Carousel({
   items,
   Component = CourseCard,
-  contentClassName = "-ml-2 md:-ml-4 lg:-ml-0 py-4",
-  ItemClassName = "basis-[80%] md:basis-[33%] lg:basis-1/4 md:pl-4 lg:pl-2 pl-4",
+  contentClassName = "-ml-2 md:-ml-0 py-4",
+  ItemClassName = "basis-[80%] md:basis-80 pl-4 md:pl-4",
 }) {
   return (
     <Carousel
       className="w-full"
-      
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+      plugins={[
+        Autoplay({
+          delay: 5000,
+        }),
+      ]}
     >
       <CarouselContent className={contentClassName}>
         {items?.map((item, index) => (

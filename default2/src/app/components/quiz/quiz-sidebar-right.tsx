@@ -27,7 +27,7 @@ export function QuizSidebarRight({ stats, fontSize, onFontSizeChange, onCollapse
       <div className="flex shrink-0 items-center justify-between border-b px-4 py-2">
         <span className="text-sm font-medium">Overview</span>
         <Button variant="ghost" size="icon" onClick={onCollapse} className="h-7 w-7" title="Hide info panel">
-          <PanelRightClose className="h-4 w-4" />
+          <PanelRightClose className="h-4 w-4 rtl:rotate-180" />
         </Button>
       </div>
 

@@ -37,7 +37,7 @@ export function QuizSidebarLeft({
       <div className="flex shrink-0 items-center justify-between border-b px-4 py-2">
         <span className="text-sm font-medium">Questions</span>
         <Button variant="ghost" size="icon" onClick={onCollapse} className="h-7 w-7" title="Hide questions panel">
-          <PanelLeftClose className="h-4 w-4" />
+          <PanelLeftClose className="h-4 w-4 rtl:rotate-180" />
         </Button>
       </div>
 

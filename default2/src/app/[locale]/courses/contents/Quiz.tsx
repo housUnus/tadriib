@@ -64,7 +64,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
 
 
   return (
-    <div className="flex h-screen flex-col bg-background">
+    <div className="flex h-full flex-col bg-background">
       <QuizHeader
         testName="AFCAT Test Series 2023 I"
         sectionName="Reasoning"
