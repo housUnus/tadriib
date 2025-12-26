@@ -6,25 +6,8 @@ PASS:A@12Bcdef
 
 
 SSL CERTIFICATE:
-1. First-time certificate issuance (ONE TIME)
-    docker compose up -d nginx
-
-2. Then:
-
-docker compose run --rm certbot certonly \
---webroot \
---webroot-path=/var/www/certbot \
---email ton.2014.har.com \
---agree-tos \
---no-eff-email \
---force-renewal \
--d ruwadacademy.com \
--d www.ruwadacademy.com
-
-
-3. Then reload Nginx:
-
-    docker compose restart nginx
+1. Disable ssl block and keep only http until certificate is obtained with certbot-init
+2. then uncomment and run again
 
 
 
