@@ -14,11 +14,11 @@ SSL CERTIFICATE:
 docker compose run --rm certbot certonly \
 --webroot \
 --webroot-path=/var/www/certbot \
---email {ton.2014.har.com} \
+--email ton.2014.har.com \
 --agree-tos \
 --no-eff-email \
--d {ruwadacademy.com} \
--d {www.ruwadacademy.com}
+-d ruwadacademy.com \
+-d www.ruwadacademy.com
 
 
 3. Then reload Nginx:
