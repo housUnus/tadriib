@@ -8,6 +8,8 @@ PASS:A@12Bcdef
 SSL CERTIFICATE:
 1. Disable ssl block and keep only http until certificate is obtained with certbot-init
 2. then uncomment and run again
-
+    > docker compose --profile init run --rm certbot-init
+    Only runs the certbot-init service. 
+    --rm ensures the container is removed after it finishes.
 
 
