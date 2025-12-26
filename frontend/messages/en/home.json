@@ -1,0 +1,156 @@
+{
+  "hero1": "Become an Expert In",
+  "rotatingWords": [
+    "Accounting",
+    "Human Resources",
+    "Finance",
+    "Project Management",
+    "IT & Cloud",
+    "Cybersecurity",
+    "Business Analysis",
+    "Safety & Security"
+  ],
+  "description": "Get ready for globally recognized certifications with detailed guides, study plans, and expert-approved preparation.",
+  "learners": "learners used our platform",
+  "getStarted": "Get Started",
+  "browseCourses": "Browse Courses",
+  "subscribers": "subscribers",
+  "professionalCertificates": "Professional Certificates",
+  "obtainGloballyRecognized": "Obtain Globally Recognized",
+  "viewAllCertificates": "View all certificates",
+  "exploreCertificates": "Explore all our professional certifications and find the right path for your career.",
+  "ourTrainingCenter": "Our training center has been offering a distinguished range of qualifying courses for local and international professional certifications in various fields.",
+  "EearnCertifications": "Earn certifications that advance your career.",
+  "GetGuidance": "Get clear guidance and structured support to prepare for top certifications and fellowship programs.",
+  "explorePaths": "Explore Paths",
+  "feature": {
+    "certificationPrep": {
+      "title": "Certification Prep",
+      "subtitle": "Guidance to pass recognized professional exams."
+    },
+    "fellowshipSupport": {
+      "title": "Fellowship Support",
+      "subtitle": "Steps and mentorship to qualify for fellowships."
+    },
+    "skillTracks": {
+      "title": "Skill Tracks",
+      "subtitle": "Clear learning paths to improve your expertise."
+    },
+    "access247": {
+      "title": "24/7 Access",
+      "subtitle": "Learn at your own pace, anytime and anywhere you want."
+    }
+  },
+  "buildProfessionalCareer": "Building a professional career has never been easier",
+  "states": {
+    "certifications": "Certifications",
+    "courses": "Courses",
+    "students": "Students",
+    "success": "Success",
+    "successStories": "Success Stories"
+  },
+  "browseAllCertificates": "BROWSE ALL CERTIFICATES",
+  "browseAllCourses": "BROWSE ALL COURSES",
+  "featuredCourses": "Featured Courses",
+  "challengeYourselfWithExpertly": "Challenge yourself with expertly crafted assessments designed to validate and enhance your skills",
+  "viewAllQuizzes": "View All Quizzes",
+  "more": "More",
+  "free": "free",
+  "mostTaken": "Most Taken",
+  "students": "students",
+  "sar": "SAR",
+  "details": "Details",
+  "buyNow": "Buy Now",
+  "findTheTrainingPath": "Find the training path that fits your goals across a wide range of professional fields",
+  "exploreCategories": "Explore Categories",
+  "categories": {
+    "management": {
+      "title": "Management & Leadership"
+    },
+    "realEstate": {
+      "title": "Real Estate"
+    },
+    "dataManagement": {
+      "title": "Data Management & Business Intelligence"
+    },
+    "accounting": {
+      "title": "Accounting & Finance"
+    },
+    "skillsDevelopment": {
+      "title": "Skills Development"
+    },
+    "safety": {
+      "title": "Safety & Security"
+    },
+    "humanResources": {
+      "title": "Human Resources"
+    },
+    "islamicFinance": {
+      "title": "Islamic Finance & Banking"
+    },
+    "media": {
+      "title": "Media & Public Relations"
+    },
+    "projectManagement": {
+      "title": "Project Management"
+    },
+    "publicSector": {
+      "title": "Public Sector & Government Affairs"
+    },
+    "audit": {
+      "title": "Audit, Governance & Compliance"
+    },
+    "engineering": {
+      "title": "Engineering & Maintenance"
+    },
+    "insurance": {
+      "title": "Insurance"
+    },
+    "languages": {
+      "title": "Languages"
+    },
+    "environment": {
+      "title": "Environment & Sustainability"
+    },
+    "quality": {
+      "title": "Quality & Productivity"
+    },
+    "it": {
+      "title": "Information Technology"
+    },
+    "supplyChain": {
+      "title": "Warehousing, Procurement & Supply Chain"
+    },
+    "innovation": {
+      "title": "Innovation & Digital Transformation"
+    },
+    "ai": {
+      "title": "Artificial Intelligence"
+    }
+  },
+  "wordsFromCustomers": "Words from customers.",
+  "discoverHowPeopleFromAll": "Discover how people from all walks of life are gaining new skills and achieving their goals with our platform.",
+  "advanceYourCareer": "Advance your career with globally recognized professional certifications.",
+  "joinThousandsOfProfessionals": "Join thousands of professionals who have transformed their careers with our expert-led certification programs.",
+  "startTeaching": "Start Teaching",
+  "followUs": "Follow us",
+  "allRightsReservedTo": "All rights reserved to",
+  "company": "Company",
+  "legalLinks": {
+    "aboutUs": "About us",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "helpCenter": "Help Center",
+    "contactSupport": "Contact Support",
+    "blog": "Blog",
+    "forBusiness": "For Business"
+  },
+  "lang": {
+    "english": "English",
+    "arabic": "Arabic",
+    "french": "French"
+  },
+  "login": "Login",
+  "certifications": "Certifications"
+}
