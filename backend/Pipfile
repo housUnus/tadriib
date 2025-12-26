@@ -7,11 +7,18 @@ name = "pypi"
 django = "5.2.9"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
-django-allauth = "*"
+django-allauth = "65.2.0"
 djoser = "*"
 django-cors-headers = "*"
 drf-yasg = "*"
 drf-spectacular = "*"
+dj-rest-auth = {extras = ["with_social"], version = "*"}
+django-rest-auth = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
+django-storages = "*"
+boto3 = "*"
+gunicorn = "*"
 
 [dev-packages]
 

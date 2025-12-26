@@ -1,8 +1,9 @@
 {
+  "python.analysis.typeCheckingMode": "basic",
   "i18n-ally.enabled": true,
 
   "i18n-ally.localesPaths": [
-    "default2/messages",
+    "frontend/messages",
   ],
 
   "i18n-ally.namespace": true,
