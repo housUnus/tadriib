@@ -70,15 +70,8 @@ services:
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
-    command: >
-        certbot certonly
-        --webroot
-        --webroot-path=/var/www/certbot
-        --email user@email.com
-        --agree-tos
-        --no-eff-email
-        -d mydomain.com
-        -d www.mydomain.com
+    entrypoint: "/bin/sh -c 'certbot certonly --webroot --webroot-path=/var/www/certbot --email ton.2014.har@gmail.com --agree-tos --no-eff-email --force-renewal -d ruwadacademy.com -d www.ruwadacademy.com'"
+
 volumes:
   postgres_data:
   static_volume :
