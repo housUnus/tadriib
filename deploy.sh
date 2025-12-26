@@ -3,6 +3,7 @@ set -e  # Stop on errors
 
 echo "==> Pulling latest code"
 git pull
+# chmod +x deploy.sh
 
 echo "==> Building images"
 docker compose build
