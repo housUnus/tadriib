@@ -1,4 +1,29 @@
+Test user
 email: unus@unus.com
 password: unus1123
 
 PASS:A@12Bcdef
+
+
+SSL CERTIFICATE:
+1. First-time certificate issuance (ONE TIME)
+    docker compose up -d nginx
+
+2. Then:
+
+    docker compose run --rm certbot certonly \
+    --webroot \
+    --webroot-path=/var/www/certbot \
+    --email {you@example.com} \
+    --agree-tos \
+    --no-eff-email \
+    -d {mydomain.com} \
+    -d {www.mydomain.com}
+
+
+3. Then reload Nginx:
+
+    docker compose restart nginx
+
+
+
