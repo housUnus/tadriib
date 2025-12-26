@@ -50,6 +50,7 @@ services:
     depends_on:
       - backend
       - frontend
+      - certbot
 
   certbot:
     image: certbot/certbot:latest
@@ -63,7 +64,21 @@ services:
         certbot renew --webroot -w /var/www/certbot;
         sleep 12h;
       done"
-
+  certbot-init:
+    image: certbot/certbot:latest
+    container_name: certbot-init
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    command: >
+        certbot certonly
+        --webroot
+        --webroot-path=/var/www/certbot
+        --email user@email.com
+        --agree-tos
+        --no-eff-email
+        -d mydomain.com
+        -d www.mydomain.com
 volumes:
   postgres_data:
   static_volume :
