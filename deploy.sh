@@ -1,19 +1,23 @@
 #!/bin/bash
-set -e  # Stop on errors
+set -e
 
-echo "==> Pulling latest code"
 git pull
-
-echo "==> Building images"
 docker compose build
 
-echo "==> Running database migrations"
-docker compose run --rm backend python manage.py migrate
+# Wait for DB to be ready
+echo "==> Waiting for database..."
+docker compose run --rm backend sh -c '
+  until nc -z db 5432; do
+    echo "Waiting for db..."
+    sleep 1
+  done
+'
 
-echo "==> Collecting static files"
+# Run migrations and collect static files
+docker compose run --rm backend python manage.py migrate
 docker compose run --rm backend python manage.py collectstatic --noinput
 
-echo "==> Updating containers"
+# Restart containers
 docker compose up -d --remove-orphans
 
-echo "==> Deployment completed successfully!"
+echo "==> Deployment completed!"
