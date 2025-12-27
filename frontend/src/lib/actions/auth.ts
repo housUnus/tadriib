@@ -36,7 +36,7 @@ export async function register(payload: RegisterInput) {
 
     const client = await useServerFetch();
 
-    const { data, error } = await client.post("/auth/register/", parsed.data);
+    const { data, error } = await client.post("/dj-auth/register/", parsed.data);
     if (error) {
         return { success: false, error };
     }
