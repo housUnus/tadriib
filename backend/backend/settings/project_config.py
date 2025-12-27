@@ -15,8 +15,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("ALLOWED_HOSTS", "").split(",")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
-
+CSRF_TRUSTED_ORIGINS = [
+    f"{FRONTEND_URL}",
+]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
