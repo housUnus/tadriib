@@ -6,4 +6,5 @@ export const authConfig = {
     maxAge: BACKEND_ACCESS_TOKEN_LIFETIME, // 1 Day
    },
    providers: [],
+   trustHost: true,
   }
