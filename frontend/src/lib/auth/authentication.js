@@ -1,11 +1,9 @@
-import { authConfig } from "@/auth.config";
-import NextAuth from "next-auth";
 import { jwtDecode } from "jwt-decode";
 
 
 export async function get_me(access_token) {
   const response = await fetch(
-    `${process.env.API_SERVER_BASE_URL}/auth/user`,
+    `${process.env.API_SERVER_BASE_URL}/dj-auth/user`,
     {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -17,9 +15,8 @@ export async function get_me(access_token) {
 }
 
 export async function refreshAccessToken(token) {
-  console.log("🚀 ~ refreshAccessToken ~ token:", token)
   const response = await fetch(
-    `${process.env.API_SERVER_BASE_URL}/auth/token/refresh/`,
+    `${process.env.API_SERVER_BASE_URL}/dj-auth/token/refresh/`,
     {
       method: "POST",
       body: JSON.stringify({
