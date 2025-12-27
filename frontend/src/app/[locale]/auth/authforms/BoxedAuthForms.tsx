@@ -76,7 +76,7 @@ const BoxedAuthLogin = () => {
           className="rounded-md w-full bg-primary hover:bg-primaryemphasis"
           control={control}
         >
-          Sign Up
+          Sign In
         </SubmitButton>
       </form>
     </>

@@ -12,4 +12,5 @@ SSL CERTIFICATE:
     Only runs the certbot-init service. 
     --rm ensures the container is removed after it finishes.
 
-
+Create Super User
+docker exec -it backend python manage.py createsuperuser

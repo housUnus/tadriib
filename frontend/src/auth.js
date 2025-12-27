@@ -134,6 +134,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   pages: {
-    // signIn: "/auth/main/login", // CUSTOM SIGN IN PAGE
+    signIn: "/auth/main/login", // CUSTOM SIGN IN PAGE
   },
 });
