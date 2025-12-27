@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 export async function get_me(access_token) {
   const response = await fetch(
-    `${process.env.API_SERVER_BASE_URL}/dj-auth/user`,
+    `${process.env.AUTH_SERVER_BASE_URL}/dj-auth/user`,
     {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -16,7 +16,7 @@ export async function get_me(access_token) {
 
 export async function refreshAccessToken(token) {
   const response = await fetch(
-    `${process.env.API_SERVER_BASE_URL}/dj-auth/token/refresh/`,
+    `${process.env.AUTH_SERVER_BASE_URL}/dj-auth/token/refresh/`,
     {
       method: "POST",
       body: JSON.stringify({

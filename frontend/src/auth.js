@@ -12,7 +12,7 @@ const SIGN_IN_HANDLERS = {
   google: async (user, account, profile, email, credentials) => {
     try {
       const response = await fetch(
-        process.env.API_SERVER_BASE_URL + "/dj-auth/google/",
+        process.env.AUTH_SERVER_BASE_URL + "/dj-auth/google/",
         {
           method: "POST",
           body: JSON.stringify({
@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (credentials === null) return null;
         try {
           const res = await fetch(
-            `${process.env.API_SERVER_BASE_URL}/dj-auth/login/`,
+            `${process.env.AUTH_SERVER_BASE_URL}/dj-auth/login/`,
             {
               method: "POST",
               body: JSON.stringify({
