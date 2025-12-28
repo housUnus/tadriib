@@ -57,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           );
           if (res.ok) {
             const token = await res.json();
+            console.log('token', token)
             return {
               ...token,
               expiry: {
@@ -69,6 +70,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           console.log("🚀 ~ error:", error);
           // console.error(error);
         }
+        console.log('returning null')
         return null;
       },
     }),
@@ -86,6 +88,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
+      console.log('in signing provider', SIGN_IN_PROVIDERS)
+      console.log('account provider', account.provider)
       if (!SIGN_IN_PROVIDERS.includes(account.provider)) return false;
       return SIGN_IN_HANDLERS[account.provider](
         user,
@@ -96,6 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       );
     },
     jwt: async ({ user, token, account }) => {
+      console.log('jwt', user, token, account)
       if (account && user) {
         let backendResponse =
           account.provider === "credentials" ? user : account.meta;
