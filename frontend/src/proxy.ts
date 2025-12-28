@@ -33,10 +33,8 @@ async function authMiddleware (request: NextRequest) {
     secret: process.env.AUTH_SECRET,
     secureCookie: process.env.NODE_ENV === "production",
   }) as AppJWT | null;
-  console.log("🚀 ~ authMiddleware ~ session:", session)
 
   const isAuthenticated = !!session?.access_token;
-  console.log("🚀 ~ authMiddleware ~ isAuthenticated:", isAuthenticated)
 
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
@@ -92,12 +90,10 @@ const middleware = (request: NextRequest) => {
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
 
-  console.log("🚀 ~ middleware ~ isAuthRoute:", isAuthRoute)
   if (isAuthRoute) {
     return (authMiddleware as any)(request)
   }
 
-  console.log("🚀 ~ middleware ~ isPublicRoute:", isPublicRoute)
   if (isPublicRoute) {
     return intlMiddleware(request)
   } else {

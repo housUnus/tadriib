@@ -70,7 +70,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           console.log("🚀 ~ error:", error);
           // console.error(error);
         }
-        console.log('returning null')
         return null;
       },
     }),
@@ -88,8 +87,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log('in signing provider', SIGN_IN_PROVIDERS)
-      console.log('account provider', account.provider)
       if (!SIGN_IN_PROVIDERS.includes(account.provider)) return false;
       return SIGN_IN_HANDLERS[account.provider](
         user,
@@ -104,7 +101,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account && user) {
         let backendResponse =
           account.provider === "credentials" ? user : account.meta;
-        console.log("🚀 ~ backendResponse:", backendResponse)
+        console.log("🚀 ~ :", backendResponse)
         return {
           ...token,
           access_token: backendResponse.access,
@@ -117,13 +114,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       // Token is still valid
       if (token.expiry.access > Date.now()) {
-        console.log("🚀 ~ token:", token)
         return token;
       }
 
       // Token is not valid && refresh token is still valid
       if (token.expiry.refresh > Date.now()) {
-        console.log("🚀 ~ new_token:", new_token)
         const new_token = await refreshAccessToken(token);
         return new_token;
       }
@@ -132,8 +127,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return { ...token, error: "RefreshTokenExpired" };
     },
     session: async ({ session, token }) => {
-      console.log("🚀 ~ token:", token)
-      console.log("🚀 ~ session:", session)
       if (token) {
         session.access_token = token.access_token;
         session.user = token.user;
