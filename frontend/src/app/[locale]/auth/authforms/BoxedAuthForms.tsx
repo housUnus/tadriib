@@ -12,7 +12,7 @@ import SubmitButton from "@/components/common/forms/generic/SubmitButton";
 
 const BoxedAuthLogin = () => {
   const router = useRouter();
-  const { control, handleSubmit, setError, formState: { errors, isSubmitting, isValid, isDirty } } = useForm<LoginInput>({
+  const { control, handleSubmit, setError, formState: { errors } } = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -24,6 +24,7 @@ const BoxedAuthLogin = () => {
 
   const onSubmit = async (data: LoginInput) => {
     const result = await login(data);
+    console.log("🚀 ~ onSubmit ~ result:", result)
 
     if (result?.error) {
       setError("root", {

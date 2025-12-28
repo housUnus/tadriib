@@ -128,6 +128,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return { ...token, error: "RefreshTokenExpired" };
     },
     session: async ({ session, token }) => {
+      console.log("🚀 ~ token:", token)
+      console.log("🚀 ~ session:", session)
       if (token) {
         session.access_token = token.access_token;
         session.user = token.user;

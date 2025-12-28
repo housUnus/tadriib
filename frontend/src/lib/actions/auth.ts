@@ -11,6 +11,7 @@ export async function login(data:{email:string, password:string}) {
             password: data.password,
             redirect: false
         });
+        console.log("🚀 ~ login ~ res:", res)
     } catch (error: unknown) {
         if (typeof error === "object" && error && "type" in error) {
             if (
