@@ -104,6 +104,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account && user) {
         let backendResponse =
           account.provider === "credentials" ? user : account.meta;
+        console.log("🚀 ~ backendResponse:", backendResponse)
         return {
           ...token,
           access_token: backendResponse.access,
@@ -113,13 +114,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       }
 
+
       // Token is still valid
       if (token.expiry.access > Date.now()) {
+        console.log("🚀 ~ token:", token)
         return token;
       }
 
       // Token is not valid && refresh token is still valid
       if (token.expiry.refresh > Date.now()) {
+        console.log("🚀 ~ new_token:", new_token)
         const new_token = await refreshAccessToken(token);
         return new_token;
       }

@@ -88,10 +88,12 @@ const middleware = (request: NextRequest) => {
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
 
+  console.log("🚀 ~ middleware ~ isAuthRoute:", isAuthRoute)
   if (isAuthRoute) {
     return (authMiddleware as any)(request)
   }
 
+  console.log("🚀 ~ middleware ~ isPublicRoute:", isPublicRoute)
   if (isPublicRoute) {
     return intlMiddleware(request)
   } else {
