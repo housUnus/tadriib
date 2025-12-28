@@ -8,8 +8,8 @@ urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
     path('api/v1/dj-auth/', include('authentication.urls')),
     path('api/v1/users', include('users.urls')),
-    path('api/v1/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/v1/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/v1/dj-auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/dj-auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # path('accounts/', include('allauth.urls')),
 ]
 

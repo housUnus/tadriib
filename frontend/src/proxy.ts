@@ -31,8 +31,10 @@ async function authMiddleware (request: NextRequest) {
     req: request,
     secret: process.env.AUTH_SECRET,
   }) as AppJWT | null;
+  console.log("🚀 ~ authMiddleware ~ session:", session)
 
   const isAuthenticated = !!session?.access_token;
+  console.log("🚀 ~ authMiddleware ~ isAuthenticated:", isAuthenticated)
 
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
