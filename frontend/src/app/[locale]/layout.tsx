@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { ReactQueryProvider } from "@/hooks/react-query-provider";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-    const { locale } = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -48,7 +49,9 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <CustomizerContextProvider>
-              {children}
+              <ReactQueryProvider>
+                {children}
+              </ReactQueryProvider>
             </CustomizerContextProvider>
             <Toaster />
           </ThemeProvider>

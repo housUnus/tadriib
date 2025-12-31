@@ -23,7 +23,7 @@ const FrontNav = [
   },
   {
     menu: "Dashboard",
-    link: "/",
+    link: "/dashboards/dashboard1",
     badge: false,
   },
   {

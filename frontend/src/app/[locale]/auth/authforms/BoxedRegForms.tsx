@@ -52,7 +52,7 @@ const BoxedAuthRegister = () => {
 
   return (
     <>
-      <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
+      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
         {/* First Name + Last Name */}
         <div className="mb-4 flex gap-4">
           <div className="flex-1">

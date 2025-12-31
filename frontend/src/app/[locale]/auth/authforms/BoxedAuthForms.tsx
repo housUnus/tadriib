@@ -3,7 +3,6 @@ import Link from "next/link";
 import { login } from "@/lib/actions/auth";
 import { useForm } from "react-hook-form";
 import InputField from "@/components/common/forms/generic/InputField";
-import LoadingButton from "@/components/common/forms/generic/LoadingButton";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { loginSchema, LoginInput } from "@/schemas/auth";
@@ -24,7 +23,6 @@ const BoxedAuthLogin = () => {
 
   const onSubmit = async (data: LoginInput) => {
     const result = await login(data);
-    console.log("🚀 ~ onSubmit ~ result:", result)
 
     if (result?.error) {
       setError("root", {
@@ -41,7 +39,7 @@ const BoxedAuthLogin = () => {
 
   return (
     <>
-      <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
+      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
         {errors.root &&
           <div className="mb-2">
             <Alert variant="lighterror">

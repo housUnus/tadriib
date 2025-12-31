@@ -15,13 +15,13 @@ const BoxedRegister = () => {
   return (
     <>
       <div className="relative min-h-screen flex flex-col justify-center bg-cover bg-center bg-[url('/images/backgrounds/login-bg.jpg')]">
-        <div className="flex h-full justify-center items-center px-4">
+        <div className="flex h-full justify-center items-center px-4 py-6">
           <CardBox className="xl:max-w-6xl lg:max-w-3xl md:max-w-xl w-full border-none p-0">
             <div className="grid grid-cols-12">
               <div className="xl:col-span-6 col-span-12 px-8 xl:border-e border-ld">
-                <div className="md:py-14 py-8 lg:px-6">
+                <div className="md:py-10 py-6 lg:px-6">
                   <Logo />
-                  <h3 className="md:text-34 text-2xl md:my-8 my-5">
+                  <h3 className="md:text-34 text-2xl md:my-4 my-3">
                     Let's get you signed up
                   </h3>
                   <BoxedSocialButtons title="Or sign up with email" />

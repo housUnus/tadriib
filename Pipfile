@@ -4,10 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django-storages = "*"
-boto3 = "*"
+django-filer = "*"
+django-unfold = "*"
+django-import-export = "*"
+django-sql-explorer = "*"
+easy-thumbnails = "*"
+django-simple-history = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.14"

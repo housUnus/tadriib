@@ -17,7 +17,7 @@ const BoxedSocialButtons: React.FC<MyAppProps> = ({ title }) => {
 
   return (
     <>
-      <div className="flex justify-between gap-8 mb-6 md:mt-10 mt-5">
+      <div className="flex justify-between gap-8 mb-4 md:mt-8 mt-3">
         {/* <Link
           href={"/"}
           className="px-4 py-3 shadow-tw border border-ld flex gap-2 items-enter w-full rounded-md text-center justify-center text-ld hover:bg-sky hover:text-white dark:text-white dark:hover:bg-sky font-semibold"

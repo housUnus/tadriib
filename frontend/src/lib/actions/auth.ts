@@ -3,6 +3,7 @@
 import { signIn, signOut } from "@/auth";
 import { useServerFetch } from "../../hooks/auth/user-server-fetch";
 import { registerSchema, RegisterInput } from "@/schemas/auth";
+import { redirect } from "next/navigation";
 
 export async function login(data:{email:string, password:string}) {
     try {
@@ -11,7 +12,6 @@ export async function login(data:{email:string, password:string}) {
             password: data.password,
             redirect: false
         });
-        console.log("🚀 ~ login ~ res:", res)
     } catch (error: unknown) {
         if (typeof error === "object" && error && "type" in error) {
             if (
@@ -43,4 +43,10 @@ export async function register(payload: RegisterInput) {
     }
 
     return { success: true, error: null };
+}
+
+
+export async function logoutAction() {
+  await signOut({ redirect: false });
+  redirect("/auth/main/login");
 }

@@ -1,6 +1,5 @@
-import { Icon } from "@iconify/react";
-
 import React, { useContext } from "react";
+import { Icon } from "@iconify/react";
 import * as profileData from "./Data";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,14 +11,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CustomizerContext } from "@/app/context/CustomizerContext";
+import { logoutAction } from "@/lib/actions/auth";
+import { ActionButton } from "@/components/common/forms/generic/action-button";
+
 
 const Profile = () => {
-  const { activeDir } = useContext(CustomizerContext);
 
   return (
     <div className="relative group/menu">
-      <DropdownMenu dir={activeDir === "rtl" ? "rtl" : "ltr"}>
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <span className="h-10 w-10 hover:text-primary hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">
             <Image
@@ -66,7 +66,7 @@ const Profile = () => {
               <DropdownMenuItem
                 key={index}
                 asChild
-                className="px-6 py-3 flex justify-between items-center bg-hover group/link w-full cursor-pointer "
+                className="px-6 py-2 flex justify-between items-center bg-hover group/link w-full cursor-pointer "
               >
                 <Link href={items.url} className="flex items-center w-full">
                   <div className="flex items-center w-full">
@@ -97,11 +97,12 @@ const Profile = () => {
 
           {/* Logout Button */}
 
-          <div className="pt-6 px-6">
-            <Button color="primary" className="w-full rounded-full">
-              <Link href="/auth/auth1/login"> Logout</Link>
-            </Button>
+          <div className="pt-4 px-6">
+            <ActionButton action={logoutAction} className="w-full rounded-full">
+              Logout
+            </ActionButton>
           </div>
+
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
