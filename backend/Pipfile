@@ -20,6 +20,7 @@ django-storages = "*"
 boto3 = "*"
 gunicorn = "*"
 pillow = "*"
+django-guardian = "*"
 
 [dev-packages]
 
