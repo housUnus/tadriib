@@ -22,6 +22,7 @@ gunicorn = "*"
 pillow = "*"
 django-guardian = "*"
 django-unfold = "*"
+django-simple-history = "*"
 
 [dev-packages]
 
