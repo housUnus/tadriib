@@ -21,7 +21,11 @@ boto3 = "*"
 gunicorn = "*"
 pillow = "*"
 django-guardian = "*"
+django-filer = "*"
 django-unfold = "*"
+django-import-export = "*"
+django-sql-explorer = "*"
+easy-thumbnails = "*"
 django-simple-history = "*"
 
 [dev-packages]
