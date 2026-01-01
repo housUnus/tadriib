@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
+from core.constants import RolesTypes
 
 # ----------------------------
 # Custom User
@@ -25,14 +26,14 @@ class User(AbstractUser):
 # Role
 # ----------------------------
 class Role(models.Model):
-    name = models.CharField(_("Role name"), max_length=50, unique=True)
+    type = models.CharField(_("Role name"), max_length=50, choices=RolesTypes, default=RolesTypes.STUDENT)
     
     class Meta:
         verbose_name = _("Role")
         verbose_name_plural = _("Roles")
     
     def __str__(self):
-        return self.name
+        return self.type
 
 # ----------------------------
 # Profile

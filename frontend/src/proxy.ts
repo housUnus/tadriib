@@ -27,7 +27,6 @@ async function authMiddleware (request: NextRequest) {
   const { nextUrl } = request;
   const pathname = nextUrl.pathname.replace(/^\/(en|ar)(?=\/|$)/, '');
   
-  console.log("🚀 ~ authMiddleware ~ request:", process.env.NODE_ENV === "production")
   const session = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,

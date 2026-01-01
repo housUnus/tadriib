@@ -33,3 +33,4 @@ else:
     STATIC_ROOT = BASE_DIR / "staticfiles"
     MEDIA_ROOT = BASE_DIR / "mediafiles"
     STATIC_URL = 'static/'
+    MEDIA_URL = 'media/'

@@ -2,10 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Role, Profile
 from django.utils.translation import gettext_lazy as _
-from unfold.admin import ModelAdmin
+from unfold.admin import ModelAdmin, StackedInline
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(BaseUserAdmin, ModelAdmin):
     # Fields to display in the admin list
     list_display = ('email', 'phone_number', 'country', 'is_active', 'is_staff', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'profile__roles')
@@ -33,22 +33,22 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(Role)
 class RoleAdmin(ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    list_display = ('type',)
+    search_fields = ('type',)
     
 
-class ProfileInline(admin.StackedInline):
+class ProfileInline(StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
 
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin, ModelAdmin):
     inlines = (ProfileInline,)
     list_display = ('email', 'is_staff', 'is_active', 'get_roles')
 
     def get_roles(self, obj):
-        return ", ".join([role.name for role in obj.profile.roles.all()])
+        return ", ".join([role.type for role in obj.profile.roles.all()])
     get_roles.short_description = 'Roles'
 
 admin.site.unregister(User)
