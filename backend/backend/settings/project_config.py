@@ -53,6 +53,15 @@ INSTALLED_APPS = [
     'simple_history',
     'import_export',
     'crispy_forms',
+    'django_filters',
+    
+    "health_check",  # required
+    "health_check.db",  # stock Django health checkers
+    "health_check.cache",
+    "health_check.storage",
+    "health_check.contrib.migrations",
+    "health_check.contrib.psutil",  # disk and memory utilization; requires psutil
+    "health_check.contrib.s3boto3_storage",  # requires boto3 and S3BotoStorage backend
     
     'authentication',
     'users'

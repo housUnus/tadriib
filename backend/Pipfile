@@ -27,6 +27,13 @@ django-simple-history = "*"
 django-shortcuts = "*"
 django-crispy-forms = "*"
 django-unfold = "*"
+django-filter = "*"
+pytest-django = "*"
+factory-boy = "*"
+pytest = "*"
+django-health-check = "*"
+psutil = "*"
+sentry-sdk = {extras = ["django"], version = "*"}
 
 [dev-packages]
 

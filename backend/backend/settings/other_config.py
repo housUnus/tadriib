@@ -1,3 +1,7 @@
+import os
+
+DEBUG = os.getenv("DEBUG") == "True"
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Your Project API',
     'DESCRIPTION': 'Your project description',
@@ -9,3 +13,18 @@ SPECTACULAR_SETTINGS = {
 # Crispy Unfold
 CRISPY_TEMPLATE_PACK = "unfold_crispy"
 CRISPY_ALLOWED_TEMPLATE_PACKS = ["unfold_crispy"]
+
+# Health Check
+HEALTH_CHECK = {
+    "DISK_USAGE_MAX": 90,  # percent
+    "MEMORY_MIN": 100,  # in MB
+}
+
+if not DEBUG:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn="https://993358fd253b2042c2118a56fc8baad6@o4509475196502016.ingest.de.sentry.io/4510640624566352",
+        # Add data like request headers and IP for users,
+        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        send_default_pii=True,
+    )

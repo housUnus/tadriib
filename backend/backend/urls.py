@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
+    path("api/v1/ht/", include("health_check.urls")),
     path('api/v1/dj-auth/', include('authentication.urls')),
     path('api/v1/users', include('users.urls')),
     path('api/v1/dj-auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
