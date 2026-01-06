@@ -154,5 +154,15 @@
   "login": "Login",
   "certifications": "Certifications",
   "logOut": "Log Out",
-  "signUp": "Sign Up"
+  "signUp": "Sign Up",
+  "redirecting": "Redirecting...",
+  "verifyingYourEmail": "Verifying your email...",
+  "emailVerifiedSuccessfully": "Email verified successfully",
+  "emailAlreadyVerified": "Email already verified",
+  "verificationLinkIsInvalidOrExpired": "Verification link is invalid or expired",
+  "pleaseVerifyYourEmail": "Please verify your email",
+  "youreAlmostThereWeSent": "You're almost there! We sent you an email to verify your account",
+  "linkIsInvalidOrDidntGetTheEmail": "Link is invalid or didn't get the email?",
+  "resendEmail": "Resend Email",
+  "justClickOnTheLinkInTheEmail": "Just click on the link in the email to complete the verification process."
 }
