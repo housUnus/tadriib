@@ -61,7 +61,6 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "html-to-image": "^1.11.13",
-    "i18next": "^23.12.2",
     "input-otp": "^1.4.2",
     "jspdf": "^4.0.0",
     "jwt-decode": "^4.0.0",
