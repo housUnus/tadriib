@@ -7,18 +7,14 @@ import {
   PUBLIC_ROUTES,
   AUTH_ROUTES,
   REDIRECT_AFTER_LOGIN,
-  DEFAULT_LOGIN_ROUTE
+  DEFAULT_LOGIN_ROUTE,
+  VERIFY_EMAIL_ROUTE,
+  AUTH_PREFIX,
 } from "@/lib/auth/routes";
 
 import { refreshAccessToken } from "@/lib/auth/authentication";
+import { AppJWT } from "./schemas/auth";
 
-interface AppJWT extends JWT {
-  access_token?: string
-  expiry?: {
-    access: number
-    refresh: number
-  }
-}
 
 const intlMiddleware = createIntlMiddleware(routing)
 
@@ -34,50 +30,56 @@ async function authMiddleware (request: NextRequest) {
   }) as AppJWT | null;
 
   const isAuthenticated = !!session?.access_token;
+  const isEmailVerified = !!session?.user?.email_verified;
 
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
-  const isAuthRoute = AUTH_ROUTES.includes(pathname);
-  let Response = null
+  const isAuthRoute = pathname.includes(AUTH_PREFIX);
+  const isEmailVerifyRoute = pathname === VERIFY_EMAIL_ROUTE;
 
   // Token & Refresh are expired 
-  if (!isPublicRoute && (session?.expiry?.access && Date.now() >= session.expiry.access)) {
-    const TokenIsExpired = isAuthenticated && Date.now() >= session.expiry.access
-    const RefreshIsExpired = isAuthenticated && Date.now() >= session.expiry.refresh && Date.now() >= session.expiry.access
+  // if (!isPublicRoute && (session?.expiry?.access && Date.now() >= session.expiry.access)) {
+  //   const TokenIsExpired = isAuthenticated && Date.now() >= session.expiry.access
+  //   const RefreshIsExpired = isAuthenticated && Date.now() >= session.expiry.refresh && Date.now() >= session.expiry.access
     
-    if (RefreshIsExpired && TokenIsExpired && isAuthRoute) {
-      return intlMiddleware(request)
-    }
+  //   if (RefreshIsExpired && TokenIsExpired && isAuthRoute) {
+  //     return intlMiddleware(request)
+  //   }
 
-    if (RefreshIsExpired) { 
-      // Create a response and the session cookies
-      const response = NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
-      response.cookies.set("authjs.csrf-token", "", { maxAge: 0 });
-      response.cookies.set("authjs.session-token", "", { maxAge: 0 });
-      return response;
-    }
+  //   if (RefreshIsExpired) { 
+  //     // Create a response and the session cookies
+  //     const response = NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
+  //     response.cookies.set("authjs.csrf-token", "", { maxAge: 0 });
+  //     response.cookies.set("authjs.session-token", "", { maxAge: 0 });
+  //     return response;
+  //   }
 
-    if (TokenIsExpired) { 
-      const secret = process.env.AUTH_SECRET
-      if (!secret) {
-        throw new Error("AUTH_SECRET is not defined")
-      }
-      // Create a response and the session cookies
-      const new_token = await refreshAccessToken(session);
-      const encoded_token = await encode({token:new_token, secret: secret, salt: "authjs.session-token",});
-      const response = intlMiddleware(request)
-      response.cookies.set("authjs.session-token", encoded_token);
-      return response;
-    }
+  //   if (TokenIsExpired) { 
+  //     const secret = process.env.AUTH_SECRET
+  //     if (!secret) {
+  //       throw new Error("AUTH_SECRET is not defined")
+  //     }
+  //     // Create a response and the session cookies
+  //     const new_token = await refreshAccessToken(session);
+  //     const encoded_token = await encode({token:new_token, secret: secret, salt: "authjs.session-token",});
+  //     const response = intlMiddleware(request)
+  //     response.cookies.set("authjs.session-token", encoded_token);
+  //     return response;
+  //   }
+  // }
+  
+  //   Redirect if it's an authentication url used by nextAuth 
+  if (isAuthenticated && !isEmailVerified && !isPublicRoute && !isEmailVerifyRoute) {
+    return NextResponse.redirect(new URL(VERIFY_EMAIL_ROUTE, nextUrl));
   }
 
-  //   Redirect if it's an authentication url used by nextAuth 
-  if (isAuthRoute && isAuthenticated) {
+  if (isAuthRoute && isAuthenticated && !isEmailVerifyRoute) {
     return NextResponse.redirect(new URL(REDIRECT_AFTER_LOGIN, nextUrl));
   }
 
   if(!isAuthenticated && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
   }
+
 
   return intlMiddleware(request);
 }

@@ -13,7 +13,7 @@ class GoogleLoginViewSet(SocialLoginView):
 
 def email_confirm_redirect(request, key):
     return HttpResponseRedirect(
-        f"{settings.EMAIL_CONFIRM_REDIRECT_BASE_URL}{key}/"
+        f"{settings.EMAIL_CONFIRM_REDIRECT_BASE_URL}?key={key}/"
     )
 
 

@@ -1,10 +1,15 @@
-export const API_AUTH_PREFIX = '/auth/main'
-export const DEFAULT_LOGIN_ROUTE = '/auth/main/login'
-export const DEFAULT_SIGNUP_ROUTE = '/auth/main/register'
-export const REDIRECT_AFTER_LOGIN = '/dashboards/dashboard1'
+export const API_AUTH_PREFIX = '/auth'
+export const DEFAULT_LOGIN_ROUTE = '/auth/login'
+export const DEFAULT_SIGNUP_ROUTE = '/auth/register'
+export const VERIFY_EMAIL_ROUTE = '/auth/verify-email'
+export const REDIRECT_AFTER_LOGIN = '/auth/verify-email'
+export const HOME_ROUTE = '/'
+export const AUTH_PREFIX = '/auth'
+export const ACCOUNT_ROUTE = '/dashboards/dashboard1'
 
 export const PUBLIC_ROUTES = [
-    REDIRECT_AFTER_LOGIN
+    HOME_ROUTE,
+    '',
 ]
 
 export const AUTH_ROUTES = [

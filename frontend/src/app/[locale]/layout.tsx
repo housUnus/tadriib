@@ -10,6 +10,8 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ReactQueryProvider } from "@/hooks/react-query-provider";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -24,12 +26,14 @@ export const metadata: Metadata = {
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const session = await auth();
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -50,7 +54,9 @@ export default async function LocaleLayout({
           >
             <CustomizerContextProvider>
               <ReactQueryProvider>
-                {children}
+                <SessionProvider session={session}>
+                  {children}
+                </SessionProvider>
               </ReactQueryProvider>
             </CustomizerContextProvider>
             <Toaster />

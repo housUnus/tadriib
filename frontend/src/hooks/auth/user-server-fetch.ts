@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-
 import type { Session as AuthSession } from 'next-auth';
 
 type SessionWithToken = AuthSession & {

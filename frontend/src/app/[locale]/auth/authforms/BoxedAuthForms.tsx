@@ -8,6 +8,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert"
 import { loginSchema, LoginInput } from "@/schemas/auth";
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import SubmitButton from "@/components/common/forms/generic/SubmitButton";
+import { ACCOUNT_ROUTE } from "@/lib/auth/routes";
 
 const BoxedAuthLogin = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const BoxedAuthLogin = () => {
       return
     }
 
-    router.push("/");
+    router.push(ACCOUNT_ROUTE);
 
   };
 
@@ -54,7 +55,7 @@ const BoxedAuthLogin = () => {
           </div>
           <div className="mb-4">
             <InputField name="password" type="password" placeholder="Password" control={control} label="Password" required />
-            <Link className="text-xs text-primary" href="/auth/main/forgot-password" >
+            <Link className="text-xs text-primary" href="/auth/forgot-password" >
               Forgot Password ?
             </Link>
           </div>

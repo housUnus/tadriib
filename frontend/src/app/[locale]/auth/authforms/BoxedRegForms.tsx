@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react"; // NOT your "@/auth"
 import LoadingButton from "@/components/common/forms/generic/LoadingButton";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import SubmitButton from "@/components/common/forms/generic/SubmitButton";
+import { ACCOUNT_ROUTE } from "@/lib/auth/routes";
 
 const BoxedAuthRegister = () => {
 
@@ -43,7 +44,7 @@ const BoxedAuthRegister = () => {
     }
 
     const loginResult = await signIn("credentials", {
-      redirectTo: "/",
+      redirectTo: ACCOUNT_ROUTE,
       email: data.email,
       password1: data.password1,
     });

@@ -1,3 +1,4 @@
+import { JWT } from "next-auth/jwt";
 import { z } from "zod";
 
 export const registerSchema = z.object({
@@ -21,3 +22,21 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+
+export interface AppJWT extends JWT {
+  access_token?: string
+  expiry?: {
+    access: number
+    refresh: number
+  },
+  user: {
+    id: number
+    email: string
+    first_name: string
+    last_name: string
+    roles: string[]
+    email_verified: boolean
+    active_role: string
+  }
+}

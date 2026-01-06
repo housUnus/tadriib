@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from '@/components/ui/button'
 import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
@@ -7,32 +7,22 @@ import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
 import { Language } from "@/app/[locale]/(main)/layout/vertical/header/Language";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
+import { ActionButton } from "@/components/common/forms/generic/action-button";
+import { logoutAction } from "@/lib/actions/auth";
 
 const FrontHeader = () => {
   const [isSticky, setIsSticky] = useState(true);
   const t = useTranslations("home");
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 50) {
-  //       setIsSticky(true);
-  //     } else {
-  //       setIsSticky(false);
-  //     }
-  //   };
+  const { data: session } = useSession();
 
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
 
   return (
     <>
       <header
         className={` top-0 z-50 ${isSticky
-            ? "bg-white dark:bg-dark shadow-md fixed w-full py-3"
-            : "bg-lightgray dark:bg-darkgray lg:py-7 py-3 "
+          ? "bg-white dark:bg-dark shadow-md fixed w-full py-3"
+          : "bg-lightgray dark:bg-darkgray lg:py-7 py-3 "
           }`}
       >
 
@@ -47,9 +37,20 @@ const FrontHeader = () => {
           </Button> */}
           {/* Login Button */}
           <Language />
-          <Button asChild className="font-bold xl:flex hidden">
-            <Link href='/auth/auth1/login'>{t('login')}</Link>
-          </Button>
+          {session ? (
+            <ActionButton action={logoutAction} className="rounded-full w-fit">
+              Logout
+            </ActionButton>
+          ) : (
+            <div className="flex gap-2">
+              <Button asChild variant={"outline"} className="font-bold xl:flex hidden">
+                <Link href='/auth/login'>{t('login')}</Link>
+              </Button>
+              <Button asChild className="font-bold xl:flex hidden">
+                <Link href='/auth/register'>{t('signUp')}</Link>
+              </Button>
+            </div>
+          )}
           <MobileMenu />
         </div>
       </header>

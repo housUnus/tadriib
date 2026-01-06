@@ -57,7 +57,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           );
           if (res.ok) {
             const token = await res.json();
-            console.log('token', token)
             return {
               ...token,
               expiry: {
@@ -67,7 +66,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             };
           }
         } catch (error) {
-          console.log("🚀 ~ error:", error);
           // console.error(error);
         }
         return null;
@@ -96,12 +94,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         credentials
       );
     },
-    jwt: async ({ user, token, account }) => {
-      console.log('jwt', user, token, account)
+    jwt: async ({ user, token, account, trigger }) => {
+      if (trigger === "update") {
+        const new_token = await refreshAccessToken(token);
+        return new_token;
+      }
       if (account && user) {
         let backendResponse =
           account.provider === "credentials" ? user : account.meta;
-        console.log("🚀 ~ :", backendResponse)
         return {
           ...token,
           access_token: backendResponse.access,
@@ -129,6 +129,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: async ({ session, token }) => {
       if (token) {
         session.access_token = token.access_token;
+        session.refresh_token = token.refresh_token;
         session.user = token.user;
       }
       // session.refresh_token = token.refresh_token;
@@ -138,6 +139,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   pages: {
-    signIn: "/auth/main/login", // CUSTOM SIGN IN PAGE
+    signIn: "/auth/login", // CUSTOM SIGN IN PAGE
   },
 });

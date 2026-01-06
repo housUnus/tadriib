@@ -37,6 +37,10 @@ export async function refreshAccessToken(token) {
 
   return {
     ...token,
+    user: {
+      ...token.user,
+      ...new_token.user,
+    },
     access_token: new_token.access,
     refresh_token: token.refresh_token,
     expiry: {

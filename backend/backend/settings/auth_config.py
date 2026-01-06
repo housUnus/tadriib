@@ -9,8 +9,9 @@ GOOGLE_CLIENT_SECRET=os.getenv("GOOGLE_CLIENT_SECRET")
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "TOKEN_REFRESH_SERIALIZER": "users.serializers.JWTRefreshSerializer",
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
@@ -29,7 +30,7 @@ ACCOUNT_SIGNUP_FIELDS = ["email", "phone_number", "first_name", "last_name"]
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION=True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL=f'{FRONTEND_URL}/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL=f'{FRONTEND_URL}/'
-ACCOUNT_CONFIRM_EMAIL_ON_GET=True
+ACCOUNT_CONFIRM_EMAIL_ON_GET=False
 ACCOUNT_EMAIL_VERIFICATION_SUPPORTS_RESEND=True
 
 DJOSER = {
@@ -66,7 +67,7 @@ else:
 #REST AUTH
 # <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
 EMAIL_CONFIRM_REDIRECT_BASE_URL = \
-    f"{FRONTEND_URL}/email/confirm/"
+    f"{FRONTEND_URL}/auth/verify-email/"
 
 # <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
 PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = \
@@ -74,8 +75,7 @@ PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = \
     
 REST_AUTH  = {
     "REGISTER_SERIALIZER": "users.serializers.UserCreateSerializer",
-    "USER_DETAILS_SERIALIZER": "users.serializers.UserSerializer",
-    
+    "USER_DETAILS_SERIALIZER": "users.serializers.JwtUserSerializer",
     'JWT_AUTH_RETURN_EXPIRATION': True,
     'USE_JWT': True,
     'JWT_AUTH_REFRESH_COOKIE': 'refresh',
@@ -99,4 +99,10 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         "VERIFIED_EMAIL": True,
     },
+}
+
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": f"{FRONTEND_URL}"+"/auth/verify-email/?key={key}",
+    # "account_reset_password_from_key": "https://app.org/account/password/reset/key/{key}",
+    # "account_signup": "https://app.org/account/signup",
 }

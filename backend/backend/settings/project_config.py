@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'allauth',
     'allauth.account',
+    'allauth.headless',
     'rest_auth.registration',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
@@ -146,3 +147,5 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.User"
+
+# APPEND_SLASH=True

@@ -48,7 +48,7 @@ class Profile(models.Model):
 
     # Roles
     roles = models.ManyToManyField(Role, related_name="profiles", verbose_name=_("Roles"))
-
+    active_role = models.ForeignKey(Role, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     # Common fields
     avatar = models.ImageField(_("Avatar"), upload_to="avatars/", blank=True, null=True)
     bio = models.TextField(_("Bio"), blank=True)
@@ -61,7 +61,7 @@ class Profile(models.Model):
 
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
-
+  
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")

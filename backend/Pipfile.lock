@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "91ca8915969a25ed3c6f183f30e0f056fdb398a46b82b88d4055ee6e87c8b9a1"
+            "sha256": "4a99647503597e7380df2d6b7faccb408477387192c59afbceeb92e8cc7f7aff"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -371,14 +371,14 @@
         },
         "django-allauth": {
             "extras": [
-                "socialaccount"
+                "headless"
             ],
             "hashes": [
-                "sha256:0a3d7baf7beefd6fe8027316302c26ece7433cf4331a3b245d15fc9a7be68b6f"
+                "sha256:2887294beedfd108b4b52ebd182e0ed373deaeb927fc5a22f77bbde3174704a6",
+                "sha256:2af0d07812f8c1a8e3732feaabe6a9db5ecf3fad6b45b6a0f7fd825f656c5a15"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==65.2.0"
+            "version": "==65.13.1"
         },
         "django-appconf": {
             "hashes": [
