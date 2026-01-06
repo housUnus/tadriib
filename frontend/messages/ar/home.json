@@ -152,5 +152,7 @@
     "french": "French"
   },
   "login": "Login",
-  "certifications": "Certifications"
+  "certifications": "Certifications",
+  "logOut": "Log Out",
+  "signUp": "Sign Up"
 }
