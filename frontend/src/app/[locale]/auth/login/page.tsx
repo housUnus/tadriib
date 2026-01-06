@@ -1,8 +1,6 @@
 import Logo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import CardBox from "@/app/components/shared/CardBox";
 import React from "react";
-import SocialButtons from "../authforms/SocialButtons";
-import AuthLogin from "../authforms/AuthLogin";
 import Link from "next/link";
 import type { Metadata } from "next";
 import BoxedSocialButtons from "../authforms/BoxedSocialButtons";

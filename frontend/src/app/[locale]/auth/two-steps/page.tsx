@@ -1,6 +1,6 @@
+import React from "react";
 import Logo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
 import CardBox from "@/app/components/shared/CardBox";
-import React from "react";
 import Link from "next/link";
 import AuthTwoSteps from "../authforms/AuthTwoSteps";
 import type { Metadata } from "next";
