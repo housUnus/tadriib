@@ -33,7 +33,7 @@ pytest = "*"
 django-health-check = "*"
 psutil = "*"
 sentry-sdk = {extras = ["django"], version = "*"}
-django-allauth = {extras = ["headless"], version = "*"}
+django-allauth = {extras = ["headless"], version = "65.2.0"}
 
 [dev-packages]
 
