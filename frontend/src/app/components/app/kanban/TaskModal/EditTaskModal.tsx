@@ -1,6 +1,5 @@
 'use client'
 
-import 'react-datepicker/dist/react-datepicker.css'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'

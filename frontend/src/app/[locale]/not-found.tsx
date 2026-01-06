@@ -2,15 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Lottie from "lottie-react";
-import animationdata from "@/animation/error404page.json";
 
 const Error = () => {
   return (
     <>
       <div className="h-screen flex items-center justify-center bg-white dark:bg-dark w-full">
         <div className="text-center">
-          <Lottie animationData={animationdata} loop />
 
           <h1 className="text-ld text-4xl mb-6">Opps!!!</h1>
           <h6 className="text-xl text-ld">

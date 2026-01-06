@@ -4,8 +4,6 @@ import React, { useContext, useState } from 'react'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import { Icon } from '@iconify/react'
 import { format } from 'date-fns'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import SimpleBar from 'simplebar-react'
 import { ProductType } from '@/app/[locale]/(main)/types/apps/eCommerce'
 import { ProductContext } from '@/app/context/Ecommercecontext'
@@ -51,6 +49,7 @@ import {
 } from '@/app/components/animatedComponents/AnimatedTable'
 import InputPlaceholderAnimate from '@/app/components/animatedComponents/AnimatedInputPlaceholder'
 import Image from 'next/image'
+import { DayPicker } from 'react-day-picker'
 
 const ProductTablelist = () => {
   const {
@@ -255,46 +254,46 @@ const ProductTablelist = () => {
                           id: number
                           photo: string | undefined
                           title:
-                            | string
-                            | number
-                            | boolean
-                            | React.ReactElement<
-                                any,
-                                string | React.JSXElementConstructor<any>
-                              >
-                            | Iterable<React.ReactNode>
-                            | React.ReactPortal
-                            | Iterable<React.ReactNode>
-                            | null
-                            | undefined
+                          | string
+                          | number
+                          | boolean
+                          | React.ReactElement<
+                            any,
+                            string | React.JSXElementConstructor<any>
+                          >
+                          | Iterable<React.ReactNode>
+                          | React.ReactPortal
+                          | Iterable<React.ReactNode>
+                          | null
+                          | undefined
                           category:
-                            | string
-                            | number
-                            | boolean
-                            | React.ReactElement<
-                                any,
-                                string | React.JSXElementConstructor<any>
-                              >
-                            | Iterable<React.ReactNode>
-                            | React.ReactPortal
-                            | Iterable<React.ReactNode>
-                            | null
-                            | undefined
+                          | string
+                          | number
+                          | boolean
+                          | React.ReactElement<
+                            any,
+                            string | React.JSXElementConstructor<any>
+                          >
+                          | Iterable<React.ReactNode>
+                          | React.ReactPortal
+                          | Iterable<React.ReactNode>
+                          | null
+                          | undefined
                           created: string | number | Date
                           stock: any
                           price:
-                            | string
-                            | number
-                            | boolean
-                            | React.ReactElement<
-                                any,
-                                string | React.JSXElementConstructor<any>
-                              >
-                            | Iterable<React.ReactNode>
-                            | React.ReactPortal
-                            | Iterable<React.ReactNode>
-                            | null
-                            | undefined
+                          | string
+                          | number
+                          | boolean
+                          | React.ReactElement<
+                            any,
+                            string | React.JSXElementConstructor<any>
+                          >
+                          | Iterable<React.ReactNode>
+                          | React.ReactPortal
+                          | Iterable<React.ReactNode>
+                          | null
+                          | undefined
                         },
                         index: number
                       ) => (
@@ -479,13 +478,12 @@ const ProductTablelist = () => {
                 <Label htmlFor='dt' className='mb-2 block capitalize'>
                   Date
                 </Label>
-                <DatePicker
+                {/* <DayPicker
+                  mode="single"
                   selected={selectedDate}
-                  onChange={handleDateChange}
-                  dateFormat='MMMM d, yyyy'
-                  className='form-control-input w-full max-w-full py-[10px] border border-input rounded-md px-3'
-                  id='dt'
-                />
+                  onSelect={handleDateChange}
+                  className="border border-input rounded-md p-3"
+                /> */}
               </div>
 
               <div className='col-span-12 lg:col-span-6'>

@@ -42,7 +42,6 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Image from 'next/image'
 import StatusCard from './statuscard'
-import { toast, ToastContainer } from 'react-toastify'
 import { CustomizerContext } from '@/app/context/CustomizerContext'
 // shadcn calender
 import { Calendar } from '@/components/ui/calendar'
@@ -675,15 +674,15 @@ export default function OrderDataTable({ data }: OrderTableProps) {
   const toastColor = activeMode === 'dark' ? 'dark' : 'light'
   useEffect(() => {
     if (feedback) {
-      toast(feedback, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: toastColor,
-      })
+      // toast(feedback, {
+      //   position: 'top-center',
+      //   autoClose: 3000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: toastColor,
+      // })
     }
   }, [feedback])
 
@@ -926,7 +925,6 @@ export default function OrderDataTable({ data }: OrderTableProps) {
       </Activity>
 
       {/* Feedback Toast */}
-      {feedback && <ToastContainer />}
 
       {/* table */}
       <div className='overflow-x-auto'>

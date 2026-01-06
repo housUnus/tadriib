@@ -29,8 +29,6 @@ import Image from "next/image";
 import { ImageContext } from "@/app/context/ImageAiContext";
 
 // Toastify imports
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function ImagePrompt() {
   const {
@@ -88,14 +86,14 @@ function ImagePrompt() {
 
   const generateImage = async () => {
     if (!prompt.trim()) {
-      toast("Please enter a prompt before generating.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      // toast("Please enter a prompt before generating.", {
+      //   position: "top-center",
+      //   autoClose: 3000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      // });
       return;
     }
 
@@ -272,7 +270,6 @@ function ImagePrompt() {
         </Card>
       </div>
 
-      <ToastContainer />
     </div>
   );
 }

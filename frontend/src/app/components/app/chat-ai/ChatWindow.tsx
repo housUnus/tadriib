@@ -15,7 +15,6 @@ import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import SimpleBar from 'simplebar-react'
 import { CustomizerContext } from '@/app/context/CustomizerContext'
-import { toast, ToastContainer } from 'react-toastify'
 import Image from 'next/image'
 
 function ChatWindow({
@@ -55,15 +54,15 @@ function ChatWindow({
   const toastColor = activeMode === 'dark' ? 'dark' : 'light'
   useEffect(() => {
     if (feedback) {
-      toast(feedback, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: toastColor,
-      })
+      // toast(feedback, {
+      //   position: 'top-center',
+      //   autoClose: 3000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: toastColor,
+      // })
     }
   }, [feedback])
 
@@ -251,7 +250,7 @@ function ChatWindow({
         </div>
         <div ref={scrollRef} />
       </SimpleBar>
-      {feedback && <ToastContainer />}
+      {/* {feedback && <ToastContainer />} */}
     </>
   )
 }

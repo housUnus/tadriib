@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation'
 import { InvoiceContext } from '@/app/context/InvoiceContext'
 import jsPDF from 'jspdf'
 import { toPng } from 'html-to-image'
-import { useReactToPrint } from 'react-to-print'
 import { format, isValid, parseISO } from 'date-fns'
 import FullLogo from '@/app/[locale]/(main)/layout/shared/logo/FullLogo'
 import { Icon } from '@iconify/react/dist/iconify.js'
@@ -37,7 +36,6 @@ const InvoiceDetail = () => {
 
   // print the page
   const contentRef = useRef<HTMLDivElement>(null)
-  const reactToPrintFn = useReactToPrint({ contentRef })
 
   useEffect(() => {
     // Set the first invoice as the default selected invoice initially
@@ -113,7 +111,7 @@ const InvoiceDetail = () => {
             <Button
               variant={'ghost'}
               className='flex items-center gap-2 text-sm font-medium text-darklink dark:text-bodytext'
-              onClick={reactToPrintFn}>
+              onClick={() => setOpenModal(true)}>
               <span>
                 <Icon icon={'solar:eye-linear'} width={20} height={20} />
               </span>
@@ -139,7 +137,7 @@ const InvoiceDetail = () => {
             <Button
               variant={'ghost'}
               className='flex items-center gap-2 text-sm font-medium text-darklink dark:text-bodytext'
-              onClick={reactToPrintFn}>
+              onClick={() => handleDownloadPdf()}>
               <span>
                 <Icon icon={'solar:printer-linear'} width={20} height={20} />
               </span>

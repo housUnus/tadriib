@@ -1,6 +1,5 @@
 'use client'
 
-import 'react-datepicker/dist/react-datepicker.css'
 import {
   Dialog,
   DialogContent,

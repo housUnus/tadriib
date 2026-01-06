@@ -42,7 +42,6 @@ import {
   AnimatedTableBody,
   AnimatedTableRow,
 } from '@/app/components/animatedComponents/AnimatedTable'
-import { toast, ToastContainer } from 'react-toastify'
 import { CustomizerContext } from '@/app/context/CustomizerContext'
 import CardBox from '../../shared/CardBox'
 
@@ -630,15 +629,15 @@ function UserDataTable() {
   const toastColor = activeMode === 'dark' ? 'dark' : 'light'
   useEffect(() => {
     if (feedback) {
-      toast(feedback, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: toastColor,
-      })
+      // toast(feedback, {
+      //   position: 'top-center',
+      //   autoClose: 3000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: toastColor,
+      // })
     }
   }, [feedback])
 
@@ -779,7 +778,6 @@ function UserDataTable() {
         </div>
 
         {/* Feedback Toast */}
-        {feedback && <ToastContainer />}
 
         {/* user table */}
         <div className='overflow-x-auto'>
