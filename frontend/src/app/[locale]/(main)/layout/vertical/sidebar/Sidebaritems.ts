@@ -1027,19 +1027,19 @@ const SidebarContent: MenuItem[] = [
             name: "Side Login",
             icon: "solar:login-3-line-duotone",
             id: uniqueId(),
-            url: "/auth/auth1/login",
+            url: "/auth/login",
           },
           {
             name: "Boxed Login",
             icon: "solar:login-3-line-duotone",
             id: uniqueId(),
-            url: "/auth/auth2/login",
+            url: "/auth/login",
           },
           {
             name: "Side Register",
             icon: "solar:user-plus-rounded-line-duotone",
             id: uniqueId(),
-            url: "/auth/auth1/register",
+            url: "/auth/register",
           },
           {
             name: "Boxed Register",

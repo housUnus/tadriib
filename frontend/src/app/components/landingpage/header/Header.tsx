@@ -68,7 +68,7 @@ const Header = () => {
                 <NavigationMenuItem>
                   <Button asChild>
                     <Link
-                      href='/auth/auth1/login'
+                      href='/auth/login'
                       className='bg-primary'>
                       Login
                     </Link>

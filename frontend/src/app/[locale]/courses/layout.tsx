@@ -31,7 +31,7 @@ export default function Layout({
               >
                 {children}
               </div>
-              <Customizer />
+              {/* <Customizer /> */}
             </div>
           </div>
         </div>
