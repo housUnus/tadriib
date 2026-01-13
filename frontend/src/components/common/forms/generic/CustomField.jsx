@@ -1,11 +1,10 @@
 "use client";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export default function CustomField({
-  control,
   name,
   label,
   required = false,
@@ -15,16 +14,22 @@ export default function CustomField({
   Component: Component = Input, // 👈 Default to shadcn Input
   ...rest
 }) {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   return (
     <Controller
       name={name}
-      control={control}
       defaultValue={defaultValue}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {/* Label with required star */}
           {label && (
-            <FieldLabel htmlFor={field.name} className="flex items-center gap-1">
+            <FieldLabel
+              htmlFor={field.name}
+              className="flex items-center gap-1"
+            >
               {label}
               {required && (
                 <span className="text-red-500 font-medium" aria-hidden="true">
@@ -39,7 +44,10 @@ export default function CustomField({
             {...field}
             id={field.name}
             aria-invalid={fieldState.invalid}
-            className={cn(`mt-1 ${fieldState.error ? "border-red-500" : ""}`, className)}
+            className={cn(
+              `mt-1 ${fieldState.error ? "border-red-500" : ""}`,
+              className
+            )}
             {...rest}
           />
 

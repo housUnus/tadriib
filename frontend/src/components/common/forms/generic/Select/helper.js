@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 * styles that aligns with shadcn/ui
 */
 const controlStyles = {
-  base: 'flex !min-h-9 w-full rounded-md border border-input bg-transparent pl-3 py-1 pr-1 gap-1 text-sm shadow-sm transition-colors hover:cursor-pointer',
+  base: 'flex !min-h-9 w-full rounded-md border border-input bg-transparent pl-3 py-1 pr-1 gap-1 text-sm transition-colors hover:cursor-pointer',
   focus: 'outline-none ring-1 ring-ring',
   disabled: 'cursor-not-allowed opacity-50'
 };
@@ -91,7 +91,7 @@ export const defaultClassNames = createClassNames({});
 export const defaultStyles = {
   input: (base) => ({
     ...base,
-    'input:focus': {
+    'input': {
       boxShadow: 'none'
     }
   }),

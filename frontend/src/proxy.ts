@@ -13,7 +13,7 @@ import {
 } from "@/lib/auth/routes";
 
 import { refreshAccessToken } from "@/lib/auth/authentication";
-import { AppJWT } from "./schemas/auth";
+import { AppJWT } from "./lib/schemas/auth";
 
 
 const intlMiddleware = createIntlMiddleware(routing)

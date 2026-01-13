@@ -1,8 +1,8 @@
 // lib/server-actions/auth.ts
 'use server';
 import { signIn, signOut } from "@/auth";
-import { useServerFetch } from "../../hooks/auth/user-server-fetch";
-import { registerSchema, RegisterInput } from "@/schemas/auth";
+import { useServerFetch } from "@/hooks/auth/user-server-fetch";
+import { registerSchema, RegisterInput, changePasswordSchema, ChangePasswordInput } from "@/lib/schemas/auth";
 import { redirect } from "next/navigation";
 
 export async function login(data: { email: string, password: string }) {
@@ -30,17 +30,18 @@ export async function register(payload: RegisterInput) {
     if (!parsed.success) {
         return {
             success: false,
-            errors: parsed.error.flatten().fieldErrors,
+            error: parsed.error.flatten().fieldErrors,
+            data: null
         };
     }
 
     const client = await useServerFetch();
     const { data, error } = await client.post("/dj-auth/register/", parsed.data);
     if (error) {
-        return { success: false, error };
+        return { success: false, error, data: null };
     }
 
-    return { success: true, error: null };
+    return { success: true, error: null, data };
 }
 
 export async function resend_email_verification({ email }: { email: string }) {
@@ -62,4 +63,23 @@ export async function verify_email({ key }: { key: string }) {
 export async function logoutAction() {
     await signOut({ redirect: false });
     redirect("/auth/login");
+}
+
+export async function changePassword(id: number, payload: ChangePasswordInput) {
+    const parsed = changePasswordSchema.safeParse(payload);
+    if (!parsed.success) {
+        return {
+            success: false,
+            error: parsed.error.flatten().fieldErrors,
+            data: null,
+        };
+    }
+    const client = await useServerFetch();
+
+    const { data, error } = await client.put(`/users/change-password/${id}/`, parsed.data);
+    if (error) {
+        return { success: false, error, data: null };
+    }
+
+    return { success: true, error: null, data: data };
 }

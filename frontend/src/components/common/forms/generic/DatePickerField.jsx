@@ -1,5 +1,5 @@
 "use client";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -26,7 +26,10 @@ export default function DatePickerField({
   ...rest
 }) {
   const [open, setOpen]   = useState(false);
-  
+  const {
+      control,
+      formState: { errors },
+    } = useFormContext();
   return (
     <Controller
       name={name}

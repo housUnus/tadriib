@@ -9,8 +9,8 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 type InputFieldProps<T extends FieldValues> = {
   name: Path<T>;
@@ -21,12 +21,11 @@ type InputFieldProps<T extends FieldValues> = {
   className?: string;
   rules?: RegisterOptions<T>;
   disabled?: boolean;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "name">;
+} & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name">;
 
-export default function InputField<T extends FieldValues>({
+export default function TextAreaField<T extends FieldValues>({
   name,
   label,
-  type = "text",
   required = false,
   helperText,
   className,
@@ -54,14 +53,17 @@ export default function InputField<T extends FieldValues>({
             </FieldLabel>
           )}
 
-          <Input
+          <Textarea
             {...field}
             id={field.name}
-            type={type}
             aria-invalid={fieldState.invalid}
-            className={cn(`mt-1`, className)}
-            variant={fieldState.error? 'failure':'default'}
-            disabled={disabled}
+            className={cn(
+              "mt-1",
+              fieldState.error
+                ? "border-destructive focus-visible:ring-destructive rounded-md"
+                : "border-input focus-visible:ring-ring rounded-md",
+              className
+            )} disabled={disabled}
             {...rest}
           />
 

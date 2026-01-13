@@ -1,5 +1,5 @@
 "use client";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,10 @@ export default function RadioGroupField({
   orientation = "vertical", // or "inline"
   ...rest
 }) {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   return (
     <Controller
       name={name}
@@ -28,7 +32,10 @@ export default function RadioGroupField({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {label && (
-            <FieldLabel htmlFor={field.name} className="flex items-center gap-1">
+            <FieldLabel
+              htmlFor={field.name}
+              className="flex items-center gap-1"
+            >
               {label}
               {required && (
                 <span className="text-red-500 font-medium" aria-hidden="true">

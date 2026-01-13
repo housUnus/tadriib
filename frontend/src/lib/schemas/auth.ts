@@ -1,5 +1,6 @@
 import { JWT } from "next-auth/jwt";
 import { z } from "zod";
+import type { Session } from 'next-auth';
 
 export const registerSchema = z.object({
   first_name: z.string().min(2, "First name is too short"),
@@ -23,6 +24,13 @@ export const loginSchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
+export const changePasswordSchema = z.object({
+  old_password: z.string().min(6, "Password must be at least 6 characters"),
+  new_password1: z.string().min(6, "Password must be at least 6 characters"),
+  new_password2: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export interface AppJWT extends JWT {
   access_token?: string
@@ -39,4 +47,8 @@ export interface AppJWT extends JWT {
     email_verified: boolean
     active_role: string
   }
+}
+
+export interface JwtSession extends Session, AppJWT {
+  user: Session['user'] & AppJWT['user'];
 }

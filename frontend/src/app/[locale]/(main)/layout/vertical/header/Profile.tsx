@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Icon } from "@iconify/react";
 import * as profileData from "./Data";
 import Link from "next/link";
 import Image from "next/image";
 import SimpleBar from "simplebar-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -8,7 +8,7 @@ import { resend_email_verification, verify_email } from "@/lib/actions/auth";
 import { ActionButton } from "@/components/common/forms/generic/action-button";
 import { Check, X } from "lucide-react";
 import { ACCOUNT_ROUTE, DEFAULT_LOGIN_ROUTE } from "@/lib/auth/routes";
-import { AppJWT } from "@/schemas/auth";
+import { AppJWT } from "@/lib/schemas/auth";
 import { Session } from "next-auth";
 import { useTranslations } from "next-intl";
 
@@ -95,7 +95,7 @@ export default function VerifyEmailClient({
           <div>{t('youreAlmostThereWeSent')}
             <h6 className="text-sm font-bold my-4 ">{session?.user?.email}</h6>
           </div>
-          <p>`{t('justClickOnTheLinkInTheEmail')}`</p>
+          <p>{t('justClickOnTheLinkInTheEmail')}</p>
         </div>
       </>
       }

@@ -20,10 +20,15 @@ import {
 } from "@/components/ui/popover";
 
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import SimpleSelect from "./Select/simple-select";
 
 export default function SelectField({ control, name, type, label, ...rest }) {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
   return (
     <Controller
       name={name}
@@ -44,7 +49,7 @@ export default function SelectField({ control, name, type, label, ...rest }) {
   );
 }
 
-export function SelectComboBox({onChange, value, options}) {
+export function SelectComboBox({ onChange, value, options }) {
   const [open, setOpen] = React.useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>

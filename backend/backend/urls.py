@@ -2,7 +2,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
@@ -13,7 +14,8 @@ urlpatterns = [
     path('api/v1/dj-auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/v1/accounts/', include('allauth.urls')),
     path("api/v1/_allauth/", include("allauth.headless.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 
 

@@ -260,9 +260,9 @@ const profileDD: ProfileType[] = [
     icon: "solar:wallet-2-line-duotone",
     bgcolor: "bg-lightprimary dark:bg-lightprimary",
     color: "text-primary",
-    title: "My Profile",
+    title: "My Account",
     subtitle: "Account settings",
-    url: "/apps/user-profile/profile",
+    url: "/user/account",
   },
   {
     icon: "solar:inbox-line-duotone",

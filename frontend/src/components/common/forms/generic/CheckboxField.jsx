@@ -1,5 +1,5 @@
 "use client";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,10 @@ export default function CheckboxField({
   disabled,
   ...rest
 }) {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   return (
     <Controller
       name={name}

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -14,19 +13,19 @@ const AccountSettingIndex = () => {
       <Tabs defaultValue="account" className="w-full">
         <TabsList className="w-full justify-start">
           <TabsTrigger value="account" className="flex items-center gap-2">
-            <Icon icon="tabler:user-circle" height={20} />
+            {/* <Icon icon="tabler:user-circle" height={20} /> */}
             Account
           </TabsTrigger>
           <TabsTrigger value="notification" className="flex items-center gap-2">
-            <Icon icon="tabler:bell" height={20} />
+            {/* <Icon icon="tabler:bell" height={20} /> */}
             Notification
           </TabsTrigger>
           <TabsTrigger value="bills" className="flex items-center gap-2">
-            <Icon icon="tabler:article" height={20} />
+            {/* <Icon icon="tabler:article" height={20} /> */}
             Bills
           </TabsTrigger>
           <TabsTrigger value="security" className="flex items-center gap-2">
-            <Icon icon="tabler:lock" height={20} />
+            {/* <Icon icon="tabler:lock" height={20} /> */}
             Security
           </TabsTrigger>
         </TabsList>

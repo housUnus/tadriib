@@ -11,7 +11,7 @@ GOOGLE_CLIENT_SECRET=os.getenv("GOOGLE_CLIENT_SECRET")
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "TOKEN_REFRESH_SERIALIZER": "users.serializers.JWTRefreshSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "authentication.serializers.JWTRefreshSerializer",
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
@@ -33,28 +33,6 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL=f'{FRONTEND_URL}/'
 ACCOUNT_CONFIRM_EMAIL_ON_GET=False
 ACCOUNT_EMAIL_VERIFICATION_SUPPORTS_RESEND=True
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'USER_CREATE_PASSWORD_RETYPE': False,
-    'SEND_ACTIVATION_EMAIL': True,
-    'LOGIN_AFTER_ACTIVATION': False,
-    'SERIALIZERS': {
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
-        'current_user': 'users.serializers.UserSerializer',
-    },
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_FIELDS': (
-        'email',
-        'password',
-        'first_name',
-        'last_name',
-        'phone_number',
-    ),
-}
-
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
@@ -75,7 +53,7 @@ PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = \
     
 REST_AUTH  = {
     "REGISTER_SERIALIZER": "users.serializers.UserCreateSerializer",
-    "USER_DETAILS_SERIALIZER": "users.serializers.JwtUserSerializer",
+    "USER_DETAILS_SERIALIZER": "authentication.serializers.JwtUserSerializer",
     'JWT_AUTH_RETURN_EXPIRATION': True,
     'USE_JWT': True,
     'JWT_AUTH_REFRESH_COOKIE': 'refresh',

@@ -8,6 +8,21 @@ const nextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false, // disable source maps in prod to save memory
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8000',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'sgp1.vultrobjects.com',
+        pathname: '/media/**',
+      },
+    ],
+  },
 };
 
 // Wrap with NextIntl plugin

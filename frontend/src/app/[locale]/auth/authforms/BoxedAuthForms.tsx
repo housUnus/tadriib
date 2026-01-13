@@ -5,14 +5,15 @@ import { useForm } from "react-hook-form";
 import InputField from "@/components/common/forms/generic/InputField";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle } from "@/components/ui/alert"
-import { loginSchema, LoginInput } from "@/schemas/auth";
+import { loginSchema, LoginInput } from "@/lib/schemas/auth";
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import SubmitButton from "@/components/common/forms/generic/SubmitButton";
 import { ACCOUNT_ROUTE } from "@/lib/auth/routes";
+import { RHFForm } from "@/components/common/forms/RHFForm";
 
 const BoxedAuthLogin = () => {
   const router = useRouter();
-  const { control, handleSubmit, setError, formState: { errors } } = useForm<LoginInput>({
+  const form = useForm<LoginInput>({
     resolver: standardSchemaResolver(loginSchema),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -26,7 +27,7 @@ const BoxedAuthLogin = () => {
     const result = await login(data);
 
     if (result?.error) {
-      setError("root", {
+      form.setError("root", {
         type: "server",
         message: result?.error ?? "Login failed",
       });
@@ -40,21 +41,22 @@ const BoxedAuthLogin = () => {
 
   return (
     <>
-      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
-        {errors.root &&
+
+    <RHFForm form={form} onSubmit={onSubmit}>
+        {form.formState.errors.root &&
           <div className="mb-2">
             <Alert variant="lighterror">
-              <AlertTitle className="text-error">{errors.root.message}</AlertTitle>
+              <AlertTitle className="text-error">{form.formState.errors.root.message}</AlertTitle>
             </Alert>
           </div>
         }
         <div className="mb-4">
           {/* Email */}
           <div className="mb-4">
-            <InputField name="email" type="email" placeholder="Enter Your Email" control={control} label="Email Address" required />
+            <InputField name="email" type="email" placeholder="Enter Your Email" label="Email Address" required />
           </div>
           <div className="mb-4">
-            <InputField name="password" type="password" placeholder="Password" control={control} label="Password" required />
+            <InputField name="password" type="password" placeholder="Password" label="Password" required />
             <Link className="text-xs text-primary" href="/auth/forgot-password" >
               Forgot Password ?
             </Link>
@@ -74,11 +76,10 @@ const BoxedAuthLogin = () => {
         {/* Button */}
         <SubmitButton
           className="rounded-md w-full bg-primary hover:bg-primaryemphasis"
-          control={control}
         >
           Sign In
         </SubmitButton>
-      </form>
+      </RHFForm>
     </>
   );
 };

@@ -25,15 +25,21 @@ export const useServerFetch = async () => {
   ): Promise<RequestResult<T>> => {
     isPending = true;
     error = null;
+    const isFormData = payload instanceof FormData;
+
     try {
       const options = {
         method,
         headers: {
-          "Content-Type": "application/json",
           ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(isFormData ? {} : { "Content-Type": "application/json" }),
           ...headers,
         },
-        body: payload ? JSON.stringify(payload) : undefined,
+        body: payload
+          ? isFormData
+            ? payload
+            : JSON.stringify(payload)
+          : undefined,
       };
 
       const response = await fetch(`${process.env.API_SERVER_BASE_URL}${url}`, options);

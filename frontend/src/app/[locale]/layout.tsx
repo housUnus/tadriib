@@ -5,7 +5,7 @@ import "../css/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { CustomizerContextProvider } from "../context/CustomizerContext";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from 'sonner'
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
@@ -56,10 +56,10 @@ export default async function LocaleLayout({
               <ReactQueryProvider>
                 <SessionProvider session={session}>
                   {children}
+                  <Toaster richColors position="top-right" />
                 </SessionProvider>
               </ReactQueryProvider>
             </CustomizerContextProvider>
-            <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

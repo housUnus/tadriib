@@ -2,21 +2,18 @@
 import { register } from "@/lib/actions/auth";
 import { useForm } from "react-hook-form";
 import InputField from "@/components/common/forms/generic/InputField";
-import { registerSchema, RegisterInput } from "@/schemas/auth";
-import { signIn } from "next-auth/react"; // NOT your "@/auth"
-import LoadingButton from "@/components/common/forms/generic/LoadingButton";
+import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import SubmitButton from "@/components/common/forms/generic/SubmitButton";
 import { ACCOUNT_ROUTE } from "@/lib/auth/routes";
+import CountrySelect from "@/components/common/forms/generic/CountryField";
+import { signIn } from "next-auth/react";
+import { RHFForm } from "@/components/common/forms/RHFForm";
+import { applyServerErrors } from "@/components/common/forms/rhfActionHandler";
 
 const BoxedAuthRegister = () => {
 
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterInput>({
+  const form = useForm<RegisterInput>({
     resolver: standardSchemaResolver(registerSchema),
     mode: "onChange",
     defaultValues: {
@@ -31,66 +28,59 @@ const BoxedAuthRegister = () => {
 
   const onSubmit = async (data: RegisterInput) => {
     const result = await register(data);
-
     if (!result.success && result.error) {
-      Object.entries(result.error).forEach(([field, messages]) => {
-        if (messages?.[0]) {
-          setError(field as keyof RegisterInput, {
-            message: messages[0],
-          });
-        }
-      });
-      return
+      applyServerErrors(result.error, form.setError);
     }
 
-    const loginResult = await signIn("credentials", {
+    await signIn("credentials", {
       redirectTo: ACCOUNT_ROUTE,
       email: data.email,
-      password1: data.password1,
+      password: data.password1,
     });
   };
 
 
+
+
   return (
     <>
-      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
+      <RHFForm form={form} className="mt-2" onSubmit={onSubmit}>
         {/* First Name + Last Name */}
         <div className="mb-4 flex gap-4">
           <div className="flex-1">
-            <InputField name="first_name" type="text" placeholder="First Name" control={control} label="First Name" />
+            <InputField name="first_name" type="text" placeholder="First Name" label="First Name" />
           </div>
           <div className="flex-1">
-            <InputField name="last_name" type="text" placeholder="Last Name" control={control} label="Last Name" />
+            <InputField name="last_name" type="text" placeholder="Last Name" label="Last Name" />
           </div>
         </div>
 
         {/* Email */}
         <div className="mb-4">
-          <InputField name="email" type="email" placeholder="Enter Your Email" control={control} label="Email Address" />
+          <InputField name="email" type="email" placeholder="Enter Your Email" label="Email Address" />
         </div>
 
         <div className="mb-4">
-          <InputField name="password1" type="password" placeholder="Enter Your Password" control={control} label="Password" />
+          <InputField name="password1" type="password" placeholder="Enter Your Password" label="Password" />
         </div>
 
         {/* Country */}
         <div className="mb-4">
-          <InputField name="country" type="text" placeholder="Select Country" control={control} label="Country" />
+          <CountrySelect name="country" label="Country" className={''} simpleValue />
         </div>
 
         {/* Phone Number */}
         <div className="mb-4">
-          <InputField name="phone_number" type="text" placeholder="(+91) Enter Your Phone Number" control={control} label="Phone Number" />
+          <InputField name="phone_number" type="text" placeholder="(+91) Enter Your Phone Number" label="Phone Number" />
         </div>
 
         {/* Button */}
         <SubmitButton
           className="rounded-md w-full bg-primary hover:bg-primaryemphasis"
-          control={control}
         >
           Sign Up
         </SubmitButton>
-      </form>
+      </RHFForm>
 
     </>
   );
