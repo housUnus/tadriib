@@ -3,6 +3,7 @@
 import CountrySelect from "@/components/common/forms/generic/CountryField";
 import FileField from "@/components/common/forms/generic/FileField";
 import InputField from "@/components/common/forms/generic/InputField";
+import RichTextField from "@/components/common/forms/generic/RichTextField";
 import SubmitButton from "@/components/common/forms/generic/SubmitButton";
 import TextAreaField from "@/components/common/forms/generic/TextAreaField";
 import { applyServerErrors } from "@/components/common/forms/rhfActionHandler";
@@ -46,7 +47,7 @@ export default function UpdateProfile({ user }: { user: UserInput }) {
 
         {/* Profile fields */}
         <TextAreaField name="bio" label="Bio" rows={4} />
-        <TextAreaField name="details" label="Details" rows={10} />
+        <RichTextField name="details" label="Details"/>
         <TextAreaField name="expertise" label="Expertise" rows={5} />
         <InputField
           name="experience_years"

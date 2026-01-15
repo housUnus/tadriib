@@ -9,9 +9,9 @@ import { Toaster } from 'sonner'
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { ReactQueryProvider } from "@/hooks/react-query-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { Providers } from "../providers";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -53,12 +53,12 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <CustomizerContextProvider>
-              <ReactQueryProvider>
+              <Providers>
                 <SessionProvider session={session}>
                   {children}
                   <Toaster richColors position="top-right" />
                 </SessionProvider>
-              </ReactQueryProvider>
+              </Providers>
             </CustomizerContextProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

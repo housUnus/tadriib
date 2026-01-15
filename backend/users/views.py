@@ -7,6 +7,7 @@ from .serializers import UserSerializer, ChangePasswordSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import action
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -19,6 +20,10 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return super().get_queryset()
     
+    @action(detail=False, methods=["get"], url_path="me")
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
     
 class ChangePasswordView(viewsets.GenericViewSet, UpdateAPIView):
         """

@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Icon } from "@iconify/react";
 import * as profileData from "./Data";
@@ -12,9 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/lib/actions/auth";
 import { ActionButton } from "@/components/common/forms/generic/action-button";
-
+import { useUserStore } from "@/app/stores/user";
 
 const Profile = () => {
+
+  const user = useUserStore(s => s.user)
 
   return (
     <div className="relative group/menu">
@@ -22,7 +25,8 @@ const Profile = () => {
         <DropdownMenuTrigger asChild>
           <span className="h-10 w-10 hover:text-primary hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">
             <Image
-              src="/images/profile/user-1.jpg"
+              unoptimized
+              src={user?.avatar || "/images/profile/user-1.jpg"}
               alt="logo"
               height="35"
               width="35"
@@ -37,23 +41,24 @@ const Profile = () => {
             <h3 className="text-lg font-semibold text-ld">User Profile</h3>
             <div className="flex items-center gap-6 pb-5 border-b border-border dark:border-darkborder mt-5 mb-3">
               <Image
-                src="/images/profile/user-1.jpg"
+                unoptimized
+                src={user?.avatar || "/images/profile/user-1.jpg"}
                 alt="logo"
                 height="80"
                 width="80"
                 className="rounded-full"
               />
               <div>
-                <h5 className="card-title">Jonathan Deo</h5>
+                <h5 className="card-title">{user?.first_name} {user?.last_name}</h5>
 
-                <span className="card-subtitle">Admin</span>
+                <span className="card-subtitle">{user?.country}</span>
 
                 <p className="card-subtitle mb-0 mt-1 flex items-center">
                   <Icon
                     icon="solar:mailbox-line-duotone"
                     className="text-base me-1"
                   />
-                  info@Materialm.com
+                  {user?.email}
                 </p>
               </div>
             </div>

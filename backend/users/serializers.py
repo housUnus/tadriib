@@ -74,7 +74,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source='profile.avatar', required=False, allow_null=True)
     details = serializers.CharField(source='profile.details', required=False)
-    expertise = serializers.IntegerField(source='profile.expertise', required=False)
+    expertise = serializers.CharField(source='profile.expertise', required=False)
     experience_years = serializers.IntegerField(source='profile.experience_years', required=False)
 
     class Meta:

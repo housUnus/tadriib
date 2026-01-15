@@ -1,5 +1,4 @@
 "use server";
-import { serialize } from 'object-to-formdata';
 import { useServerFetch } from "@/hooks/auth/user-server-fetch";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +15,6 @@ export async function createUser(payload: any) {
 
 
 export async function updateUser(id: number, payload: any) {
-    console.log("🚀 ~ updateUser ~ payload:", payload)
     var form_data = new FormData();
     for (var key in payload) {
         if (key === 'avatar' && typeof payload[key] === 'string') {
@@ -29,7 +27,6 @@ export async function updateUser(id: number, payload: any) {
             form_data.append(key, payload[key]);
         }
     }
-    console.log("🚀 ~ updateUser ~ form_data:", form_data)
 
     const client = await useServerFetch();
     const { data, error } = await client.put(`/users/${id}/`, form_data);
@@ -40,4 +37,14 @@ export async function updateUser(id: number, payload: any) {
 
     revalidatePath("/users");
     return { success: true, error: null, data };
+}
+
+export async function getMe() {
+    const client = await useServerFetch();
+    const { data, error } = await client.get("/users/me/");
+    console.log("🚀 ~ getMe ~ error:", error)
+    if (error) {
+        return null;
+    }
+    return data;
 }
