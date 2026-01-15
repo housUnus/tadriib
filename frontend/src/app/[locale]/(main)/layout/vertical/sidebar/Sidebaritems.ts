@@ -1045,7 +1045,7 @@ const SidebarContent: MenuItem[] = [
             name: "Boxed Register",
             icon: "solar:user-plus-rounded-line-duotone",
             id: uniqueId(),
-            url: "/auth/auth2/register",
+            url: "/auth/register",
           },
           {
             name: "Side Forgot Pwd",
@@ -1057,7 +1057,7 @@ const SidebarContent: MenuItem[] = [
             name: "Boxed Forgot Pwd",
             icon: "solar:password-outline",
             id: uniqueId(),
-            url: "/auth/auth2/forgot-password",
+            url: "/auth/forgot-password",
           },
           {
             name: "Side Two Steps",
@@ -1069,7 +1069,7 @@ const SidebarContent: MenuItem[] = [
             name: "Boxed Two Steps",
             icon: "solar:password-outline",
             id: uniqueId(),
-            url: "/auth/auth2/two-steps",
+            url: "/auth/two-steps",
           },
           {
             name: "Maintenance",

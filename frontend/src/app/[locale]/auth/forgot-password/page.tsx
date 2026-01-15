@@ -30,7 +30,7 @@ const BoxedForgotpwd = () => {
                     variant={"lightprimary"}
                     className="rounded-md w-full mt-3"
                   >
-                    <Link href={"/auth/auth2/login"}>
+                    <Link href={"/auth/login"}>
                       Back to Login
                     </Link>
                   </Button>

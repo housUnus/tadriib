@@ -22,7 +22,7 @@ const HeroText = () => {
                 asChild
                 className="px-4 font-bold sm:w-fit w-full"
               >
-                <Link href="/auth/auth2/register">Create an Account</Link>
+                <Link href="/auth/register">Create an Account</Link>
               </Button>
 
               <Button

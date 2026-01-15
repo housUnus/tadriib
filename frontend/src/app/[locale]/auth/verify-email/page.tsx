@@ -4,6 +4,8 @@ import CardBox from "@/app/components/shared/CardBox";
 import BoxedAuthSlider from "../authforms/BoxedAuthSlider";
 import VerifyEmailClient from "../authforms/VerifyEmailClient";
 import { useServerFetch } from "@/hooks/auth/user-server-fetch";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function VerifyEmail({
   searchParams,
@@ -20,13 +22,17 @@ export default async function VerifyEmail({
             <div className="xl:col-span-6 col-span-12 px-8 xl:border-e border-ld">
               <div className="md:py-14 py-8 lg:px-6">
                 <Logo />
-                <VerifyEmailClient emailKey={key}/>
+                <VerifyEmailClient emailKey={key} />
                 <div className="text-ld opacity-80 text-sm font-medium mt-6">
                   Need help? Contact us at support@ruwadacademy.com
                 </div>
+                <div className="mt-2">
+                  <Link href={"/auth/login"} className="text-sm text-primary font-medium">
+                    Back to Login
+                  </Link>
+                </div>
               </div>
             </div>
-
             <div className="xl:col-span-6 col-span-12 xl:block hidden">
               <BoxedAuthSlider />
             </div>

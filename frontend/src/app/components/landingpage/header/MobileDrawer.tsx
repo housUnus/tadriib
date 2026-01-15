@@ -67,7 +67,7 @@ const MobileDrawer = () => {
               </Link>
 
               <Button className='mt-4 w-full' asChild>
-                <Link href='/auth/auth2/login'>Login</Link>
+                <Link href='/auth/login'>Login</Link>
               </Button>
             </div>
           </SheetContent>

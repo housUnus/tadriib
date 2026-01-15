@@ -59,7 +59,7 @@ const MobileMenu = () => {
                 asChild
                 className="font-bold w-full bg-sky hover:bg-sky/90 text-white"
               >
-                <Link href="/auth/auth2/login">Log in</Link>
+                <Link href="/auth/login">Log in</Link>
               </Button>
             </SheetClose>
           </SheetFooter>

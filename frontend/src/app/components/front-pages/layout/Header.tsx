@@ -32,7 +32,7 @@ const FrontHeader = () => {
           <div className="xl:block hidden">
             <Navigation />
           </div>
-          {/* <Button as={Link} href="/auth/auth2/login" className="font-bold xl:flex hidden" color={"sky"}>
+          {/* <Button as={Link} href="/auth/login" className="font-bold xl:flex hidden" color={"sky"}>
             Log in
           </Button> */}
           {/* Login Button */}

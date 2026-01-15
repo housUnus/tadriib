@@ -93,10 +93,10 @@ const MainBanner = () => {
             {/* Login Button */}
             <div className="flex lg:justify-start justify-center gap-2">
               <Button asChild className="px-6! font-bold sm:w-fit w-full bg-primary text-white hover:bg-primary/90" >
-                <Link href="/auth/auth2/login">{t('getStarted')}</Link>
+                <Link href="/auth/login">{t('getStarted')}</Link>
               </Button>
               <Button asChild className="px-6! font-bold sm:w-fit w-full bg-success text-white hover:bg-success/90" >
-                <Link href="/auth/auth2/login">{t('browseCourses')}</Link>
+                <Link href="/auth/login">{t('browseCourses')}</Link>
               </Button>
             </div>
           </div>

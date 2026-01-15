@@ -48,7 +48,7 @@ const banner = () => {
                   size="lg"
                   className="sm:mb-0 mb-3"
                 >
-                  <Link href="/auth/auth2/login">Login</Link>
+                  <Link href="/auth/login">Login</Link>
                 </Button>
                 <Button
                   asChild

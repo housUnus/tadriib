@@ -26,7 +26,7 @@ const AuthTwoSteps = () => {
           </div>
         </div>
 
-        {pathname === "/auth/auth2/two-steps" ? (
+        {pathname === "/auth/two-steps" ? (
           <Button className="w-full bg-sky dark:bg-sky hover:bg-dark dark:hover:bg-dark">
             Verify My Account
           </Button>

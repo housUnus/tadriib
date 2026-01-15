@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 const AuthForgotPassword = () => {
   const pathname = usePathname();
-  const isAuth2 = pathname === "/auth/auth2/forgot-password";
+  const isAuth2 = pathname === "/auth/forgot-password";
 
   return (
     <>

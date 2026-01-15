@@ -18,13 +18,13 @@ const LoginReg = () => {
                   asChild
                   className="mb-3 sm:mb-0"
                 >
-                  <Link href="/auth/auth2/login">Login</Link>
+                  <Link href="/auth/login">Login</Link>
                 </Button>
                 <Button
                   asChild
                   variant="outlinewhite"
                 >
-                  <Link href="/auth/auth2/register">Register</Link>
+                  <Link href="/auth/register">Register</Link>
                 </Button>
               </div>
             </div>

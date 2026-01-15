@@ -31,8 +31,8 @@ const BoxedAuthSlider = () => {
   const pathname = usePathname();
 
   const isSmall =
-    pathname === "/auth/auth2/forgot-password" ||
-    pathname === "/auth/auth2/two-steps";
+    pathname === "/auth/forgot-password" ||
+    pathname === "/auth/two-steps";
 
   return (
     <div className="max-w-md mx-auto h-full flex flex-col justify-center items-center boxed-auth">
@@ -44,7 +44,7 @@ const BoxedAuthSlider = () => {
         className={isSmall ? "max-w-[200px]" : "max-w-[300px]"}
       />
 
-      <Carousel className={isSmall ? "h-[150px]" : "-mt-8"}>
+      <Carousel className={isSmall ? "h-[150px]" : "my-4"}>
         <CarouselContent>
           {SliderData.map((item, index) => (
             <CarouselItem key={index}>
