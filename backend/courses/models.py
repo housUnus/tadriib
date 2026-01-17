@@ -3,6 +3,7 @@ from django.conf import settings
 from core.models import BaseModel
 from courses.constants import CourseStatus, ContentType, CourseLevel
 from .contents.models import *
+from django.utils.translation import gettext_lazy as _
 
 class Course(BaseModel):
     title = models.CharField(max_length=255)
@@ -11,6 +12,11 @@ class Course(BaseModel):
         "categories.Category",
         related_name="courses",
         blank=True
+    )
+    primary_category = models.ForeignKey(
+        "categories.Category",
+        on_delete=models.SET_NULL,
+        null=True
     )
 
     instructor = models.ForeignKey(
@@ -42,6 +48,10 @@ class Course(BaseModel):
 
     def is_public(self):
         return self.status == CourseStatus.PUBLISHED
+    
+    class Meta:
+        verbose_name = _("Course")
+        verbose_name_plural = _("Courses")
 
 
 
@@ -56,6 +66,8 @@ class Section(BaseModel):
 
     class Meta:
         ordering = ["order"]
+        verbose_name = _("Course Section")
+        verbose_name_plural = _("Course Sections")
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
@@ -75,6 +87,8 @@ class Content(BaseModel):
 
     class Meta:
         ordering = ["order"]
+        verbose_name = _("Course Content")
+        verbose_name_plural = _("Course Contents")
 
     def __str__(self):
         return self.title

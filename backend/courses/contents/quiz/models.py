@@ -2,6 +2,7 @@ from django.db import models
 from core.models import BaseModel
 from courses.constants import QuestionBlockType, AnswerType, QuizStatus
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 class Quiz(BaseModel):
     content = models.OneToOneField(
@@ -15,6 +16,10 @@ class Quiz(BaseModel):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name = _("Quiz")
+        verbose_name_plural = _("Quizzes")
 
 
 class Question(models.Model):
@@ -29,6 +34,10 @@ class Question(models.Model):
     )
     points = models.PositiveIntegerField(default=1)
     order = models.PositiveIntegerField()
+    
+    class Meta:
+        verbose_name = _("Question")
+        verbose_name_plural = _("Questions")
 
 
 class QuestionBlock(BaseModel):
@@ -68,6 +77,10 @@ class Answer(BaseModel):
     text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
     
+    class Meta:
+        verbose_name = _("Answer")
+        verbose_name_plural = _("Answers")
+    
 class TrueFalseAnswer(models.Model):
     question = models.OneToOneField(
         Question,
@@ -75,6 +88,10 @@ class TrueFalseAnswer(models.Model):
         related_name="true_false"
     )
     correct = models.BooleanField()
+    
+    class Meta:
+        verbose_name = _("True/False Answer")
+        verbose_name_plural = _("True/False Answers")
     
 class FillBlankAnswer(models.Model):
     question = models.OneToOneField(
@@ -85,6 +102,10 @@ class FillBlankAnswer(models.Model):
     correct_text = models.CharField(max_length=255)
     case_sensitive = models.BooleanField(default=False)
     
+    class Meta:
+        verbose_name = _("Fill in the Blank Answer")
+        verbose_name_plural = _("Fill in the Blank Answers")
+    
 class EssayAnswer(models.Model):
     question = models.OneToOneField(
         Question,
@@ -92,6 +113,10 @@ class EssayAnswer(models.Model):
         related_name="essay"
     )
     min_words = models.PositiveIntegerField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = _("Essay Answer")
+        verbose_name_plural = _("Essay Answers")
     
 class FileUploadAnswer(models.Model):
     question = models.OneToOneField(
@@ -101,6 +126,10 @@ class FileUploadAnswer(models.Model):
     )
     allowed_extensions = models.JSONField(default=list)
     max_file_size_mb = models.PositiveIntegerField(default=10)
+    
+    class Meta:
+        verbose_name = _("File Upload Answer")
+        verbose_name_plural = _("File Upload Answers")
     
     
 #----------------------- Quiz Submission -----------------------
