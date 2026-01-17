@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -25,7 +24,7 @@ function CourseCard({ item }) {
           </div>
 
           {/* Image */}
-          <div className="relative h-36 sm:h-43 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
+          <div className="relative h-40 sm:h-48 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
             <img
               src={course.image || "https://picsum.photos/200/300"}
               alt={course.title}
@@ -56,14 +55,7 @@ function CourseCard({ item }) {
             <span className="text-sm text-gray-500 mb-2 block">
               by Ahmed hassan, mooahemd anwar
             </span>
-            <h3 className="font-bold mb-1">
-              {course.price} <span className="uppercase">{t("sar")}</span>
-              <span className="line-through font-normal text-gray-500 text-xs mx-1">
-                {" "}
-                {course.originalPrice}{" "}
-                <span className="uppercase">{t("sar")}</span>
-              </span>
-            </h3>
+            
             <div className="flex items-center justify-between mb-3 sm:mb-4 text-sm text-gray-500">
               <div className="flex items-center gap-2">
                 {course.total_taken} {t("students")}
@@ -74,22 +66,6 @@ function CourseCard({ item }) {
                 <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
                 <span className="text-amber-500">{course.rating}</span>
               </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="mt-auto flex gap-4">
-              <Button
-                className="w-full bg-secondary text-white border-0 group/btn text-sm py-1 sm:py-2 h-auto"
-                disabled={course.availablePlaces === 0}
-              >
-                <span>{t("details")}</span>
-              </Button>
-              <Button
-                className="w-full bg-primary text-white border-0 group/btn text-sm py-1 sm:py-2"
-                disabled={course.availablePlaces === 0}
-              >
-                <span>{t("buyNow")}</span>
-              </Button>
             </div>
           </div>
         </CardContent>

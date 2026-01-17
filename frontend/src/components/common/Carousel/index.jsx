@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import CourseCard from "../CourseCard/index";
 import Autoplay from "embla-carousel-autoplay";
+import { useLocale } from "next-intl";
 
 export default function _Carousel({
   items,
@@ -16,12 +17,16 @@ export default function _Carousel({
   contentClassName = "-ml-2 md:-ml-0 py-4",
   ItemClassName = "basis-[80%] md:basis-80 pl-4 md:pl-4",
 }) {
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+  
   return (
     <Carousel
       className="w-full"
       opts={{
         align: "start",
         loop: true,
+        direction: isRTL ? "rtl" : "ltr",
       }}
       plugins={[
         Autoplay({

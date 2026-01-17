@@ -49,6 +49,7 @@ export const Language = ({isHeader=true}) => {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("home");
   const locale = useLocale();
+  console.log("🚀 ~ Language ~ locale:", locale)
 
   const currentLang =
     Languages.find((_lang) => _lang.value === isLanguage) || Languages[1];

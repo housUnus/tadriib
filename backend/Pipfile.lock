@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "67cea95b53a1041b9e3cff2ea48b5acd967ddba5c867f4100daec58bbfd4059b"
+            "sha256": "90432ca58236c472ac47eab581d65c716744b2b56af7b851d05af927bfece1a6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -440,6 +440,23 @@
             "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==4.3.14"
+        },
+        "django-js-asset": {
+            "hashes": [
+                "sha256:1fc7584199ed1941ed7c8e7b87ca5524bb0f2ba941561d2a104e88ee9f07bedd",
+                "sha256:b5ffe376aebbd73b7af886d675ac9f43ca63b39540190fa8409c9f8e79145f68"
+            ],
+            "markers": "python_version >= '3.10'",
+            "version": "==3.1.2"
+        },
+        "django-mptt": {
+            "hashes": [
+                "sha256:bfa3f01627e3966a1df901aeca74570a3e933e66809ebf58d9df673e63627afb",
+                "sha256:cf5661357ff22bc64e20d3341c26e538aa54583aea0763cfe6aaec0ab8e3a8ee"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==0.18.0"
         },
         "django-rest-auth": {
             "hashes": [

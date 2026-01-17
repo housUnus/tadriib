@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/v1/dj-auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/v1/accounts/', include('allauth.urls')),
     path("api/v1/_allauth/", include("allauth.headless.urls")),
+    path('api/v1/', include('courses.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
