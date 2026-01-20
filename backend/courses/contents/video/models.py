@@ -8,4 +8,4 @@ class Video(BaseModel):
         related_name="video"
     )
     file = models.FileField(upload_to="courses/videos/")
-    duration_seconds = models.PositiveIntegerField()
+    duration_seconds = models.PositiveIntegerField(null=True, blank=True)

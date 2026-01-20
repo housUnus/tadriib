@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 function CourseCard({ item }) {
   const t = useTranslations("home");
@@ -34,7 +35,7 @@ function CourseCard({ item }) {
             <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
           </div>
 
-          <div className="p-1 sm:p-2 flex-1 flex flex-col">
+          <div className="p-2 sm:p-3 flex-1 flex flex-col">
             {/* Category & Availability */}
             <div className="flex items-center justify-between mb-1 sm:mb-2">
               {/* <Badge
@@ -79,10 +80,13 @@ function CourseCard({ item }) {
             {/* CTA Button */}
             <div className="mt-auto flex gap-4">
               <Button
+                asChild
                 className="w-full bg-secondary text-white border-0 group/btn text-sm py-1 sm:py-2 h-auto"
                 disabled={course.availablePlaces === 0}
               >
-                <span>{t("details")}</span>
+                <Link href={`/courses/${course.id}`}>
+                  <span>{t("details")}</span>
+                </Link>
               </Button>
               <Button
                 className="w-full bg-primary text-white border-0 group/btn text-sm py-1 sm:py-2"

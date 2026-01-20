@@ -81,6 +81,20 @@ class SectionInline(TabularInline):
 
 
 # ======================================================
+# Requirements and Outcomes
+# ======================================================
+class LearningOutcomeInline(TabularInline):
+    model = CourseLearningOutcome
+    extra = 1
+    fields = ("text", )
+    
+class RequirementInline(TabularInline):
+    model = CourseRequirement
+    extra = 1
+    fields = ("text", )
+
+
+# ======================================================
 # COURSE (ROOT)
 # ======================================================
 
@@ -100,7 +114,7 @@ class CourseAdmin(ModelAdmin):
     search_fields = ("title", "description", "instructor__email")
     filter_horizontal = ("categories",)
 
-    inlines = [SectionInline]
+    inlines = [SectionInline, LearningOutcomeInline, RequirementInline]
     readonly_fields = ("published_at",)
 
     fieldsets = (
@@ -108,7 +122,7 @@ class CourseAdmin(ModelAdmin):
             "fields": ("title", "description", "instructor", "poster")
         }),
         ("Classification", {
-            "fields": ("status", "level", "language", "categories")
+            "fields": ("status", "level", "language", "categories", "primary_category")
         }),
         ("Publishing", {
             "fields": ("published_at",)

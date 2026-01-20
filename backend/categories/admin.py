@@ -15,5 +15,5 @@ class CategoryAdmin(DraggableMPTTAdmin, ModelAdmin):
 
     list_display_links = ("indented_title",)
 
-    prepopulated_fields = {"slug": ("name",)}
+    prepocpulated_fields = {"slug": ("name",)}
     search_fields = ("name",)

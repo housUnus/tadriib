@@ -51,6 +51,7 @@ class Profile(models.Model):
     active_role = models.ForeignKey(Role, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     # Common fields
     avatar = models.ImageField(_("Avatar"), upload_to="avatars/", blank=True, null=True)
+    title = models.CharField(_("Title"), max_length=255, blank=True)
     bio = models.TextField(_("Bio"), blank=True)
     details = models.TextField(_("Details"), blank=True)  # teacher/user details, certifications, motivation
 
