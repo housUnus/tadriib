@@ -22,12 +22,18 @@ import {
   Heart,
   Share2,
   ArrowLeft,
+  Calendar,
+  Package,
+  BookOpen,
+  ChevronRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { ShareDialog } from "@/components/common/share-dialog"
+import { ContentPreviewModal } from "../content-preview"
 
 // Mock course data
 const courseData = {
@@ -38,6 +44,11 @@ const courseData = {
   rating: 4.7,
   ratingsCount: 234567,
   studentsCount: 892341,
+  category: [
+    { name: "Development", href: "/category/development" },
+    { name: "Web Development", href: "/category/web-development" },
+    { name: "React", href: "/category/react" },
+  ],
   instructor: {
     name: "Dr. Sarah Johnson",
     title: "Senior Software Engineer & Educator",
@@ -52,6 +63,7 @@ const courseData = {
   lastUpdated: "January 2025",
   price: 89.99,
   originalPrice: 199.99,
+  discountPercent: 55,
   thumbnail: "/placeholder.svg?height=400&width=720",
   previewVideo: "/preview.mp4",
   duration: "63.5 total hours",
@@ -93,7 +105,7 @@ const courseData = {
         { id: "1", title: "Welcome to the Course", type: "video", duration: "5:23", isPreview: true },
         { id: "2", title: "How the Internet Works", type: "video", duration: "12:45", isPreview: true },
         { id: "3", title: "Setting Up Your Development Environment", type: "video", duration: "18:32", isPreview: false },
-        { id: "4", title: "Course Resources", type: "article", duration: "5 min read", isPreview: false },
+        { id: "4", title: "Course Resources", type: "article", duration: "5 min read", isPreview: true, content: "<p>This article provides an overview of the resources available for this course, including code samples, project files, and recommended tools.</p>" },
       ],
     },
     {
@@ -186,6 +198,14 @@ const courseData = {
 export default function CourseDetailPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>(["1"])
   const [showFullDescription, setShowFullDescription] = useState(false)
+  const [isWishlisted, setIsWishlisted] = useState(false)
+  const [previewContent, setPreviewContent] = useState<typeof courseData.sections[0]["contents"][0] | null>(null)
+  const [previewModalOpen, setPreviewModalOpen] = useState(false)
+
+  const handlePreview = (content: typeof courseData.sections[0]["contents"][0]) => {
+    setPreviewContent(content)
+    setPreviewModalOpen(true)
+  }
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) =>
@@ -204,417 +224,388 @@ export default function CourseDetailPage() {
   const totalLectures = courseData.sections.reduce((acc, s) => acc + s.lectures, 0)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-10">
+      <div className="max-w-6xl mx-auto px-4 pt-4">
+        <nav className="flex items-center gap-1 text-sm my-3">
+          {courseData.category.map((cat, i) => (
+            <span key={cat.href} className="flex items-center gap-1">
+              <Link href={cat.href} className="text-primary hover:underline">
+                {cat.name}
+              </Link>
+              {i < courseData.category.length - 1 && (
+                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
+              )}
+            </span>
+          ))}
+        </nav>
+        <Badge className="w-fit mb-3 bg-amber-400 text-foreground hover:bg-amber-400 font-medium">Bestseller</Badge>
+      </div>
       {/* Hero Section */}
-      <div className="bg-[#1c1d1f] text-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid lg:grid-cols-3 gap-8 p-5">
-            <div className="lg:col-span-2 space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant={'primary'}>Bestseller</Badge>
-                <Badge variant="outline" className="border-neutral-600 text-neutral-300">
-                  Updated {courseData.lastUpdated}
-                </Badge>
-              </div>
-
-              <h1 className="text-3xl md:text-4xl font-bold leading-tight text-balance text-primary-foreground">{courseData.title}</h1>
-
-              <p className="text-lg text-neutral-300 leading-relaxed">{courseData.subtitle}</p>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <span className="text-[#f3ca8c] font-bold">{courseData.rating}</span>
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${i < Math.floor(courseData.rating) ? "fill-[#f3ca8c] text-[#f3ca8c]" : "text-neutral-600"}`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-[#cec0fc] underline cursor-pointer hover:text-[#a48ee8]">
-                    ({courseData.ratingsCount.toLocaleString()} ratings)
-                  </span>
-                </div>
-                <span className="text-neutral-400">{courseData.studentsCount.toLocaleString()} students</span>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-300">
-                <span>
-                  Created by{" "}
-                  <Link href="#instructor" className="text-[#cec0fc] underline hover:text-[#a48ee8]">
-                    {courseData.instructor.name}
-                  </Link>
-                </span>
-                <div className="flex items-center gap-1">
-                  <Globe className="h-4 w-4" />
-                  {courseData.language}
+      <section className="max-w-6xl mx-auto px-4 py-3">
+        <div className="grid lg:grid-cols-12 gap-10">
+          {/* Video Preview - Left Side */}
+          <div className="lg:col-span-6 lg:flex block justify-center">
+            <div
+              className="relative aspect-video bg-foreground rounded-lg overflow-hidden cursor-pointer group"
+              onClick={() => handlePreview({ id: "preview", title: "Course Preview", type: "video", duration: "2:30", isPreview: true })}
+            >
+              <Image
+                src={courseData.thumbnail || "/placeholder.svg"}
+                alt={courseData.title}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                <div className="h-16 w-16 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Play className="h-7 w-7 text-foreground fill-foreground ml-1" />
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Sticky Card - Hidden on mobile, shown in sidebar on large screens */}
-            <div className="hidden lg:block" />
+          {/* Course Info - Right Side */}
+          <div className="lg:col-span-6 flex flex-col">
+            <h1 className="text-2xl font-bold mb-2">{courseData.title}</h1>
+            <p className="text-muted-foreground text-sm mb-4">{courseData.subtitle}</p>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 text-sm mb-2">
+                <span className="font-bold text-amber-500">{courseData.rating}</span>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star key={i} className={`h-4 w-4 ${i <= Math.floor(courseData.rating) ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
+                  ))}
+                </div>
+                <span className="text-muted-foreground">({courseData.ratingsCount.toLocaleString()})</span>
+              </div>
+
+              <p className="text-sm text-muted-foreground mb-1">{courseData.studentsCount.toLocaleString()} students</p>
+            </div>
+            <p className="text-sm mb-4">
+              Created by <Link href="#instructor" className="text-primary hover:underline">{courseData.instructor.name}</Link>
+            </p>
+
+            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-6">
+              <span className="flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5" /> Updated {courseData.lastUpdated}
+              </span>
+              <span className="flex items-center gap-1">
+                <Globe className="h-3.5 w-3.5" /> {courseData.language}
+              </span>
+            </div>
+
+            {/* Price Section */}
+            <div className="mt-auto pt-4 border-t">
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="text-3xl font-bold">${courseData.price}</span>
+                <span className="text-lg text-muted-foreground line-through">${courseData.originalPrice}</span>
+                <Badge variant="secondary" className="text-xs">{courseData.discountPercent}% off</Badge>
+              </div>
+              <div className="flex gap-1 flex-col md:flex-row">
+                <div className="cta flex gap-1 flex-1">
+                  <Button className="flex-1" size="lg">Add to Cart</Button>
+                  <Button variant="outline" className="flex-1" size="lg">Buy Now</Button>
+                </div>
+                <div className="flex gap-1 flex-1">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-transparent"
+                    onClick={() => setIsWishlisted(!isWishlisted)}
+                  >
+                    <Heart className={`h-5 w-5 ${isWishlisted ? "fill-red-500 text-red-500" : ""}`} />
+                  </Button>
+                  <ShareDialog title={courseData.title} description={courseData.subtitle}>
+                    <Button variant="outline" size="lg" className="bg-transparent">
+                      <Share2 className="h-5 w-5" />
+                    </Button>
+                  </ShareDialog>
+                </div>
+
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      <section className="border-y bg-muted/30 my-3">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-sm">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span>{courseData.duration}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <PlayCircle className="h-4 w-4 text-muted-foreground" />
+              <span>{courseData.lectures} lectures</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-muted-foreground" />
+              <span>{courseData.level}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Download className="h-4 w-4 text-muted-foreground" />
+              <span>85 resources</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-4 w-4 text-muted-foreground" />
+              <span>Certificate</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* What you'll learn */}
-            <div className="border border-border rounded-lg p-6">
-              <h2 className="text-xl font-bold mb-4">What you'll learn</h2>
-              <div className="grid md:grid-cols-2 gap-3">
-                {courseData.whatYouWillLearn.map((item, index) => (
-                  <div key={index} className="flex gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Course Content */}
-            <div>
-              <h2 className="text-xl font-bold mb-4">Course content</h2>
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-4 text-sm text-muted-foreground">
-                <span>
-                  {courseData.sections.length} sections • {totalLectures} lectures • {courseData.duration}
-                </span>
-                <button
-                  onClick={expandedSections.length === courseData.sections.length ? collapseAllSections : expandAllSections}
-                  className="text-primary hover:underline font-medium"
-                >
-                  {expandedSections.length === courseData.sections.length ? "Collapse all sections" : "Expand all sections"}
-                </button>
-              </div>
-
-              <div className="border border-border rounded-lg overflow-hidden">
-                {courseData.sections.map((section, index) => (
-                  <div key={section.id} className={index > 0 ? "border-t border-border" : ""}>
-                    <button
-                      onClick={() => toggleSection(section.id)}
-                      className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors text-left"
-                    >
-                      <div className="flex items-center gap-3">
-                        {expandedSections.includes(section.id) ? (
-                          <ChevronUp className="h-4 w-4 shrink-0" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4 shrink-0" />
-                        )}
-                        <span className="font-semibold">{section.title}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {section.lectures} lectures • {section.duration}
-                      </span>
-                    </button>
-
-                    {expandedSections.includes(section.id) && (
-                      <div className="bg-background">
-                        {section.contents.map((content) => (
-                          <div
-                            key={content.id}
-                            className="flex items-center justify-between px-4 py-3 border-t border-border/50 hover:bg-muted/30 transition-colors"
-                          >
-                            <div className="flex items-center gap-3">
-                              {content.type === "video" ? (
-                                <PlayCircle className="h-4 w-4 text-muted-foreground" />
-                              ) : content.type === "quiz" ? (
-                                <FileText className="h-4 w-4 text-muted-foreground" />
-                              ) : (
-                                <FileText className="h-4 w-4 text-muted-foreground" />
-                              )}
-                              <span className="text-sm">{content.title}</span>
-                              {content.isPreview && (
-                                <Badge variant="secondary" className="text-xs">
-                                  Preview
-                                </Badge>
-                              )}
-                            </div>
-                            <span className="text-sm text-muted-foreground">{content.duration}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Requirements */}
-            <div>
-              <h2 className="text-xl font-bold mb-4">Requirements</h2>
-              <ul className="space-y-2">
-                {courseData.requirements.map((req, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-foreground">•</span>
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Description */}
-            <div>
-              <h2 className="text-xl font-bold mb-4">Description</h2>
-              <div
-                className={`prose prose-sm max-w-none text-muted-foreground ${!showFullDescription ? "line-clamp-6" : ""}`}
-                dangerouslySetInnerHTML={{ __html: courseData.description }}
-              />
-              <button
-                onClick={() => setShowFullDescription(!showFullDescription)}
-                className="text-primary hover:underline font-medium mt-2 text-sm"
-              >
-                {showFullDescription ? "Show less" : "Show more"}
-              </button>
-            </div>
-
-            {/* Instructor */}
-            <div id="instructor">
-              <h2 className="text-xl font-bold mb-4">Instructor</h2>
-              <div className="space-y-4">
-                <Link href="#" className="text-primary hover:underline text-lg font-semibold">
-                  {courseData.instructor.name}
-                </Link>
-                <p className="text-sm text-muted-foreground">{courseData.instructor.title}</p>
-
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-28 w-28">
-                    <AvatarImage src={courseData.instructor.avatar || "/placeholder.svg"} />
-                    <AvatarFallback className="text-2xl">
-                      {courseData.instructor.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-foreground" />
-                      <span>{courseData.instructor.rating} Instructor Rating</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-foreground" />
-                      <span>{courseData.instructor.reviewsCount.toLocaleString()} Reviews</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-foreground" />
-                      <span>{courseData.instructor.studentsCount.toLocaleString()} Students</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Play className="h-4 w-4 text-foreground" />
-                      <span>{courseData.instructor.coursesCount} Courses</span>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-muted-foreground leading-relaxed">{courseData.instructor.bio}</p>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Reviews */}
-            <div>
-              <h2 className="text-xl font-bold mb-6">Student feedback</h2>
-
-              <div className="grid md:grid-cols-[auto_1fr] gap-8 mb-8">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-[#b4690e]">{courseData.rating}</div>
-                  <div className="flex justify-center my-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${i < Math.floor(courseData.rating) ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                      />
-                    ))}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Course Rating</div>
-                </div>
-
-                <div className="space-y-2">
-                  {[5, 4, 3, 2, 1].map((stars) => (
-                    <div key={stars} className="flex items-center gap-3">
-                      <Progress
-                        value={courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}
-                        className="h-2 flex-1"
-                      />
-                      <div className="flex items-center gap-1 w-24">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-3 w-3 ${i < stars ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-muted-foreground w-10">
-                        {courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}%
-                      </span>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        {/* Left Content */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* What you'll learn */}
+          <div className="border border-border rounded-lg p-6">
+            <div className="grid md:grid-cols-2 gap-3">
+              <div className="outcome">
+                <h2 className="text-xl font-bold mb-4">What you'll learn</h2>
+                <div className="flex flex-col gap-4">
+                  {courseData.whatYouWillLearn.map((item, index) => (
+                    <div key={index} className="flex gap-3 items-center">
+                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              <div className="space-y-6">
-                {courseData.reviews.map((review) => (
-                  <div key={review.id} className="border-t border-border pt-6">
-                    <div className="flex items-start gap-4">
-                      <Avatar>
-                        <AvatarImage src={review.avatar || "/placeholder.svg"} />
-                        <AvatarFallback>{review.user[0]}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold">{review.user}</span>
-                          <span className="text-sm text-muted-foreground">{review.date}</span>
-                        </div>
-                        <div className="flex mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${i < review.rating ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
-                      </div>
+              <div className="requirements">
+                <h2 className="text-xl font-bold mb-4">Requirements</h2>
+                <div className="flex flex-col gap-4">
+                  {courseData.requirements.map((req, index) => (
+                    <div key={index} className="flex gap-3 items-center">
+                      <Package className="h-5 w-5 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground">{req}</span>
                     </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          {/* Course Content */}
+          <div className="">
+            <h2 className="text-xl font-bold mb-4">Course content</h2>
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-4 text-sm text-muted-foreground">
+              <span>
+                {courseData.sections.length} sections • {totalLectures} lectures • {courseData.duration}
+              </span>
+              <button
+                onClick={expandedSections.length === courseData.sections.length ? collapseAllSections : expandAllSections}
+                className="text-primary hover:underline font-medium"
+              >
+                {expandedSections.length === courseData.sections.length ? "Collapse all sections" : "Expand all sections"}
+              </button>
+            </div>
+
+            <div className="border border-border rounded-lg overflow-hidden">
+              {courseData.sections.map((section, index) => (
+                <div key={section.id} className={index > 0 ? "border-t border-border" : ""}>
+                  <button
+                    onClick={() => toggleSection(section.id)}
+                    className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      {expandedSections.includes(section.id) ? (
+                        <ChevronUp className="h-4 w-4 shrink-0" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 shrink-0" />
+                      )}
+                      <span className="font-semibold">{section.title}</span>
+                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      {section.lectures} lectures • {section.duration}
+                    </span>
+                  </button>
+
+                  {expandedSections.includes(section.id) && (
+                    <div className="bg-background">
+                      {section.contents.map((content) => (
+                        <div
+                          key={content.id}
+                          onClick={() => content.isPreview && handlePreview(content)}
+                          className={`flex items-center justify-between px-4 py-3 border-t ${content.isPreview ? "hover:bg-muted/30 cursor-pointer" : ""}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            {content.type === "video" ? (
+                              <PlayCircle className="h-4 w-4 text-muted-foreground" />
+                            ) : content.type === "quiz" ? (
+                              <FileText className="h-4 w-4 text-muted-foreground" />
+                            ) : (
+                              <FileText className="h-4 w-4 text-muted-foreground" />
+                            )}
+                            <span className="text-sm">{content.title}</span>
+                            {content.isPreview && (
+                              <Badge variant="secondary" className="text-xs">
+                                Preview
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="text-sm text-muted-foreground">{content.duration}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <h2 className="text-xl font-bold mb-4">Description</h2>
+            <div
+              className={`prose prose-sm max-w-none text-muted-foreground ${!showFullDescription ? "line-clamp-6" : ""}`}
+              dangerouslySetInnerHTML={{ __html: courseData.description }}
+            />
+            <button
+              onClick={() => setShowFullDescription(!showFullDescription)}
+              className="text-primary hover:underline font-medium mt-2 text-sm"
+            >
+              {showFullDescription ? "Show less" : "Show more"}
+            </button>
+          </div>
+
+          {/* Instructor */}
+          <div id="instructor">
+            <h2 className="text-xl font-bold mb-4">Instructor</h2>
+            <div className="space-y-4">
+              <Link href="#" className="text-primary hover:underline text-lg font-semibold">
+                {courseData.instructor.name}
+              </Link>
+              <p className="text-sm text-muted-foreground">{courseData.instructor.title}</p>
+
+              <div className="flex items-center gap-4">
+                <Avatar className="h-28 w-28">
+                  <AvatarImage src={courseData.instructor.avatar || "/placeholder.svg"} />
+                  <AvatarFallback className="text-2xl">
+                    {courseData.instructor.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-foreground" />
+                    <span>{courseData.instructor.rating} Instructor Rating</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award className="h-4 w-4 text-foreground" />
+                    <span>{courseData.instructor.reviewsCount.toLocaleString()} Reviews</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-foreground" />
+                    <span>{courseData.instructor.studentsCount.toLocaleString()} Students</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Play className="h-4 w-4 text-foreground" />
+                    <span>{courseData.instructor.coursesCount} Courses</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground leading-relaxed">{courseData.instructor.bio}</p>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Reviews */}
+          <div>
+            <h2 className="text-xl font-bold mb-6">Student feedback</h2>
+
+            <div className="grid md:grid-cols-[auto_1fr] gap-8 mb-8">
+              <div className="text-center">
+                <div className="text-5xl font-bold text-[#b4690e]">{courseData.rating}</div>
+                <div className="flex justify-center my-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${i < Math.floor(courseData.rating) ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
+                    />
+                  ))}
+                </div>
+                <div className="text-sm text-muted-foreground">Course Rating</div>
+              </div>
+
+              <div className="space-y-2">
+                {[5, 4, 3, 2, 1].map((stars) => (
+                  <div key={stars} className="flex items-center gap-3">
+                    <Progress
+                      value={courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}
+                      className="h-2 flex-1"
+                    />
+                    <div className="flex items-center gap-1 w-24">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-3 w-3 ${i < stars ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-muted-foreground w-10">
+                      {courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}%
+                    </span>
                   </div>
                 ))}
               </div>
-
-              <Button variant="outline" className="mt-6 bg-transparent">
-                See all reviews
-              </Button>
             </div>
-          </div>
 
-          {/* Sticky Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-4 space-y-4">
-              {/* Course Card */}
-              <div className="border border-border rounded-lg overflow-hidden bg-card shadow-lg">
-                <div className="relative aspect-video bg-neutral-900">
-                  <Image
-                    src={courseData.thumbnail || "/placeholder.svg"}
-                    alt={courseData.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <button className="flex items-center gap-2 text-white hover:scale-105 transition-transform">
-                      <div className="h-16 w-16 rounded-full bg-white/90 flex items-center justify-center">
-                        <Play className="h-8 w-8 text-black fill-black ml-1" />
+            <div className="space-y-6">
+              {courseData.reviews.map((review) => (
+                <div key={review.id} className="border-t border-border pt-6">
+                  <div className="flex items-start gap-4">
+                    <Avatar>
+                      <AvatarImage src={review.avatar || "/placeholder.svg"} />
+                      <AvatarFallback>{review.user[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold">{review.user}</span>
+                        <span className="text-sm text-muted-foreground">{review.date}</span>
                       </div>
-                    </button>
-                  </div>
-                  <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm font-medium">
-                    Preview this course
-                  </span>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">${courseData.price}</span>
-                    <span className="text-lg text-muted-foreground line-through">${courseData.originalPrice}</span>
-                    <Badge className="bg-primary/10 text-primary hover:bg-primary/10">
-                      {Math.round((1 - courseData.price / courseData.originalPrice) * 100)}% off
-                    </Badge>
-                  </div>
-
-                  <div className="text-sm text-destructive font-medium">
-                    2 days left at this price!
-                  </div>
-
-                  <div className="space-y-2">
-                    <Button className="w-full" size="lg">
-                      Add to cart
-                    </Button>
-                    <Button variant="outline" className="w-full bg-transparent" size="lg">
-                      Buy now
-                    </Button>
-                  </div>
-
-                  <p className="text-center text-xs text-muted-foreground">
-                    30-Day Money-Back Guarantee
-                  </p>
-
-                  <Separator />
-
-                  <div>
-                    <h3 className="font-semibold mb-3">This course includes:</h3>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <Play className="h-4 w-4" />
-                        {courseData.duration} on-demand video
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
-                        42 articles
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Download className="h-4 w-4" />
-                        85 downloadable resources
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4" />
-                        Access on mobile and TV
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Infinity className="h-4 w-4" />
-                        Full lifetime access
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Award className="h-4 w-4" />
-                        Certificate of completion
-                      </li>
-                    </ul>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between text-sm">
-                    <button className="flex items-center gap-1 hover:text-primary transition-colors">
-                      <Share2 className="h-4 w-4" />
-                      Share
-                    </button>
-                    <button className="flex items-center gap-1 hover:text-primary transition-colors">
-                      <Heart className="h-4 w-4" />
-                      Wishlist
-                    </button>
+                      <div className="flex mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${i < review.rating ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
+                          />
+                        ))}
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Course Stats */}
-              <div className="border border-border rounded-lg p-4 bg-card">
-                <h3 className="font-semibold mb-3">Course Stats</h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span>{courseData.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <PlayCircle className="h-4 w-4 text-muted-foreground" />
-                    <span>{totalLectures} lectures</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                    <span>{courseData.level}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    <span>{courseData.language}</span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
+
+            <Button variant="outline" className="mt-6 bg-transparent">
+              See all reviews
+            </Button>
           </div>
         </div>
       </div>
+      {/* Preview Modal */}
+      {previewContent && (
+        <ContentPreviewModal
+          open={previewModalOpen}
+          onOpenChange={setPreviewModalOpen}
+          content={{
+            title: previewContent.title,
+            duration: previewContent.duration,
+            type: previewContent.type,
+            videoUrl: previewContent.type === "video" ? (previewContent.content || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
+            articleContent: previewContent.type === "article" ? previewContent.content : undefined,
+          }}
+        />
+      )}
     </div>
   )
 }

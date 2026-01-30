@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db.models import Avg
 from unfold.admin import ModelAdmin, TabularInline
+from django import forms
+from tinymce.widgets import TinyMCE
 
 from .models import *
 
@@ -98,8 +100,20 @@ class RequirementInline(TabularInline):
 # COURSE (ROOT)
 # ======================================================
 
+class CourseAdminForm(forms.ModelForm):
+    description = forms.CharField(
+        widget=TinyMCE(attrs={"cols": 80, "rows": 20}),
+        required=False,
+    )
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+        
 @admin.register(Course)
 class CourseAdmin(ModelAdmin):
+    form = CourseAdminForm
+
     list_display = (
         "title",
         "instructor",
@@ -119,7 +133,7 @@ class CourseAdmin(ModelAdmin):
 
     fieldsets = (
         ("Basic Info", {
-            "fields": ("title", "description", "instructor", "poster")
+            "fields": ("title", "short_description", "description", "instructor", "poster")
         }),
         ("Classification", {
             "fields": ("status", "level", "language", "categories", "primary_category")

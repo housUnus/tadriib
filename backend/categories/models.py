@@ -23,3 +23,8 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.name
+    
+    def get_full_path(self):
+        return "/".join(
+            [ancestor.name for ancestor in self.get_ancestors(include_self=True)]
+        )

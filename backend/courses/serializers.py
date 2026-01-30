@@ -9,6 +9,7 @@ from .models import (
 from django.db.models import Avg
 from core.serializers import PublicSerializerMixin
 from drf_writable_nested.serializers import WritableNestedModelSerializer
+from categories.serializers import CategorySerializer
 
 
 class CourseLearningOutcomeSerializer(PublicSerializerMixin, serializers.ModelSerializer):
@@ -42,8 +43,9 @@ class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
         
 class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
-    # rating = serializers.SerializerMethodField()
-
+    # total_students = serializers.IntegerField(read_only=True)
+    total_reviews = serializers.IntegerField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
     class Meta:
         model = Course
         fields = [
@@ -55,6 +57,8 @@ class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
             "status",
             "published_at",
             "instructor_name",
+            "total_reviews",
+            "average_rating",
         ]
         
 class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer):
@@ -62,8 +66,10 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
     learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
     requirements = CourseRequirementSerializer(many=True, read_only=True)
-    # rating = serializers.SerializerMethodField()
-
+    primary_category = CategorySerializer(read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+    total_reviews = serializers.IntegerField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
     class Meta:
         model = Course
         fields = [
@@ -75,11 +81,13 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "status",
             "published_at",
             "instructor_name",
+            "primary_category",
             "categories",
             "sections",
             "learning_outcomes",
             "requirements",
-            # "rating",
+            "total_reviews",
+            "average_rating",
         ]
 
 

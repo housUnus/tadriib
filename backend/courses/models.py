@@ -4,6 +4,8 @@ from core.models import BaseModel
 from courses.constants import CourseStatus, ContentType, CourseLevel
 from .contents.models import *
 from django.utils.translation import gettext_lazy as _
+from tinymce.models import HTMLField
+from .querysets import CourseQuerySet
 
 class CourseLearningOutcome(models.Model):
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE, related_name="learning_outcomes")
@@ -15,14 +17,14 @@ class CourseRequirement(models.Model):
 
 class Course(BaseModel):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    short_description = models.CharField(max_length=500, blank=True, null=True)
+    description = HTMLField(null=True, blank=True)
     categories = models.ManyToManyField("categories.Category", related_name="courses", blank=True)
     primary_category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True)
 
     instructor = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="courses")
 
-    status = models.CharField(max_length=20, choices=CourseStatus.choices, default=CourseStatus.DRAFT
-)
+    status = models.CharField(max_length=20, choices=CourseStatus.choices, default=CourseStatus.DRAFT)
 
     language = models.CharField(max_length=50, default="en")
     level = models.CharField(max_length=20, choices=CourseLevel.choices, default=CourseLevel.ALL_LEVELS)
@@ -39,6 +41,7 @@ class Course(BaseModel):
         verbose_name = _("Course")
         verbose_name_plural = _("Courses")
 
+    objects = CourseQuerySet.as_manager()
 
 
 class Section(BaseModel):

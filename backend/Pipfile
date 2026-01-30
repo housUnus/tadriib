@@ -35,6 +35,7 @@ sentry-sdk = {extras = ["django"], version = "*"}
 django-allauth = {extras = ["headless"], version = "65.2.0"}
 drf-writable-nested = "*"
 django-mptt = "*"
+django-tinymce = "*"
 
 [dev-packages]
 

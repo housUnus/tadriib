@@ -16,7 +16,7 @@ export default function HomeLayout({
         <AnnouncementBar />
         <FrontHeader />
         {/* Content */}
-        <section>{children}</section>
+        {children}
         {/* Footer */}
         <Footer />
       {/* </ThemeProvider> */}

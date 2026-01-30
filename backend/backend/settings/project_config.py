@@ -63,11 +63,13 @@ INSTALLED_APPS = [
     "health_check.contrib.migrations",
     "health_check.contrib.psutil",  # disk and memory utilization; requires psutil
     "health_check.contrib.s3boto3_storage",  # requires boto3 and S3BotoStorage backend
+    "tinymce",
     
     'authentication',
     'users',
     'categories',
     'courses',
+    'ratings',
 ]
 
 MIDDLEWARE = [

@@ -12,11 +12,7 @@ from core.views import PublicViewsMixin
 
 
 class CourseViewSet(PublicViewsMixin, ModelViewSet):
-    queryset = Course.objects.select_related("instructor").prefetch_related(
-        "sections__contents",
-        # "categories",
-        # "reviews",
-    )
+    queryset = Course.objects.with_stats().select_related("instructor")#type: ignore
 
     permission_classes = [IsInstructorOrReadOnly]
 

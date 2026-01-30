@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/v1/admin/', admin.site.urls),
+    path('api/v1/tinymce/', include('tinymce.urls')),
     path("api/v1/ht/", include("health_check.urls")),
     path('api/v1/dj-auth/', include('authentication.urls')),
     path('api/v1/', include('users.urls')),
@@ -15,6 +16,7 @@ urlpatterns = [
     path('api/v1/accounts/', include('allauth.urls')),
     path("api/v1/_allauth/", include("allauth.headless.urls")),
     path('api/v1/', include('courses.urls')),
+    path('api/v1/', include('ratings.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
