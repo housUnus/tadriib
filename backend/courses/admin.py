@@ -129,11 +129,11 @@ class CourseAdmin(ModelAdmin):
     filter_horizontal = ("categories",)
 
     inlines = [SectionInline, LearningOutcomeInline, RequirementInline]
-    readonly_fields = ("published_at",)
+    readonly_fields = ("published_at","slug")
 
     fieldsets = (
         ("Basic Info", {
-            "fields": ("title", "short_description", "description", "instructor", "poster")
+            "fields": ("title", "slug", "short_description", "description", "instructor", "poster")
         }),
         ("Classification", {
             "fields": ("status", "level", "language", "categories", "primary_category")

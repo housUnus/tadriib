@@ -28,7 +28,7 @@ function CourseCard({ item }) {
           {/* Image */}
           <div className="relative h-36 sm:h-43 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
             <img
-              src={course.image || "https://picsum.photos/200/300"}
+              src={course.poster || "https://picsum.photos/200/300"}
               alt={course.title}
               className="w-full h-full object-cover transition-transform duration-300"
             />
@@ -55,7 +55,7 @@ function CourseCard({ item }) {
               {course.title}
             </h3>
             <span className="text-sm text-gray-500 mb-2 block">
-              by Ahmed hassan, mooahemd anwar
+              by {course.instructor_name}
             </span>
             <h3 className="font-bold mb-1">
               {course.price} <span className="uppercase">{t("sar")}</span>
@@ -71,9 +71,9 @@ function CourseCard({ item }) {
               </div>
 
               <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
-                <span className="">({course.reviews})</span>
+                <span className="">({course.total_reviews})</span>
                 <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                <span className="text-amber-500">{course.rating}</span>
+                <span className="text-amber-500">{course.average_rating}</span>
               </div>
             </div>
 
@@ -84,7 +84,7 @@ function CourseCard({ item }) {
                 className="w-full bg-secondary text-white border-0 group/btn text-sm py-1 sm:py-2 h-auto"
                 disabled={course.availablePlaces === 0}
               >
-                <Link href={`/courses/${course.id}`}>
+                <Link href={`/courses/${course.slug}`}>
                   <span>{t("details")}</span>
                 </Link>
               </Button>

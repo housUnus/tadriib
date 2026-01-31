@@ -1,9 +1,11 @@
 import { Zap } from "lucide-react";
 import CoursesCore from "./CoursesCore";
 import { useTranslations } from "next-intl";
+import { useServerFetch } from "@/hooks/auth/user-server-fetch";
 
-export default function Courses() {
+export default function Courses({courses}: {courses: any[]}) {
   const t = useTranslations("home");
+
   return (
     <section className="bg-lightgray dark:bg-darkgray lg:py-20 py-10 px-4 sm:px-6 lg:px-8">
       <div className="">
@@ -18,7 +20,7 @@ export default function Courses() {
         </div>
 
         {/* Upcoming Webinars */}
-        <CoursesCore />
+        <CoursesCore courses={courses || []}/>
       </div>
     </section>
   );

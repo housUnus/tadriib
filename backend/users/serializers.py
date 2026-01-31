@@ -125,3 +125,33 @@ class ChangePasswordSerializer(serializers.Serializer):
         if data['new_password1'] != data['new_password2']:
             raise serializers.ValidationError({"new_password": "Passwords must match."})
         return data
+
+
+class ShortUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "slug",
+        )
+        
+class UserWithStatesSerializer(serializers.ModelSerializer):
+    total_reviews = serializers.IntegerField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    total_courses = serializers.IntegerField(read_only=True)
+    slug = serializers.SlugField(source='profile.slug', read_only=True)
+    bio = serializers.CharField(source='profile.bio', read_only=True)
+    details = serializers.CharField(source='profile.details', read_only=True)
+    class Meta:
+        model = User
+        fields = (
+            "slug",
+            "first_name",
+            "last_name",
+            "total_reviews",
+            "average_rating",
+            "total_courses",
+            "bio",
+            "details"
+        )

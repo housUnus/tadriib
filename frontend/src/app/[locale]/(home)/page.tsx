@@ -8,12 +8,17 @@ import OurClients from "@/app/components/front-pages/homepage/OurClients";
 import CtaSection from "@/app/components/front-pages/homepage/CtaSection";
 import { StatsSection } from "@/app/components/front-pages/homepage/StatsSection";
 import type { Metadata } from "next";
+import { useServerFetch } from "@/hooks/auth/user-server-fetch";
 
 export const metadata: Metadata = {
-  title: "Front-Homepage",
+  title: "Ruwad Academy For Training - رواد أكاديمي للتدريب",
+  description: "Ruwad Academy For Training - رواد أكاديمي للتدريب",
 };
 
-const page = () => {
+const page = async () => {
+    const client = await useServerFetch();
+  const res = await client.get("/courses/?limit=3");
+  const { data, error } = res as { data: any[]; error?: any };
   return (
     <>
       {/* <Hero /> */}
@@ -22,7 +27,7 @@ const page = () => {
       {/* <FeatureTabs /> */}
       <CertificatesSection />
       <StatsSection />
-      <Courses />
+      <Courses courses={data || []} />
       {/* <OurTeam /> */}
       {/* <ContactBar /> */}
       <Highlights />

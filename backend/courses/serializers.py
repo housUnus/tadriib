@@ -6,10 +6,10 @@ from .models import (
     CourseLearningOutcome,
     CourseRequirement,
 )
-from django.db.models import Avg
 from core.serializers import PublicSerializerMixin
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from categories.serializers import CategorySerializer
+from users.serializers import UserWithStatesSerializer
 
 
 class CourseLearningOutcomeSerializer(PublicSerializerMixin, serializers.ModelSerializer):
@@ -44,30 +44,7 @@ class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
 class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
     # total_students = serializers.IntegerField(read_only=True)
-    total_reviews = serializers.IntegerField(read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
-    class Meta:
-        model = Course
-        fields = [
-            "id",
-            "title",
-            "description",
-            "language",
-            "level",
-            "status",
-            "published_at",
-            "instructor_name",
-            "total_reviews",
-            "average_rating",
-        ]
-        
-class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer):
-    sections = SectionSerializer(many=True, read_only=True)
-    instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
-    learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
-    requirements = CourseRequirementSerializer(many=True, read_only=True)
     primary_category = CategorySerializer(read_only=True)
-    categories = CategorySerializer(many=True, read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.FloatField(read_only=True)
     class Meta:
@@ -75,6 +52,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
         fields = [
             "id",
             "title",
+            "slug",
             "description",
             "language",
             "level",
@@ -82,12 +60,40 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "published_at",
             "instructor_name",
             "primary_category",
+            "total_reviews",
+            "average_rating",
+            "poster",
+        ]
+        
+class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    sections = SectionSerializer(many=True, read_only=True)
+    # instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
+    learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
+    requirements = CourseRequirementSerializer(many=True, read_only=True)
+    primary_category = CategorySerializer(read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+    total_reviews = serializers.IntegerField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    instructor = UserWithStatesSerializer(read_only=True)
+    
+    class Meta:
+        model = Course
+        fields = [
+            "id",
+            "title",
+            "description",
+            "language",
+            "level",
+            "status",
+            "published_at",
+            "primary_category",
             "categories",
             "sections",
             "learning_outcomes",
             "requirements",
             "total_reviews",
             "average_rating",
+            "instructor",
         ]
 
 

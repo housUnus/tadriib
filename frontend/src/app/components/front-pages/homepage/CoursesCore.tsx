@@ -295,9 +295,10 @@ const categories = [
     count: courses.filter((w) => w.category === "Cybersecurity").length,
   },
 ];
-export default function Core({}) {
+export default function Core({courses}: {courses: any[]}) {
   const [activeCategory, setActiveCategory] = useState("All");
   const t = useTranslations("home")
+
   const filteredCourses =
     activeCategory === "All"
       ? courses

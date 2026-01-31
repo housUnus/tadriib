@@ -10,16 +10,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().with_stats() #type: ignore
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     parser_classes = (MultiPartParser, FormParser)
 
-    
-    def get_queryset(self):
-        user = self.request.user
-        return super().get_queryset()
-    
     @action(detail=False, methods=["get"], url_path="me")
     def me(self, request):
         serializer = self.get_serializer(request.user)

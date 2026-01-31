@@ -16,7 +16,12 @@ class CourseRequirement(models.Model):
     text = models.CharField(max_length=255)
 
 class Course(BaseModel):
+    
+    slug_field = 'title'
+    
     title = models.CharField(max_length=255)
+    slug = models.SlugField(_("Slug"), max_length=255, unique=True, blank=True, db_index=True)
+
     short_description = models.CharField(max_length=500, blank=True, null=True)
     description = HTMLField(null=True, blank=True)
     categories = models.ManyToManyField("categories.Category", related_name="courses", blank=True)

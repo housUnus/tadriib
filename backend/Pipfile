@@ -8,7 +8,6 @@ django = "5.2.9"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
-drf-yasg = "*"
 drf-spectacular = "*"
 dj-rest-auth = {extras = ["with_social"], version = "*"}
 django-rest-auth = "*"
@@ -20,7 +19,6 @@ gunicorn = "*"
 pillow = "*"
 django-guardian = "*"
 django-import-export = "*"
-django-sql-explorer = "*"
 django-simple-history = "*"
 django-shortcuts = "*"
 django-crispy-forms = "*"
@@ -36,6 +34,7 @@ django-allauth = {extras = ["headless"], version = "65.2.0"}
 drf-writable-nested = "*"
 django-mptt = "*"
 django-tinymce = "*"
+pydash = "*"
 
 [dev-packages]
 

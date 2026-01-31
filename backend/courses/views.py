@@ -9,12 +9,15 @@ from .serializers import (
     CourseCreateUpdateSerializer,
 )
 from core.views import PublicViewsMixin
+from core.authentication import OptionalJWTAuthentication
+from users.models import User
 
 
 class CourseViewSet(PublicViewsMixin, ModelViewSet):
-    queryset = Course.objects.with_stats().select_related("instructor")#type: ignore
-
-    permission_classes = [IsInstructorOrReadOnly]
+    lookup_field = "slug"
+    authentication_classes = [OptionalJWTAuthentication]
+    permission_classes = [AllowAny]
+    queryset = Course.objects.with_stats().select_related("primary_category")#type: ignore
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -33,6 +36,18 @@ class CourseViewSet(PublicViewsMixin, ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        
+        if self.action in ["retrieve", "update", "partial_update"]:
+            queryset = queryset.with_stats().prefetch_related(
+                "categories",
+                "sections__contents",
+                "learning_outcomes",
+                "requirements",
+                Prefetch(
+                    "instructor",
+                    queryset=User.objects.with_stats(),
+                ),
+            )
 
         # Only published courses for public users
         # if not self.request.user.is_authenticated:

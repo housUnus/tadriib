@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 from core.constants import RolesTypes
+from core.utils.slugify import generate_unique_slug
 
 # ----------------------------
 # Custom User
@@ -39,12 +40,16 @@ class Role(models.Model):
 # Profile
 # ----------------------------
 class Profile(models.Model):
+    
+    slug_field = 'get_full_name'
+    
     user = models.OneToOneField(
         'users.User', 
         on_delete=models.CASCADE, 
         related_name="profile",
         verbose_name=_("User")
     )
+    slug = models.SlugField(_("Slug"), max_length=255, blank=True)
 
     # Roles
     roles = models.ManyToManyField(Role, related_name="profiles", verbose_name=_("Roles"))
@@ -73,3 +78,8 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.email}'s profile"
+
+    def save(self, *args, **kwargs):
+        if hasattr(self, "slug") and not self.slug and hasattr(self, "slug_field"):
+            self.slug = generate_unique_slug(self, getattr(self, self.slug_field)) #type: ignore
+        super().save(*args, **kwargs)
