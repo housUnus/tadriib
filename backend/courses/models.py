@@ -16,7 +16,8 @@ class CourseRequirement(models.Model):
     text = models.CharField(max_length=255)
 
 class Course(BaseModel):
-    
+    sections: models.Manager[Section]
+
     slug_field = 'title'
     
     title = models.CharField(max_length=255)
@@ -47,9 +48,41 @@ class Course(BaseModel):
         verbose_name_plural = _("Courses")
 
     objects = CourseQuerySet.as_manager()
+    
+    @property
+    def total_students(self):
+        return 0 #TODO to implement student count
+    
+    @property
+    def total_videos(self):
+        return Content.objects.filter(section__course=self, type=ContentType.VIDEO).count()
 
-
+    @property
+    def total_quizzes(self):
+        return Content.objects.filter(section__course=self, type=ContentType.QUIZ).count()
+    
+    @property
+    def total_assignments(self):
+        return Content.objects.filter(section__course=self, type=ContentType.ASSIGNMENT).count()
+    
+    @property
+    def total_articles(self):
+        return Content.objects.filter(section__course=self, type=ContentType.ARTICLE).count()
+    
+    @property
+    def total_videos_duration_minutes(self):
+        total = Content.objects.filter(
+            section__course=self,
+            type=ContentType.VIDEO
+        ).aggregate(
+            total_duration=models.Sum('duration_minutes')
+        )['total_duration']
+        return total if total else 0
+    
+    
 class Section(BaseModel):
+    contents: models.Manager[Content]
+    
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
@@ -61,8 +94,33 @@ class Section(BaseModel):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+    
+    @property
+    def total_videos(self):
+        return self.contents.filter(type=ContentType.VIDEO).count()
 
+    @property
+    def total_articles(self):
+        return self.contents.filter(type=ContentType.ARTICLE).count()
 
+    @property
+    def total_attachments(self):
+        return self.contents.filter(type=ContentType.ATTACHMENT).count()
+    
+    @property
+    def total_assignments(self):
+        return self.contents.filter(type=ContentType.ASSIGNMENT).count()
+
+    @property
+    def total_quizzes(self):
+        return self.contents.filter(type=ContentType.QUIZ).count()
+    
+    @property
+    def total_videos_duration_minutes(self):
+        total = self.contents.filter(type=ContentType.VIDEO).aggregate(
+            total_duration=models.Sum('duration_minutes')
+        )['total_duration']
+        return total if total else 0
 
 class Content(BaseModel):
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="contents")

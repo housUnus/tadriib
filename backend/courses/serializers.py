@@ -75,7 +75,13 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.FloatField(read_only=True)
     instructor = UserWithStatesSerializer(read_only=True)
-    
+    total_videos=serializers.IntegerField(read_only=True)
+    total_articles=serializers.IntegerField(read_only=True)
+    total_attachments=serializers.IntegerField(read_only=True)
+    total_assignments=serializers.IntegerField(read_only=True)
+    total_quizzes=serializers.IntegerField(read_only=True)
+    total_videos_duration_minutes = serializers.FloatField(read_only=True)
+        
     class Meta:
         model = Course
         fields = [
@@ -94,7 +100,15 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "total_reviews",
             "average_rating",
             "instructor",
-        ]
+            "poster",
+            "updated_at",
+            "total_videos",
+            "total_articles",
+            "total_attachments",
+            "total_assignments",
+            "total_quizzes",
+            "total_videos_duration_minutes",
+            ]
 
 
 class CourseCreateUpdateSerializer(PublicSerializerMixin, serializers.ModelSerializer):

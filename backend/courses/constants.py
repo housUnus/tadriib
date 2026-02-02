@@ -30,6 +30,7 @@ class ContentType(models.TextChoices):
     QUIZ = "quiz", "Quiz"
     ATTACHMENT = "attachment", "Attachment"
     ASSIGNMENT = "assignment", "Assignment"
+    ARTICLE = "article", "Article"
     
 class CourseLevel(models.TextChoices):
     BEGINNER = "beginner", "Beginner"

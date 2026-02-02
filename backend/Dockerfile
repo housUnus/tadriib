@@ -2,6 +2,13 @@ FROM python:3.14-slim
 
 WORKDIR /app
 
+# Install system dependencies (ffmpeg + build tools)
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install pipenv
 RUN pip install --no-cache-dir pipenv
 

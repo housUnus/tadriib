@@ -46,6 +46,23 @@ class VideoInline(TabularInline):
     fields = ("file", "duration_seconds")
 
 
+class ArticleAdminForm(forms.ModelForm):
+    text = forms.CharField(
+        widget=TinyMCE(attrs={"cols": 80, "rows": 20}),
+        required=False,
+    )
+
+    class Meta:
+        model = Article
+        fields = "__all__"
+        
+class ArticleInline(TabularInline):
+    form = ArticleAdminForm
+    model = Article
+    extra = 0
+    fields = ("text",)
+
+
 class AttachmentInline(TabularInline):
     model = Attachment
     extra = 0
@@ -181,6 +198,7 @@ class ContentAdmin(ModelAdmin):
 
     inlines = [
         VideoInline,
+        ArticleInline,
         AttachmentInline,
         AssignmentInline,
         QuizInline,
