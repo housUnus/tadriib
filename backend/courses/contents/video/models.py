@@ -15,7 +15,7 @@ class Video(BaseModel):
         super().save(*args, **kwargs)  # save file first
 
         if self.file:
-            duration = get_video_duration_seconds(self.file.path)
+            duration = get_video_duration_seconds(self.file)
             Video.objects.filter(pk=self.pk).update(
                 duration_seconds=duration
             )

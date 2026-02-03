@@ -4,11 +4,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 USE_DCN = os.getenv("USE_DCN") == "True"
 if USE_DCN:
-    AWS_ACCESS_KEY_ID = os.getenv("VULTR_ACCESS_KEY")
-    AWS_SECRET_ACCESS_KEY = os.getenv("VULTR_SECRET_KEY")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("VULTR_BUCKET_NAME")
+    AWS_ACCESS_KEY_ID = os.getenv("S3_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("S3_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 
-    AWS_S3_ENDPOINT_URL = os.getenv("VULTR_ENDPOINT")
+    AWS_S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT")
     AWS_S3_REGION_NAME = "ewr1"  # example
 
 
