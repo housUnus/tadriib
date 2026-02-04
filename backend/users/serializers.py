@@ -143,6 +143,9 @@ class UserWithStatesSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField(source='profile.slug', read_only=True)
     bio = serializers.CharField(source='profile.bio', read_only=True)
     details = serializers.CharField(source='profile.details', read_only=True)
+    full_name = serializers.CharField(source='profile.get_full_name', read_only=True)
+    avatar = serializers.ImageField(source='profile.avatar', read_only=True)
+    title=serializers.CharField(source='profile.title', read_only=True)
     class Meta:
         model = User
         fields = (
@@ -153,5 +156,8 @@ class UserWithStatesSerializer(serializers.ModelSerializer):
             "average_rating",
             "total_courses",
             "bio",
-            "details"
+            "details",
+            "full_name",
+            "title",
+            "avatar",
         )

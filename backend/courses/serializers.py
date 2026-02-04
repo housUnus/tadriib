@@ -71,7 +71,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
     requirements = CourseRequirementSerializer(many=True, read_only=True)
     primary_category = CategorySerializer(read_only=True)
-    categories = CategorySerializer(many=True, read_only=True)
+    # categories = CategorySerializer(many=True, read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.FloatField(read_only=True)
     instructor = UserWithStatesSerializer(read_only=True)
@@ -81,19 +81,22 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     total_assignments=serializers.IntegerField(read_only=True)
     total_quizzes=serializers.IntegerField(read_only=True)
     total_videos_duration_minutes = serializers.FloatField(read_only=True)
+    level_display = serializers.CharField(source='get_level_display', read_only=True)
         
     class Meta:
         model = Course
         fields = [
             "id",
             "title",
+            "short_description",
             "description",
             "language",
             "level",
+            "level_display",
             "status",
             "published_at",
             "primary_category",
-            "categories",
+            # "categories",
             "sections",
             "learning_outcomes",
             "requirements",
