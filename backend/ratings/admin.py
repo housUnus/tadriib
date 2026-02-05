@@ -11,12 +11,14 @@ class RatingAdmin(ModelAdmin):
         "rated_by",
         "ip_address",
         "created_at",
+        "status",
     )
 
     list_filter = (
         "value",
         "course",
         "created_at",
+        "status",
     )
 
     search_fields = (
@@ -27,7 +29,7 @@ class RatingAdmin(ModelAdmin):
     )
 
     readonly_fields = (
-        "rated_by",
+        # "rated_by",
         "ip_address",
         "created_at",
         "updated_at",
@@ -43,6 +45,8 @@ class RatingAdmin(ModelAdmin):
                     "course",
                     "value",
                     "comment",
+                    "rated_by",
+                    "status",
                 )
             },
         ),
@@ -50,7 +54,7 @@ class RatingAdmin(ModelAdmin):
             "Metadata",
             {
                 "fields": (
-                    "rated_by",
+                    # "rated_by",
                     "ip_address",
                     "created_at",
                 )

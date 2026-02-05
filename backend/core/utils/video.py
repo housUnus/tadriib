@@ -63,5 +63,5 @@ def get_video_duration_seconds(file) -> int:
             finally:
                 os.remove(temp_path)
     else:
-        duration = get_video_duration_from_url(file)
+        duration = get_video_duration_from_url(file.path)
     return duration

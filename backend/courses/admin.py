@@ -43,7 +43,7 @@ class QuizInline(TabularInline):
 class VideoInline(TabularInline):
     model = Video
     extra = 0
-    fields = ("file", "duration_seconds")
+    fields = ("file", "duration_seconds", "is_main_preview")
 
 
 class ArticleAdminForm(forms.ModelForm):

@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import BaseModel
 from django.utils.translation import gettext_lazy as _
+from .constants import RatingStatus
 
 class Rating(BaseModel):
     CHOICES = [
@@ -11,6 +12,7 @@ class Rating(BaseModel):
         (5, '5'),
     ]
     
+    status= models.CharField(max_length=20, choices=RatingStatus.choices, default=RatingStatus.PENDING)
     rated_by = models.ForeignKey("users.User", verbose_name=_("Rated By"), on_delete=models.CASCADE, null=True, blank=True)
     ip_address = models.GenericIPAddressField(_("Ip Address"), protocol="both", unpack_ipv4=False, default="127.1.1.0", null=True, blank=True)
     

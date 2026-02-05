@@ -128,11 +128,12 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class ShortUserSerializer(serializers.ModelSerializer):
+    slug = serializers.SlugField(source='profile.slug', read_only=True)
+    full_name = serializers.CharField(source='profile.get_full_name', read_only=True)
     class Meta:
         model = User
         fields = (
-            "first_name",
-            "last_name",
+            "full_name",
             "slug",
         )
         

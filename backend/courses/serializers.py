@@ -5,11 +5,22 @@ from .models import (
     Content,
     CourseLearningOutcome,
     CourseRequirement,
+    Video
 )
+
+from .contents.serializers import (
+    VideoSerializer,
+    QuizSerializer,
+    AttachmentSerializer,
+    ArticleSerializer,
+    AssignmentSerializer,
+)
+from .constants import ContentType
 from core.serializers import PublicSerializerMixin
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from categories.serializers import CategorySerializer
 from users.serializers import UserWithStatesSerializer
+from ratings.serializers import RatingSerializer
 
 
 class CourseLearningOutcomeSerializer(PublicSerializerMixin, serializers.ModelSerializer):
@@ -23,6 +34,22 @@ class CourseRequirementSerializer(PublicSerializerMixin, serializers.ModelSerial
         fields = ["id", "text"]
 
 class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
+    content = serializers.SerializerMethodField()
+
+    def get_content(self, obj):
+        if obj.type == ContentType.VIDEO and hasattr(obj, "video"):
+            return VideoSerializer(obj.video, context=self.context).data
+
+        elif obj.type == ContentType.QUIZ and hasattr(obj, "quiz"):
+            return QuizSerializer(obj.quiz, context=self.context).data
+        
+        elif obj.type == ContentType.ARTICLE and hasattr(obj, "article"):
+            return ArticleSerializer(obj.article, context=self.context).data
+        
+        elif obj.type == ContentType.ATTACHMENT and hasattr(obj, "attachment"):
+            return AttachmentSerializer(obj.attachment, context=self.context).data
+
+        return None
     class Meta:
         model = Content
         fields = [
@@ -32,11 +59,11 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
             "order",
             "is_preview",
             "duration_minutes",
+            "content",
         ]
         
 class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     contents = ContentSerializer(many=True, read_only=True)
-
     class Meta:
         model = Section
         fields = ["id", "title", "order", "contents"]
@@ -80,9 +107,21 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     total_attachments=serializers.IntegerField(read_only=True)
     total_assignments=serializers.IntegerField(read_only=True)
     total_quizzes=serializers.IntegerField(read_only=True)
-    total_videos_duration_minutes = serializers.FloatField(read_only=True)
+    total_contents=serializers.IntegerField(read_only=True)
+    total_videos_duration_hours = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     level_display = serializers.CharField(source='get_level_display', read_only=True)
-        
+    latest_reviews=RatingSerializer(many=True, read_only=True)
+    rating_distribution = serializers.SerializerMethodField()
+    main_preview=serializers.SerializerMethodField()
+    
+    def get_rating_distribution(self, obj: Course):
+        return obj.get_rating_distribution()
+    
+    def get_main_preview(self, obj):
+        if not getattr(obj, "main_preview_video_id", None):
+            return None
+        video = Video.objects.select_related("content").get(pk=obj.main_preview_video_id)
+        return VideoSerializer(video, context=self.context).data
     class Meta:
         model = Course
         fields = [
@@ -110,7 +149,11 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "total_attachments",
             "total_assignments",
             "total_quizzes",
-            "total_videos_duration_minutes",
+            "total_contents",
+            "total_videos_duration_hours",
+            "latest_reviews",
+            "rating_distribution",
+            "main_preview",
             ]
 
 

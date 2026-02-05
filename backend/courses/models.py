@@ -6,6 +6,11 @@ from .contents.models import *
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
 from .querysets import CourseQuerySet
+from ratings.constants import RatingStatus
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from users.models import User
+    from ratings.models import Rating
 
 class CourseLearningOutcome(models.Model):
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE, related_name="learning_outcomes")
@@ -17,6 +22,7 @@ class CourseRequirement(models.Model):
 
 class Course(BaseModel):
     sections: models.Manager[Section]
+    ratings: models.Manager["Rating"]
 
     slug_field = 'title'
     
@@ -70,15 +76,38 @@ class Course(BaseModel):
         return Content.objects.filter(section__course=self, type=ContentType.ARTICLE).count()
     
     @property
-    def total_videos_duration_minutes(self):
+    def total_attachments(self):
+        return Content.objects.filter(section__course=self, type=ContentType.ATTACHMENT).count()
+    
+    @property
+    def total_contents(self):
+        return Content.objects.filter(section__course=self).count()
+    
+    @property
+    def total_videos_duration_hours(self):
         total = Content.objects.filter(
             section__course=self,
             type=ContentType.VIDEO
         ).aggregate(
             total_duration=models.Sum('duration_minutes')
         )['total_duration']
-        return total if total else 0
+        return total//60 if total else 0
     
+    def get_rating_distribution(self):
+        qs = (
+            self.ratings
+            .filter(status=RatingStatus.APPROVED)
+            .values("value")
+            .annotate(count=models.Count("id"))
+        )
+
+        distribution = {i: 0 for i in range(1, 6)}
+
+        for item in qs:
+            distribution[item["value"]] = item["count"]
+
+        return distribution
+        
     
 class Section(BaseModel):
     contents: models.Manager[Content]
@@ -116,7 +145,7 @@ class Section(BaseModel):
         return self.contents.filter(type=ContentType.QUIZ).count()
     
     @property
-    def total_videos_duration_minutes(self):
+    def total_videos_duration_hours(self):
         total = self.contents.filter(type=ContentType.VIDEO).aggregate(
             total_duration=models.Sum('duration_minutes')
         )['total_duration']
@@ -129,7 +158,7 @@ class Content(BaseModel):
     order = models.PositiveIntegerField()
     is_preview = models.BooleanField(default=False)
     duration_minutes = models.PositiveIntegerField(null=True, blank=True)
-
+    
     class Meta:
         ordering = ["order"]
         verbose_name = _("Course Content")

@@ -26,6 +26,7 @@ import {
   Package,
   BookOpen,
   ChevronRight,
+  ListCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -36,6 +37,8 @@ import { ShareDialog } from "@/components/common/share-dialog"
 import { ContentPreviewModal } from "../content-preview"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { formatDate } from "date-fns"
+import { StarRating } from "@/components/common/StartRating"
+import * as _ from "lodash"
 
 // Mock course data
 const courseData = {
@@ -202,10 +205,10 @@ export default function Detail({ course }: { course: any }) {
   const [expandedSections, setExpandedSections] = useState<string[]>(["1"])
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
-  const [previewContent, setPreviewContent] = useState<typeof courseData.sections[0]["contents"][0] | null>(null)
+  const [previewContent, setPreviewContent] = useState<typeof course.sections[0]["contents"][0] | null>(null)
   const [previewModalOpen, setPreviewModalOpen] = useState(false)
 
-  const handlePreview = (content: typeof courseData.sections[0]["contents"][0]) => {
+  const handlePreview = (content: typeof course.sections[0]["contents"][0]) => {
     setPreviewContent(content)
     setPreviewModalOpen(true)
   }
@@ -217,7 +220,7 @@ export default function Detail({ course }: { course: any }) {
   }
 
   const expandAllSections = () => {
-    setExpandedSections(courseData.sections.map((s) => s.id))
+    setExpandedSections(course.sections.map((s: any) => s.id))
   }
 
   const collapseAllSections = () => {
@@ -250,7 +253,7 @@ export default function Detail({ course }: { course: any }) {
           <div className="lg:col-span-6 lg:flex block justify-center">
             <div
               className="relative aspect-video bg-foreground rounded-lg overflow-hidden cursor-pointer group"
-              onClick={() => handlePreview({ id: "preview", title: "Course Preview", type: "video", duration: "2:30", isPreview: true })}
+              onClick={() => handlePreview({ type: "video", isPreview: true, content: course.main_preview })}
             >
               <Image
                 src={course.poster || "/placeholder.svg"}
@@ -274,12 +277,8 @@ export default function Detail({ course }: { course: any }) {
 
             <div className="flex flex-col">
               <div className="flex items-center gap-2 text-sm mb-2">
-                <span className="font-bold text-amber-500">{course.average_rating}</span>
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className={`h-4 w-4 ${i <= Math.floor(course.average_rating) ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
-                  ))}
-                </div>
+                <span className="font-bold text-[#b4690e]">{course.average_rating}</span>
+                <StarRating rating={course.average_rating} size={14} />
                 <span className="text-muted-foreground">({course.total_reviews})</span>
               </div>
 
@@ -337,7 +336,7 @@ export default function Detail({ course }: { course: any }) {
           <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-sm">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>{course.total_videos_duration_minutes}</span>
+              <span>{course.total_videos_duration_hours} hours</span>
             </div>
             <div className="flex items-center gap-2">
               <PlayCircle className="h-4 w-4 text-muted-foreground" />
@@ -348,8 +347,8 @@ export default function Detail({ course }: { course: any }) {
               <span>{course.level_display}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Download className="h-4 w-4 text-muted-foreground" />
-              <span>{course.total_resources} resources</span>
+              <ListCheck className="h-4 w-4 text-muted-foreground" />
+              <span>{course.total_quizzes} quizzes</span>
             </div>
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-muted-foreground" />
@@ -369,7 +368,7 @@ export default function Detail({ course }: { course: any }) {
               <div className="outcome">
                 <h2 className="text-xl font-bold mb-4">What you'll learn</h2>
                 <div className="flex flex-col gap-4">
-                  {course.learning_outcomes?.map((item:{text: string}, index: number) => (
+                  {course.learning_outcomes?.map((item: { text: string }, index: number) => (
                     <div key={index} className="flex gap-3 items-center">
                       <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
                       <span className="text-sm text-muted-foreground">{item.text}</span>
@@ -380,7 +379,7 @@ export default function Detail({ course }: { course: any }) {
               <div className="requirements">
                 <h2 className="text-xl font-bold mb-4">Requirements</h2>
                 <div className="flex flex-col gap-4">
-                  {course.requirements?.map((req:{text: string}, index: number) => (
+                  {course.requirements?.map((req: { text: string }, index: number) => (
                     <div key={index} className="flex gap-3 items-center">
                       <Package className="h-5 w-5 text-primary shrink-0" />
                       <span className="text-sm text-muted-foreground">{req.text}</span>
@@ -398,18 +397,18 @@ export default function Detail({ course }: { course: any }) {
             <h2 className="text-xl font-bold mb-4">Course content</h2>
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4 text-sm text-muted-foreground">
               <span>
-                {courseData.sections.length} sections • {totalLectures} lectures • {courseData.duration}
+                {course.sections.length} sections • {course.total_contents} lectures • {course.total_videos_duration_hours} hours
               </span>
               <button
-                onClick={expandedSections.length === courseData.sections.length ? collapseAllSections : expandAllSections}
+                onClick={expandedSections.length === course.sections.length ? collapseAllSections : expandAllSections}
                 className="text-primary hover:underline font-medium"
               >
-                {expandedSections.length === courseData.sections.length ? "Collapse all sections" : "Expand all sections"}
+                {expandedSections.length === course.sections.length ? "Collapse all sections" : "Expand all sections"}
               </button>
             </div>
 
             <div className="border border-border rounded-lg overflow-hidden">
-              {courseData.sections.map((section, index) => (
+              {course.sections.map((section: any, index: number) => (
                 <div key={section.id} className={index > 0 ? "border-t border-border" : ""}>
                   <button
                     onClick={() => toggleSection(section.id)}
@@ -424,17 +423,17 @@ export default function Detail({ course }: { course: any }) {
                       <span className="font-semibold">{section.title}</span>
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      {section.lectures} lectures • {section.duration}
+                      {section.contents.length} lectures • {_.sumBy(section.contents, 'duration_minutes')} minutes
                     </span>
                   </button>
 
                   {expandedSections.includes(section.id) && (
                     <div className="bg-background">
-                      {section.contents.map((content) => (
+                      {section.contents.map((content: any) => (
                         <div
                           key={content.id}
-                          onClick={() => content.isPreview && handlePreview(content)}
-                          className={`flex items-center justify-between px-4 py-3 border-t ${content.isPreview ? "hover:bg-muted/30 cursor-pointer" : ""}`}
+                          onClick={() => content.is_preview && handlePreview(content)}
+                          className={`flex items-center justify-between px-4 py-3 border-t ${content.is_preview ? "hover:bg-muted/30 cursor-pointer" : ""}`}
                         >
                           <div className="flex items-center gap-3">
                             {content.type === "video" ? (
@@ -445,13 +444,13 @@ export default function Detail({ course }: { course: any }) {
                               <FileText className="h-4 w-4 text-muted-foreground" />
                             )}
                             <span className="text-sm">{content.title}</span>
-                            {content.isPreview && (
+                            {content.is_preview && (
                               <Badge variant="secondary" className="text-xs">
                                 Preview
                               </Badge>
                             )}
                           </div>
-                          <span className="text-sm text-muted-foreground">{content.duration}</span>
+                          {!!content.duration_minutes && <span className="text-sm text-muted-foreground">{content.duration_minutes} minutes</span>}
                         </div>
                       ))}
                     </div>
@@ -483,7 +482,7 @@ export default function Detail({ course }: { course: any }) {
               <Link href="#" className="text-primary hover:underline text-lg font-semibold">
                 {course.instructor.full_name}
               </Link>
-              <p className="text-sm text-muted-foreground">{courseData.instructor.title}</p>
+              <p className="text-sm text-muted-foreground">{course.instructor.title}</p>
 
               <div className="flex items-center gap-4">
                 <Avatar className="h-28 w-28">
@@ -514,7 +513,6 @@ export default function Detail({ course }: { course: any }) {
                   </div>
                 </div>
               </div>
-
               <p className="text-sm text-muted-foreground leading-relaxed">{course.instructor.bio}</p>
             </div>
           </div>
@@ -523,39 +521,34 @@ export default function Detail({ course }: { course: any }) {
 
           {/* Reviews */}
           <div>
-            <h2 className="text-xl font-bold mb-6">Student feedback</h2>
+            <h2 className="text-xl font-bold mb-6">Course Rating</h2>
 
             <div className="grid md:grid-cols-[auto_1fr] gap-8 mb-8">
               <div className="text-center">
-                <div className="text-5xl font-bold text-[#b4690e]">{courseData.rating}</div>
+                <div className="text-5xl font-bold text-[#b4690e]">{course.average_rating}</div>
                 <div className="flex justify-center my-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${i < Math.floor(courseData.rating) ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                    />
-                  ))}
+                  <StarRating rating={course.average_rating} />
                 </div>
-                <div className="text-sm text-muted-foreground">Course Rating</div>
+                <Link
+                  href={"/auth/login"}
+                  className="text-primary text-sm font-semibold underline"
+                >
+                  {course.total_reviews} reviews
+                </Link>
               </div>
 
               <div className="space-y-2">
                 {[5, 4, 3, 2, 1].map((stars) => (
                   <div key={stars} className="flex items-center gap-3">
                     <Progress
-                      value={courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}
+                      value={course.rating_distribution[stars as keyof typeof course.rating_distribution]}
                       className="h-2 flex-1"
                     />
                     <div className="flex items-center gap-1 w-24">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3 w-3 ${i < stars ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                        />
-                      ))}
+                      <StarRating key={stars} rating={stars} size={12} />
                     </div>
                     <span className="text-sm text-muted-foreground w-10">
-                      {courseData.ratingDistribution[stars as keyof typeof courseData.ratingDistribution]}%
+                      {course.rating_distribution[stars]}%
                     </span>
                   </div>
                 ))}
@@ -563,25 +556,20 @@ export default function Detail({ course }: { course: any }) {
             </div>
 
             <div className="space-y-6">
-              {courseData.reviews.map((review) => (
+              {course.latest_reviews?.map((review: any) => (
                 <div key={review.id} className="border-t border-border pt-6">
                   <div className="flex items-start gap-4">
                     <Avatar>
                       <AvatarImage src={review.avatar || "/placeholder.svg"} />
-                      <AvatarFallback>{review.user[0]}</AvatarFallback>
+                      <AvatarFallback>{review.rated_by?.full_name?.[0] || "U"}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{review.user}</span>
-                        <span className="text-sm text-muted-foreground">{review.date}</span>
+                        <span className="font-semibold">{review.rated_by?.full_name}</span>
+                        <span className="text-sm text-muted-foreground">{formatDate(review.created_at, "dd MMMM yyyy")}</span>
                       </div>
                       <div className="flex mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${i < review.rating ? "fill-[#b4690e] text-[#b4690e]" : "text-neutral-300"}`}
-                          />
-                        ))}
+                        <StarRating rating={review.value} size={14} />
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
                     </div>
@@ -605,7 +593,7 @@ export default function Detail({ course }: { course: any }) {
             title: previewContent.title,
             duration: previewContent.duration,
             type: previewContent.type,
-            videoUrl: previewContent.type === "video" ? (previewContent.content || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
+            videoUrl: previewContent.type === "video" ? (previewContent.content?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
             articleContent: previewContent.type === "article" ? previewContent.content : undefined,
           }}
         />

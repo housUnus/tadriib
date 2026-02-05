@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { StarRating } from "../StartRating";
 
 function CourseCard({ item }) {
   const t = useTranslations("home");
@@ -71,8 +72,8 @@ function CourseCard({ item }) {
               </div>
 
               <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
-                <span className="">({course.total_reviews})</span>
-                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                <span className="text-xs">({course.total_reviews})</span>
+                <StarRating rating={course.average_rating} size={14} />
                 <span className="text-amber-500">{course.average_rating}</span>
               </div>
             </div>

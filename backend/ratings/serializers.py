@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import Rating
+from users.serializers import ShortUserSerializer
 
 class RatingSerializer(serializers.ModelSerializer):
-    rated_by = serializers.StringRelatedField(read_only=True)
-
+    rated_by = ShortUserSerializer(read_only=True)
     class Meta:
         model = Rating
         fields = [
@@ -11,11 +11,10 @@ class RatingSerializer(serializers.ModelSerializer):
             "value",
             "comment",
             "rated_by",
-            "ip_address",
             "course",
             "created_at",
         ]
-        read_only_fields = ["id", "rated_by", "ip_address", "created_at"]
+        read_only_fields = ["id", "rated_by", "created_at"]
 
 
 class RatingCreateSerializer(serializers.ModelSerializer):
