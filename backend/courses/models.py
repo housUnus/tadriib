@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from core.models import BaseModel
-from courses.constants import CourseStatus, ContentType, CourseLevel
+from courses.constants import CourseStatus, ContentType, CourseLevel, CourseLanguageTypes
 from .contents.models import *
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
@@ -38,7 +38,7 @@ class Course(BaseModel):
 
     status = models.CharField(max_length=20, choices=CourseStatus.choices, default=CourseStatus.DRAFT)
 
-    language = models.CharField(max_length=50, default="en")
+    language = models.CharField(max_length=50, default=CourseLanguageTypes.ENGLISH, choices=CourseLanguageTypes.choices)
     level = models.CharField(max_length=20, choices=CourseLevel.choices, default=CourseLevel.ALL_LEVELS)
     
     poster = models.ImageField(upload_to="courses/posters/", null=True, blank=True)
@@ -101,10 +101,18 @@ class Course(BaseModel):
             .annotate(count=models.Count("id"))
         )
 
+        total = sum(item["count"] for item in qs)
+
+        # Initialize all ratings 1–5 with 0%
         distribution = {i: 0 for i in range(1, 6)}
 
+        if total == 0:
+            return distribution
+
         for item in qs:
-            distribution[item["value"]] = item["count"]
+            distribution[item["value"]] = round(
+                (item["count"] / total) * 100, 2
+            )
 
         return distribution
         

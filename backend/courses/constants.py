@@ -37,3 +37,9 @@ class CourseLevel(models.TextChoices):
     INTERMEDIATE = "intermediate", "Intermediate"
     ADVANCED = "advanced", "Advanced"
     ALL_LEVELS = "all_levels", "All Levels"
+    
+class CourseLanguageTypes(models.TextChoices):
+    ENGLISH = "en", "English"
+    ARABIC = "ar", "Arabic"
+    FRENCH = "fr", "French"
+    SPANISH = "es", "Spanish"

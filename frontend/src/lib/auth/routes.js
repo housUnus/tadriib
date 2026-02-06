@@ -7,10 +7,13 @@ export const HOME_ROUTE = '/'
 export const AUTH_PREFIX = '/auth'
 export const ACCOUNT_ROUTE = '/dashboards/dashboard1'
 
-export const PUBLIC_ROUTES = [
-    HOME_ROUTE,
-    '',
-]
+export const PRIVATE_ROUTE_PREFIXES = [
+  ACCOUNT_ROUTE,
+  "/dashboard",
+  "/app",
+  "/learn",
+  "/settings",
+];
 
 export const AUTH_ROUTES = [
     DEFAULT_LOGIN_ROUTE,

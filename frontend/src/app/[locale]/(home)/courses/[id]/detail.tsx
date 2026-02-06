@@ -202,7 +202,7 @@ const courseData = {
 
 export default function Detail({ course }: { course: any }) {
 
-  const [expandedSections, setExpandedSections] = useState<string[]>(["1"])
+  const [expandedSections, setExpandedSections] = useState<string[]>([course.sections[0].id])
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [previewContent, setPreviewContent] = useState<typeof course.sections[0]["contents"][0] | null>(null)
@@ -591,10 +591,11 @@ export default function Detail({ course }: { course: any }) {
           onOpenChange={setPreviewModalOpen}
           content={{
             title: previewContent.title,
-            duration: previewContent.duration,
+            duration: previewContent.duration_minutes,
             type: previewContent.type,
             videoUrl: previewContent.type === "video" ? (previewContent.content?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
-            articleContent: previewContent.type === "article" ? previewContent.content : undefined,
+            articleContent: previewContent.type === "article" ? previewContent.content?.text : undefined,
+            quizContent: previewContent.type === "quiz" ? previewContent.content?.description : undefined,
           }}
         />
       )}

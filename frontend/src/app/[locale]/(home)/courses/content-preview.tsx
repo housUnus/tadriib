@@ -20,6 +20,7 @@ interface ContentPreviewModalProps {
     isPreview?: boolean
     videoUrl?: string
     articleContent?: string
+    quizContent?: string
   } | null
 }
 
@@ -36,7 +37,7 @@ export function ContentPreviewModal({ open, onOpenChange, content }: ContentPrev
                 <Badge variant="outline" className="capitalize">
                   {content.type}
                 </Badge>
-                <span className="text-sm text-muted-foreground">{content.duration}</span>
+                <span className="text-sm text-muted-foreground">({content.duration} minutes)</span>
               </div>
               <DialogTitle className="text-xl pr-8">{content.title}</DialogTitle>
             </div>
@@ -106,8 +107,12 @@ export function ContentPreviewModal({ open, onOpenChange, content }: ContentPrev
                   <FileText className="h-8 w-8 text-amber-500" />
                 </div>
                 <h3 className="text-lg font-semibold">Quiz Preview</h3>
+                {content.quizContent && <div 
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: content.quizContent }}
+                />}
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  This quiz contains {content.duration}. Enroll in the course to take 
+                  This is a preview of the quiz content for {content.duration} minutes. Enroll in the course to take 
                   the full quiz and track your progress.
                 </p>
                 <Button className="mt-4">Enroll to Take Quiz</Button>

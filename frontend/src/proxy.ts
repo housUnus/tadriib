@@ -4,12 +4,12 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server";
 import { getToken, encode, JWT} from "next-auth/jwt";
 import {
-  PUBLIC_ROUTES,
   AUTH_ROUTES,
   REDIRECT_AFTER_LOGIN,
   DEFAULT_LOGIN_ROUTE,
   VERIFY_EMAIL_ROUTE,
   AUTH_PREFIX,
+  PRIVATE_ROUTE_PREFIXES,
 } from "@/lib/auth/routes";
 
 import { refreshAccessToken } from "@/lib/auth/authentication";
@@ -32,7 +32,12 @@ async function authMiddleware (request: NextRequest) {
   const isAuthenticated = !!session?.access_token;
   const isEmailVerified = !!session?.user?.email_verified;
 
-  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+  const isPrivateRoute = PRIVATE_ROUTE_PREFIXES.some((prefix) =>
+    pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+  
+  const isPublicRoute = !isPrivateRoute
+
   const isAuthRoute = pathname.includes(AUTH_PREFIX);
   const isEmailVerifyRoute = pathname === VERIFY_EMAIL_ROUTE;
 
@@ -88,7 +93,11 @@ const middleware = (request: NextRequest) => {
   const { nextUrl } = request;
   const pathname = nextUrl.pathname.replace(/^\/(en|ar)(?=\/|$)/, '');
 
-  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+  const isPrivateRoute = PRIVATE_ROUTE_PREFIXES.some((prefix) =>
+    pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+  const isPublicRoute = !isPrivateRoute
+  
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
 
   if (isAuthRoute) {

@@ -13,9 +13,10 @@ class VideoSerializer(serializers.ModelSerializer):
         fields = ["id", "file"]
         
 class QuizSerializer(serializers.ModelSerializer):
+    duration = serializers.ReadOnlyField(source="time_limit_minutes")
     class Meta:
         model = Quiz
-        fields = ["id", "description", "time_limit_minutes"]
+        fields = ["id", "description", "time_limit_minutes", "duration"]
         
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
