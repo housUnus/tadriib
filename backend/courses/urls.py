@@ -1,7 +1,14 @@
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from .views import CourseViewSet
+from ratings.views import RatingViewSet
 
-router = DefaultRouter()
-router.register("courses", CourseViewSet, basename="course")
+router = routers.SimpleRouter()#type: ignore
+router.register(r"courses", CourseViewSet, basename="courses")
 
-urlpatterns = router.urls
+courses_router = routers.NestedSimpleRouter( router, r"courses", lookup="course")
+courses_router.register(r"reviews", RatingViewSet, basename="course-reviews")
+
+urlpatterns = [
+    *router.urls,
+    *courses_router.urls,
+]

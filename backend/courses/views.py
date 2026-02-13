@@ -1,7 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db.models import Prefetch
-from .permissions import IsInstructorOrReadOnly
 from .models import Course
 from .serializers import (
     CourseListSerializer,
@@ -9,12 +8,13 @@ from .serializers import (
     CourseCreateUpdateSerializer,
 )
 from core.views import PublicViewsMixin
+from core.mixins import ListQueryMixin
 from core.authentication import OptionalJWTAuthentication
 from users.models import User
 from ratings.models import Rating
 from ratings.constants import RatingStatus
 
-class CourseViewSet(PublicViewsMixin, ModelViewSet):
+class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
     lookup_field = "slug"
     authentication_classes = [OptionalJWTAuthentication]
     permission_classes = [AllowAny]

@@ -39,6 +39,7 @@ import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { formatDate } from "date-fns"
 import { StarRating } from "@/components/common/StartRating"
 import * as _ from "lodash"
+import CourseReviews from "./reviews"
 
 // Mock course data
 const courseData = {
@@ -227,7 +228,6 @@ export default function Detail({ course }: { course: any }) {
     setExpandedSections([])
   }
 
-  const totalLectures = courseData.sections.reduce((acc, s) => acc + s.lectures, 0)
 
   return (
     <div className="min-h-screen bg-background pt-10">
@@ -285,7 +285,7 @@ export default function Detail({ course }: { course: any }) {
               <p className="text-sm text-muted-foreground mb-1">{courseData.studentsCount.toLocaleString()} students</p>
             </div>
             <p className="text-sm mb-4">
-              Created by <Link href={`/profile/${course.instructor?.slug}`} className="text-primary hover:underline">{course.instructor?.full_name}</Link>
+              Created by <Link href={`/users/${course.instructor?.slug}`} className="text-primary hover:underline">{course.instructor?.full_name}</Link>
             </p>
 
             <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-6">
@@ -519,69 +519,7 @@ export default function Detail({ course }: { course: any }) {
 
           <Separator />
 
-          {/* Reviews */}
-          <div>
-            <h2 className="text-xl font-bold mb-6">Course Rating</h2>
-
-            <div className="grid md:grid-cols-[auto_1fr] gap-8 mb-8">
-              <div className="text-center">
-                <div className="text-5xl font-bold text-[#b4690e]">{course.average_rating}</div>
-                <div className="flex justify-center my-2">
-                  <StarRating rating={course.average_rating} />
-                </div>
-                <Link
-                  href={"/auth/login"}
-                  className="text-primary text-sm font-semibold underline"
-                >
-                  {course.total_reviews} reviews
-                </Link>
-              </div>
-
-              <div className="space-y-2">
-                {[5, 4, 3, 2, 1].map((stars) => (
-                  <div key={stars} className="flex items-center gap-3">
-                    <Progress
-                      value={course.rating_distribution[stars as keyof typeof course.rating_distribution]}
-                      className="h-2 flex-1"
-                    />
-                    <div className="flex items-center gap-1 w-24">
-                      <StarRating key={stars} rating={stars} size={12} />
-                    </div>
-                    <span className="text-sm text-muted-foreground w-10">
-                      {course.rating_distribution[stars]}%
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              {course.latest_reviews?.map((review: any) => (
-                <div key={review.id} className="border-t border-border pt-6">
-                  <div className="flex items-start gap-4">
-                    <Avatar>
-                      <AvatarImage src={review.avatar || "/placeholder.svg"} />
-                      <AvatarFallback>{review.rated_by?.full_name?.[0] || "U"}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{review.rated_by?.full_name}</span>
-                        <span className="text-sm text-muted-foreground">{formatDate(review.created_at, "dd MMMM yyyy")}</span>
-                      </div>
-                      <div className="flex mb-2">
-                        <StarRating rating={review.value} size={14} />
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <Button variant="outline" className="mt-6 bg-transparent">
-              See all reviews
-            </Button>
-          </div>
+          <CourseReviews course={course} />
         </div>
       </div>
       {/* Preview Modal */}
@@ -591,7 +529,7 @@ export default function Detail({ course }: { course: any }) {
           onOpenChange={setPreviewModalOpen}
           content={{
             title: previewContent.title,
-            duration: previewContent.duration_minutes,
+            duration: previewContent.duration,
             type: previewContent.type,
             videoUrl: previewContent.type === "video" ? (previewContent.content?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
             articleContent: previewContent.type === "article" ? previewContent.content?.text : undefined,

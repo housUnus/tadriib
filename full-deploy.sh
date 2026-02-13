@@ -11,9 +11,8 @@ docker compose build
 echo "==> Running database migrations"
 docker compose run --rm backend python manage.py migrate
 
-# To minimize files transfer consumption
-# echo "==> Collecting static files"
-# docker compose run --rm backend python manage.py collectstatic --noinput
+echo "==> Collecting static files"
+docker compose run --rm backend python manage.py collectstatic --noinput
 
 echo "==> Updating containers"
 docker compose up -d --remove-orphans

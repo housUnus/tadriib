@@ -70,7 +70,7 @@ class Profile(models.Model):
     
     @property
     def get_full_name(self):
-        return f"{self.user.first_name} {self.user.last_name}".strip()
+        return f"{(self.user.first_name or '').capitalize()} {(self.user.last_name or '').capitalize()}".strip()
   
     class Meta:
         verbose_name = _("Profile")

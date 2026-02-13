@@ -1,12 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from .models import Rating
 from .serializers import RatingSerializer, RatingCreateSerializer
+from .constants import RatingStatus
+from core.mixins import CourseMixin, ListQueryMixin, StandardResultsSetPagination
 
-
-class RatingViewSet(ModelViewSet):
-    queryset = Rating.objects.select_related("course", "rated_by")
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class RatingViewSet(CourseMixin, ListQueryMixin, ModelViewSet):
+    queryset = Rating.objects.filter(status=RatingStatus.APPROVED).select_related("course", "rated_by")
+    permission_classes = [AllowAny]
+    search_fields = ["comment"]
 
     def get_serializer_class(self):
         if self.action == "create":

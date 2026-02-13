@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const page = async () => {
     const client = await useServerFetch();
   const res = await client.get("/courses/?limit=3");
-  const { data, error } = res as { data: any[]; error?: any };
+  const { data, error } = res as { data: any; error?: any };
   return (
     <>
       {/* <Hero /> */}
@@ -27,7 +27,7 @@ const page = async () => {
       {/* <FeatureTabs /> */}
       <CertificatesSection />
       <StatsSection />
-      <Courses courses={data || []} />
+      <Courses courses={data?.results || []} />
       {/* <OurTeam /> */}
       {/* <ContactBar /> */}
       <Highlights />

@@ -11,6 +11,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    "DEFAULT_PAGINATION_CLASS": "core.mixins.StandardResultsSetPagination",
+    "PAGE_SIZE": 10,
 }
 
 REST_AUTH = {

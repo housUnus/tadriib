@@ -11,7 +11,6 @@ class RatingSerializer(serializers.ModelSerializer):
             "value",
             "comment",
             "rated_by",
-            "course",
             "created_at",
         ]
         read_only_fields = ["id", "rated_by", "created_at"]

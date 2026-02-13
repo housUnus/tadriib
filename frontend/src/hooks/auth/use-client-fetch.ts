@@ -57,7 +57,7 @@ export const useClientFetch = () => {
         options.body = JSON.stringify(payload);
       }
 
-      const response = await fetch(url, options);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}${url}`, options);
 
       if (!response.ok) {
         const message = await response.text();

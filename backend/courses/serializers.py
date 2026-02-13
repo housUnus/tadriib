@@ -73,7 +73,7 @@ class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     # total_students = serializers.IntegerField(read_only=True)
     primary_category = CategorySerializer(read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
+    average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
     class Meta:
         model = Course
         fields = [
@@ -100,7 +100,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     primary_category = CategorySerializer(read_only=True)
     # categories = CategorySerializer(many=True, read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
+    average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
     instructor = UserWithStatesSerializer(read_only=True)
     total_videos=serializers.IntegerField(read_only=True)
     total_articles=serializers.IntegerField(read_only=True)
@@ -126,6 +126,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
         model = Course
         fields = [
             "id",
+            "slug",
             "title",
             "short_description",
             "description",

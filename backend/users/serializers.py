@@ -76,7 +76,7 @@ class UserSerializer(serializers.ModelSerializer):
     details = serializers.CharField(source='profile.details', required=False)
     expertise = serializers.CharField(source='profile.expertise', required=False)
     experience_years = serializers.IntegerField(source='profile.experience_years', required=False)
-
+    slug = serializers.SlugField(source='profile.slug', read_only=True)
     class Meta:
         model = User
         fields = (
@@ -90,6 +90,7 @@ class UserSerializer(serializers.ModelSerializer):
             "details",
             "expertise",
             "experience_years",
+            "slug",
         )
         read_only_fields = ("id", "email")
         
@@ -139,7 +140,7 @@ class ShortUserSerializer(serializers.ModelSerializer):
         
 class UserWithStatesSerializer(serializers.ModelSerializer):
     total_reviews = serializers.IntegerField(read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
+    average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
     total_courses = serializers.IntegerField(read_only=True)
     slug = serializers.SlugField(source='profile.slug', read_only=True)
     bio = serializers.CharField(source='profile.bio', read_only=True)

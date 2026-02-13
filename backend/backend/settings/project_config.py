@@ -41,11 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-    'rest_auth',
+    'dj_rest_auth',
     'allauth',
     'allauth.account',
     'allauth.headless',
-    'rest_auth.registration',
+    'dj_rest_auth.registration',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'corsheaders',
@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "health_check.contrib.s3boto3_storage",  # requires boto3 and S3BotoStorage backend
     "tinymce",
     
+    'core',
     'authentication',
     'users',
     'categories',

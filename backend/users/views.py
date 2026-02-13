@@ -1,24 +1,32 @@
 # users/views.py
 from rest_framework import viewsets
 from rest_framework.generics import UpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import User
-from .serializers import UserSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, ChangePasswordSerializer, UserWithStatesSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
+from core.constants import RolesTypes
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().with_stats() #type: ignore
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     parser_classes = (MultiPartParser, FormParser)
+    lookup_field = "profile__slug"
 
     @action(detail=False, methods=["get"], url_path="me")
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+    
+class InstructorViewSet(viewsets.GenericViewSet, viewsets.mixins.RetrieveModelMixin):
+    queryset = User.objects.all().with_stats().filter(profile__roles__type=RolesTypes.TEACHER).distinct() #type: ignore
+    permission_classes = [AllowAny]
+    serializer_class = UserWithStatesSerializer
+    lookup_field = "profile__slug"
     
 class ChangePasswordView(viewsets.GenericViewSet, UpdateAPIView):
         """
