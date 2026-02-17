@@ -19,7 +19,7 @@ services:
     container_name: frontend
     build: ./frontend
     env_file:
-      - ./frontend/.env.prod
+      - ./frontend/.env.production
     expose:
       - 3000
     ports:
