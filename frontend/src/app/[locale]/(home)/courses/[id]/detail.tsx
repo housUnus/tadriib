@@ -479,7 +479,7 @@ export default function Detail({ course }: { course: any }) {
           <div id="instructor">
             <h2 className="text-xl font-bold mb-4">Instructor</h2>
             <div className="space-y-4">
-              <Link href="#" className="text-primary hover:underline text-lg font-semibold">
+              <Link href={`/users/${course.instructor?.slug}`} className="text-primary hover:underline text-lg font-semibold">
                 {course.instructor.full_name}
               </Link>
               <p className="text-sm text-muted-foreground">{course.instructor.title}</p>

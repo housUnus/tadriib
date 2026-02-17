@@ -1,6 +1,3 @@
-"use client"
-
-import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -21,8 +18,14 @@ import {
   Users,
   MessageCircle,
   BookOpen,
+  Linkedin,
+  Github,
 } from "lucide-react"
 import { ShareDialog } from "@/components/common/share-dialog"
+import { useServerFetch } from "@/hooks/auth/user-server-fetch";
+import { formatDate } from "date-fns"
+
+
 
 const instructorData = {
   id: "alex-chen",
@@ -145,188 +148,133 @@ function formatCount(count: number) {
   return count.toString()
 }
 
-export default function InstructorPage() {
-  const [showFullBio, setShowFullBio] = useState(false)
+
+export default async function InstructorPage({ params }: { params: { id: string, locale: string } }) {
+  const resolvedParams = await params
+
+  const client = await useServerFetch();
+  const res = await client.get(`/instructors/${resolvedParams.id}/`);
+  const user = res?.data || {}
 
   return (
-    <div className="min-h-screen bg-background  pt-10">
-      <div className="max-w-6xl mx-auto px-4 pt-4">
-        {/* Profile Card */}
-        <div className="border rounded-lg p-6 md:p-8">
-          <div className="flex flex-col sm:flex-row gap-6">
-            <Avatar className="h-28 w-28 shrink-0 self-center sm:self-start">
-              <AvatarImage src={instructorData.avatar || "/placeholder.svg"} />
-              <AvatarFallback className="text-3xl bg-secondary text-secondary-foreground">
-                {instructorData.name.split(" ").map(n => n[0]).join("")}
-              </AvatarFallback>
-            </Avatar>
+    <div>
+      <nav className="flex items-center justify-center gap-1 mb-6">
+        <h2 className="text-primary text-xl font-semibold">
+          Instructor
+        </h2>
+      </nav>
+      {/* Profile Card */}
+      <div className="border rounded-lg p-6 md:p-8">
+        <div className="flex flex-col sm:flex-row gap-6">
+          <Avatar className="h-28 w-28 shrink-0 self-center sm:self-start">
+            <AvatarImage src={user.avatar || "/placeholder.svg"} />
+            <AvatarFallback className="text-3xl bg-secondary text-secondary-foreground">
+              {user.first_name?.charAt(0) + user.last_name?.charAt(0) || "U"}
+            </AvatarFallback>
+          </Avatar>
 
-            <div className="flex-1 min-w-0 text-center sm:text-left">
-              <h1 className="text-2xl font-bold">{instructorData.name}</h1>
-              <p className="text-muted-foreground mt-1">{instructorData.title}</p>
+          <div className="flex-1 min-w-0 text-center sm:text-left">
+            <h1 className="text-2xl font-bold">{user.full_name}</h1>
+            <p className="text-muted-foreground mt-1">{user.title}</p>
 
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 mt-3 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {instructorData.location}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5" />
-                  Joined {instructorData.joinedDate}
-                </span>
-                <a href={instructorData.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-primary hover:underline">
-                  <Globe className="h-3.5 w-3.5" />
-                  alexchen.dev
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 mt-3 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5" />
+                {user.country}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5" />
+                Joined {formatDate(new Date(user.date_joined), "MMMM yyyy")}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
+              {user.linkedin_id && (
+                <a
+                  href={`https://www.linkedin.com/in/${user.linkedin_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-8 w-8 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+                  title="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
                 </a>
-              </div>
-
-              <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
-                {Object.entries(instructorData.social).map(([name, url]) => (
-                  <a
-                    key={name}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="h-8 w-8 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-                    title={name}
-                  >
-                    <span className="text-[10px] font-semibold uppercase">{name.slice(0, 2)}</span>
-                  </a>
-                ))}
-                <ShareDialog title={`Check out ${instructorData.name}`} description={instructorData.tagline}>
-                  <button className="h-8 w-8 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors">
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </button>
-                </ShareDialog>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-border mt-6 rounded-lg overflow-hidden border">
-            <div className="bg-background flex flex-col items-center py-4 px-2">
-              <Star className="h-4 w-4 text-amber-400 fill-amber-400 mb-1.5" />
-              <span className="text-lg font-bold">{instructorData.rating}</span>
-              <span className="text-xs text-muted-foreground">Rating</span>
-            </div>
-            <div className="bg-background flex flex-col items-center py-4 px-2">
-              <MessageCircle className="h-4 w-4 text-muted-foreground mb-1.5" />
-              <span className="text-lg font-bold">{formatCount(instructorData.totalReviews)}</span>
-              <span className="text-xs text-muted-foreground">Reviews</span>
-            </div>
-            <div className="bg-background flex flex-col items-center py-4 px-2">
-              <Users className="h-4 w-4 text-muted-foreground mb-1.5" />
-              <span className="text-lg font-bold">{formatCount(instructorData.totalStudents)}</span>
-              <span className="text-xs text-muted-foreground">Students</span>
-            </div>
-            <div className="bg-background flex flex-col items-center py-4 px-2">
-              <BookOpen className="h-4 w-4 text-muted-foreground mb-1.5" />
-              <span className="text-lg font-bold">{instructorData.totalCourses}</span>
-              <span className="text-xs text-muted-foreground">Courses</span>
-            </div>
-            <div className="bg-background flex flex-col items-center py-4 px-2 col-span-2 sm:col-span-1">
-              <Clock className="h-4 w-4 text-muted-foreground mb-1.5" />
-              <span className="text-lg font-bold">{instructorData.totalHours}h</span>
-              <span className="text-xs text-muted-foreground">Content</span>
+              )}
+              {user.github_id && (
+                <a
+                  href={`https://github.com/${user.github_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-8 w-8 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+                  title="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              )}
+              <ShareDialog title={`Check out ${user.full_name}`} description={user.bio}>
+                <button className="h-8 w-8 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors">
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </button>
+              </ShareDialog>
             </div>
           </div>
         </div>
 
-        {/* About Me */}
-        <section>
-          <h2 className="text-xl font-bold mb-4">About me</h2>
-
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            {(showFullBio ? instructorData.bio : instructorData.bio.slice(0, 1)).map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border mt-6 rounded-lg overflow-hidden border">
+          <div className="bg-background flex flex-col items-center py-4 px-2">
+            <Star className="h-4 w-4 text-amber-400 fill-amber-400 mb-1.5" />
+            <span className="text-lg font-bold">{user.average_rating}</span>
+            <span className="text-xs text-muted-foreground">Rating</span>
           </div>
-          {instructorData.bio.length > 1 && (
-            <button
-              onClick={() => setShowFullBio(!showFullBio)}
-              className="text-sm font-medium text-primary mt-3 hover:underline"
-            >
-              {showFullBio ? "Show less" : "Show more"}
-            </button>
-          )}
-
-          {/* Specialties */}
-          <div className="flex flex-wrap gap-2 mt-6">
-            {instructorData.specialties.map((skill) => (
-              <Badge key={skill} variant="secondary" className="text-sm py-1 px-3 font-normal">
-                {skill}
-              </Badge>
-            ))}
+          <div className="bg-background flex flex-col items-center py-4 px-2">
+            <MessageCircle className="h-4 w-4 text-muted-foreground mb-1.5" />
+            <span className="text-lg font-bold">{formatCount(user.total_reviews)}</span>
+            <span className="text-xs text-muted-foreground">Reviews</span>
           </div>
-
-          {/* Experience */}
-          <div className="mt-8 space-y-0 border-l-2 border-border ml-1 pl-6">
-            {instructorData.experience.map((exp, i) => (
-              <div key={i} className="relative pb-6 last:pb-0">
-                <div className="absolute -left-[30px] top-0.5 h-2 w-2 rounded-full bg-primary" />
-                <p className="font-medium text-sm">{exp.role}</p>
-                <p className="text-sm text-muted-foreground">{exp.company} &middot; {exp.period}</p>
-              </div>
-            ))}
+          <div className="bg-background flex flex-col items-center py-4 px-2">
+            <Users className="h-4 w-4 text-muted-foreground mb-1.5" />
+            <span className="text-lg font-bold">{formatCount(user.total_students || 0)}</span>
+            <span className="text-xs text-muted-foreground">Students</span>
           </div>
-        </section>
-
-        {/* Courses */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">My courses ({instructorData.totalCourses})</h2>
+          <div className="bg-background flex flex-col items-center py-4 px-2">
+            <BookOpen className="h-4 w-4 text-muted-foreground mb-1.5" />
+            <span className="text-lg font-bold">{user.total_courses}</span>
+            <span className="text-xs text-muted-foreground">Courses</span>
           </div>
-
-          <div className="space-y-0 divide-y">
-            {instructorData.courses.map((course) => {
-              const discount = Math.round((1 - course.price / course.originalPrice) * 100)
-              return (
-                <Link key={course.id} href={`/course/${course.id}`} className="group flex gap-4 py-4 first:pt-0">
-                  <div className="relative w-36 sm:w-48 shrink-0 aspect-video rounded overflow-hidden bg-muted">
-                    <Image
-                      src={course.thumbnail || "/placeholder.svg"}
-                      alt={course.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {course.isBestseller && (
-                      <Badge className="absolute top-1.5 left-1.5 bg-amber-400 text-amber-950 hover:bg-amber-400 text-[10px] font-bold px-1.5 py-0">
-                        Bestseller
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 flex flex-col">
-                    <h3 className="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                      {course.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {course.duration} &middot; {course.lectures} lectures &middot; {course.level}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Updated {course.updatedAt}
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-auto pt-2">
-                      <span className="text-sm font-bold text-amber-500">{course.rating}</span>
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <Star key={i} className={`h-3 w-3 ${i <= Math.floor(course.rating) ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
-                        ))}
-                      </div>
-                      <span className="text-xs text-muted-foreground">({formatCount(course.ratingsCount)})</span>
-                      <span className="text-xs text-muted-foreground ml-1">{formatCount(course.studentsCount)} students</span>
-                    </div>
-                  </div>
-                  <div className="shrink-0 text-right hidden sm:flex flex-col items-end">
-                    <span className="text-base font-bold">${course.price}</span>
-                    <span className="text-xs text-muted-foreground line-through">${course.originalPrice}</span>
-                    <span className="text-xs text-primary font-medium mt-0.5">{discount}% off</span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
+          {/* <div className="bg-background flex flex-col items-center py-4 px-2 col-span-2 sm:col-span-1">
+            <Clock className="h-4 w-4 text-muted-foreground mb-1.5" />
+            <span className="text-lg font-bold">{user.total_hours}h</span>
+            <span className="text-xs text-muted-foreground">Content</span>
+          </div> */}
+        </div>
       </div>
+
+      {/* About Me */}
+      <section className="mt-5">
+        <h2 className="text-xl font-bold mb-4">About me</h2>
+        <div className="space-y-4 text-muted-foreground leading-relaxed">
+          {instructorData.bio}
+        </div>
+
+        {/* Specialties */}
+        {/* <div className="flex flex-wrap gap-2 mt-6">
+          {instructorData.specialties.map((skill) => (
+            <Badge key={skill} variant="secondary" className="text-sm py-1 px-3 font-normal">
+              {skill}
+            </Badge>
+          ))}
+        </div> */}
+      </section>
+
+      {/* Courses */}
+      {user.total_courses > 0 &&
+        <section className="mt-10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">My courses ({user.total_courses})</h2>
+          </div>
+        </section>
+      }
     </div>
   )
 }

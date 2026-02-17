@@ -3,7 +3,18 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Role, Profile
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin, StackedInline
+from django import forms
+from tinymce.widgets import TinyMCE
 
+class ProfileAdminForm(forms.ModelForm):
+    details = forms.CharField(
+        widget=TinyMCE(attrs={"cols": 80, "rows": 20}),
+        required=False,
+    )
+    class Meta:
+        model = Profile
+        fields = "__all__"
+        
 @admin.register(User)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     # Fields to display in the admin list
@@ -38,6 +49,7 @@ class RoleAdmin(ModelAdmin):
     
 
 class ProfileInline(StackedInline):
+    form = ProfileAdminForm
     model = Profile
     can_delete = False
     verbose_name_plural = 'Profile'

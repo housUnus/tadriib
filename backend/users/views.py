@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import User
-from .serializers import UserSerializer, ChangePasswordSerializer, UserWithStatesSerializer
+from .serializers import UserSerializer, ChangePasswordSerializer, InstructorSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -25,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class InstructorViewSet(viewsets.GenericViewSet, viewsets.mixins.RetrieveModelMixin):
     queryset = User.objects.all().with_stats().filter(profile__roles__type=RolesTypes.TEACHER).distinct() #type: ignore
     permission_classes = [AllowAny]
-    serializer_class = UserWithStatesSerializer
+    serializer_class = InstructorSerializer
     lookup_field = "profile__slug"
     
 class ChangePasswordView(viewsets.GenericViewSet, UpdateAPIView):

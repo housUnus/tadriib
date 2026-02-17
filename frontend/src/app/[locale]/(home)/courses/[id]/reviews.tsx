@@ -53,12 +53,9 @@ export default function CourseReviews({ course }: { course: any }) {
                     <div className="flex justify-center my-2">
                         <StarRating rating={course.average_rating} />
                     </div>
-                    <Link
-                        href={"/auth/login"}
-                        className="text-primary text-sm font-semibold underline"
-                    >
+                    <Button variant="link" className="text-primary text-sm font-semibold underline" onClick={toggle}>
                         {course.total_reviews} reviews
-                    </Link>
+                    </Button>
                 </div>
 
                 <div className="space-y-2">

@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 from core.constants import RolesTypes
 from core.utils.slugify import generate_unique_slug
+from tinymce.models import HTMLField
 
 # ----------------------------
 # Custom User
@@ -58,7 +59,7 @@ class Profile(models.Model):
     avatar = models.ImageField(_("Avatar"), upload_to="avatars/", blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255, blank=True)
     bio = models.TextField(_("Bio"), blank=True)
-    details = models.TextField(_("Details"), blank=True)  # teacher/user details, certifications, motivation
+    details = HTMLField(_("Details"), blank=True, null=True)  # teacher/user details, certifications, motivation
 
     # Teacher / expert fields (optional)
     is_verified_teacher = models.BooleanField(_("Verified Teacher"), default=False)
@@ -67,6 +68,9 @@ class Profile(models.Model):
 
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
+    
+    linkedin_id = models.CharField(_("Linkedin ID"), max_length=50, null=True, blank=True)
+    github_id = models.CharField(_("Github ID"), max_length=50, null=True, blank=True)
     
     @property
     def get_full_name(self):

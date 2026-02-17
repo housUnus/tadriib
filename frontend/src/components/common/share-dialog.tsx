@@ -67,7 +67,7 @@ export function ShareDialog({ title, url, description = "", children, className 
       </DialogTrigger>
       <DialogContent className="sm:max-w-md rounded-md">
         <DialogHeader>
-          <DialogTitle className="text-xl">Share this course</DialogTitle>
+          <DialogTitle className="text-xl">{title}</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 py-4">
           <div className="flex justify-center gap-3">

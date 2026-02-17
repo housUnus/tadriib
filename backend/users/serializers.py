@@ -163,3 +163,14 @@ class UserWithStatesSerializer(serializers.ModelSerializer):
             "title",
             "avatar",
         )
+
+class InstructorSerializer(UserWithStatesSerializer):
+    linkedin_id = serializers.URLField(source='profile.linkedin_id', read_only=True)
+    github_id = serializers.URLField(source='profile.github_id', read_only=True)
+    class Meta(UserWithStatesSerializer.Meta):
+        fields = UserWithStatesSerializer.Meta.fields + (
+            "linkedin_id",
+            "github_id",
+            "date_joined",
+            "country",
+        )

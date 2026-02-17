@@ -19,7 +19,8 @@ class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
     authentication_classes = [OptionalJWTAuthentication]
     permission_classes = [AllowAny]
     queryset = Course.objects.with_stats().select_related("primary_category")#type: ignore
-
+    filterset_fields = ["status", "language", "level", "categories__slug", "instructor__profile__slug"]
+    
     def get_serializer_class(self):
         if self.action == "list":
             return CourseListSerializer
