@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true, // ignore TS errors during production build
   },
+   publicRuntimeConfig: {
+      NEXT_PUBLIC_API_SERVER_BASE_URL: process.env.NEXT_PUBLIC_API_SERVER_BASE_URL,
+  },
   productionBrowserSourceMaps: false, // disable source maps in prod to save memory
   reactStrictMode: true,
   images: {
