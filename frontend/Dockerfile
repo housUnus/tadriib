@@ -3,6 +3,9 @@
 # --------------------
 FROM node:20-alpine AS builder
 
+ARG NEXT_PUBLIC_API_SERVER_BASE_URL
+ENV NEXT_PUBLIC_API_SERVER_BASE_URL=$NEXT_PUBLIC_API_SERVER_BASE_URL
+
 # Limit Node memory during build
 ENV NODE_OPTIONS="--max-old-space-size=1536"
 ENV NEXT_TELEMETRY_DISABLED=1
