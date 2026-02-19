@@ -5,7 +5,7 @@ import { FormProvider, FieldValues, UseFormReturn } from "react-hook-form";
 
 type RHFFormProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
-  onSubmit: (data: T) => Promise<void>;
+  onSubmit?: (data: T) => Promise<void>;
   children: React.ReactNode;
   className?: string;
 };
@@ -20,7 +20,7 @@ export function RHFForm<T extends FieldValues>({
     <FormProvider {...form}>
       <form
         className={className}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit ?? (async () => {}))}
         noValidate
       >
         {form.formState.errors.root &&

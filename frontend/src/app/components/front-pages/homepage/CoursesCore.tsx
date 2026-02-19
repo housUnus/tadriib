@@ -361,10 +361,13 @@ export default function Core({courses}: {courses: any[]}) {
           variant="outline"
           size="lg"
         >
-          {t('viewAllQuizzes')}
+          <Link href="/courses" className="flex items-center gap-2">
+            {t('viewAllCourses')}
+            </Link>
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </>
   );
 }
+        

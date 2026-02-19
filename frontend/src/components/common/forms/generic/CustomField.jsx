@@ -11,7 +11,7 @@ export default function CustomField({
   helperText,
   defaultValue = "",
   className,
-  Component: Component = Input, // 👈 Default to shadcn Input
+  Component: Component = Input,
   ...rest
 }) {
   const {
@@ -22,6 +22,7 @@ export default function CustomField({
     <Controller
       name={name}
       defaultValue={defaultValue}
+      control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {/* Label with required star */}

@@ -25,10 +25,10 @@ type ModalProps = UseModalOptions & {
 }
 
 const sizeClasses = {
-  sm: "max-w-1/3",
-  md: "max-w-1/2",
-  lg: "max-w-2/3",
-  full: "max-w-full",
+  sm: "md:max-w-1/3",
+  md: "md:max-w-1/2",
+  lg: "md:max-w-2/3",
+  full: "md:max-w-full",
 }
 
 export function Modal({
@@ -41,7 +41,7 @@ export function Modal({
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className={`w-full max-w-full md:${sizeClasses[size] || sizeClasses.md} rounded-lg bg-white dark:bg-darkgray p-6 shadow-md dark:dark-shadow-md`}
+      <DialogContent className={`w-full max-w-full ${sizeClasses[size] || sizeClasses.md} rounded-lg bg-white dark:bg-darkgray p-6 shadow-md dark:dark-shadow-md`}
       >
         <ScrollArea className="max-h-[90vh]">
           <div className="pt-3">

@@ -85,6 +85,10 @@ export function useDataTable<TData, TValue>({
                     page: String(pagination.pageIndex + 1),
                     page_size: String(pagination.pageSize),
                     search: globalFilter || "",
+                    ...columnFilters.reduce<Record<string, any>>((acc, filter) => {
+                        acc[filter.id] = filter.value
+                        return acc
+                    }, {}),
                 })
 
                 const res = await client.get(`${url}?${queryParams}`)

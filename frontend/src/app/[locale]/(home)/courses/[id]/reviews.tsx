@@ -1,6 +1,5 @@
 "use client"
 
-import { DataTable } from "@/components/common/DataTable/data-table"
 import TableContent from "@/components/common/DataTable/table-content"
 import TablePagination from "@/components/common/DataTable/table-pagination"
 import TableSearch from "@/components/common/DataTable/table-search"
@@ -12,7 +11,6 @@ import { Progress } from "@/components/ui/progress"
 import { useDataTable } from "@/hooks/use-data-table"
 import { useModal } from "@/hooks/use-modal"
 import { formatDate } from "date-fns/format"
-import Link from "next/link"
 
 const customRow = (row: any) => (
     <div key={row.id} className="border-t border-border pt-6">
@@ -103,7 +101,7 @@ export default function CourseReviews({ course }: { course: any }) {
                 See all reviews
             </Button>
 
-            <Modal isOpen={isOpen} close={close} title="Reviews" size="md">
+            <Modal isOpen={isOpen} close={close} title="Reviews" size="lg">
                 <div className="space-y-6">
                     <TableSearch dt={dt} />
                     <TableContent dt={dt} renderRow={customRow} />

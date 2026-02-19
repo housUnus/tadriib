@@ -4,7 +4,30 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export function useFilterQuery({ key, fetcher, defaultValues = {} }) {
+const schemas = {
+  price: { type: "array" },
+  level: { type: "array" },
+  sortBy: { type: "string" },
+};
+
+function parseParam(key, values, schemas) {
+  const schema = schemas[key];
+
+  if (!schema) return values.length > 1 ? values : values[0];
+
+  switch (schema.type) {
+    case "array":
+      return values.flatMap((v) => v.split(",").map((x) => x.trim()));
+
+    case "string":
+      return values[0] ?? "";
+
+    default:
+      return values.length > 1 ? values : values[0];
+  }
+}
+
+export function useFilterQuery({ key, fetcher, defaultValues = {}, schemas = {} }) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -14,16 +37,7 @@ export function useFilterQuery({ key, fetcher, defaultValues = {} }) {
 
     for (const key of searchParams.keys()) {
       const values = searchParams.getAll(key);
-
-      // Take the single value or array of values
-      let value = values.length > 1 ? values : values[0];
-
-      // Convert comma-separated strings like "100,200" → ["100", "200"]
-      if (typeof value === "string" && value.includes(",")) {
-        value = value.split(",").map((v) => v.trim());
-      }
-
-      obj[key] = value;
+      obj[key] = parseParam(key, values, schemas);
     }
 
     return { ...defaultValues, ...obj };

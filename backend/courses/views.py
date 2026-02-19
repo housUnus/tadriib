@@ -13,13 +13,14 @@ from core.authentication import OptionalJWTAuthentication
 from users.models import User
 from ratings.models import Rating
 from ratings.constants import RatingStatus
+from .filters import CourseFilter
 
 class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
     lookup_field = "slug"
     authentication_classes = [OptionalJWTAuthentication]
     permission_classes = [AllowAny]
     queryset = Course.objects.with_stats().select_related("primary_category")#type: ignore
-    filterset_fields = ["status", "language", "level", "categories__slug", "instructor__profile__slug"]
+    filterset_class = CourseFilter
     
     def get_serializer_class(self):
         if self.action == "list":

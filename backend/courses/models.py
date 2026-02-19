@@ -45,6 +45,7 @@ class Course(BaseModel):
 
     published_at = models.DateTimeField(null=True, blank=True)
     
+    duration = models.PositiveIntegerField(null=True, blank=True, help_text=_("Total duration of all contents in minutes"))
 
     def is_public(self):
         return self.status == CourseStatus.PUBLISHED
@@ -54,6 +55,13 @@ class Course(BaseModel):
         verbose_name_plural = _("Courses")
 
     objects = CourseQuerySet.as_manager()
+    
+    def update_duration(self):
+        total_duration = Content.objects.filter(section__course=self).aggregate(
+            total_duration=models.Sum('duration_minutes')
+        )['total_duration']
+        self.duration = total_duration if total_duration else 0
+        self.save(update_fields=['duration'])
     
     @property
     def total_students(self):
