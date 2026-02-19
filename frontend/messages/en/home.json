@@ -164,5 +164,6 @@
   "youreAlmostThereWeSent": "You're almost there! We sent you an email to verify your account",
   "linkIsInvalidOrDidntGetTheEmail": "Link is invalid or didn't get the email?",
   "resendEmail": "Resend Email",
-  "justClickOnTheLinkInTheEmail": "Just click on the link in the email to complete the verification process."
+  "justClickOnTheLinkInTheEmail": "Just click on the link in the email to complete the verification process.",
+  "viewAllCourses": "View All Courses"
 }
