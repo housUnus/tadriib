@@ -21,6 +21,8 @@ class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Course.objects.with_stats().select_related("primary_category")#type: ignore
     filterset_class = CourseFilter
+    ordering_fields = ["average_rating", "created_at"]  
+    ordering = ["-average_rating"]
     
     def get_serializer_class(self):
         if self.action == "list":
@@ -58,6 +60,18 @@ class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
                     to_attr="latest_reviews",
                 )
             )
+        if self.action == 'list':
+            sort_by = self.request.query_params.get("sortBy")
+            if sort_by == "rating":
+                queryset = queryset.order_by("-average_rating")
+            elif sort_by == "newest":
+                queryset = queryset.order_by("-created_at")
+            # elif sort_by == "price-low":
+            #     queryset = queryset.order_by("price_amount")
+            # elif sort_by == "price-high":
+            #     queryset = queryset.order_by("-price_amount")
+            else:
+                queryset = queryset.order_by("-average_rating")  # default
 
         # Only published courses for public users
         # if not self.request.user.is_authenticated:

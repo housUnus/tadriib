@@ -6,44 +6,14 @@ import {
 } from "@/components/ui/collapsible";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import CustomField from "@/components/common/forms/generic/CustomField";
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Star } from "lucide-react";
 import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { useFilterQuery } from "@/hooks/useFilterQuery";
 import { Controller } from "react-hook-form";
-
-const categories = [
-  {
-    id: "business",
-    name: "Business",
-  },
-  {
-    id: "design",
-    name: "Design",
-  },
-  {
-    id: "marketing",
-    name: "Marketing",
-  },
-  {
-    id: "tech",
-    name: "Technology",
-  },
-  {
-    id: "finance",
-    name: "Finance",
-  },
-  {
-    id: "health",
-    name: "Health",
-  },
-  {
-    id: "personal",
-    name: "Personal Development",
-  },
-];
+import { useClientFetch } from "@/hooks/auth/use-client-fetch";
+import { useQuery } from "@tanstack/react-query";
 
 export const FilterSidebar = ({ form }) => {
   const [ratingOpen, setRatingOpen] = useState(true);
@@ -51,6 +21,15 @@ export const FilterSidebar = ({ form }) => {
   const [levelOpen, setLevelOpen] = useState(true);
   const [durationOpen, setDurationOpen] = useState(true);
   const [categoryOpen, setCategoryOpen] = useState(true);
+  const client = useClientFetch()
+  
+  const {data: categories} = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const {data, error} = await client.get("/categories/");
+      return data?.results || [];
+    },
+  });
 
   const { params, setParams, fetch } = useFilterQuery({
     key: "courses",
@@ -81,6 +60,10 @@ export const FilterSidebar = ({ form }) => {
     form.reset(params);
   }, []);
 
+  useEffect(() => {
+    console.log("🚀 ~ Rendering....", params)
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Ratings Filter */}
@@ -100,8 +83,8 @@ export const FilterSidebar = ({ form }) => {
             defaultValue={[]}
             render={({ field }) => (
               <div className="mt-4 space-y-3">
-                {["4.5", "4.0", "3.5", "3.0"].map((value) => (
-                  <div key={value} className="flex items-center space-x-2">
+                {["4.5", "4.0", "3.5", "3.0"].map((value, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
                       checked={field.value?.includes(value)}
                       onCheckedChange={(checked) => {
@@ -145,8 +128,8 @@ export const FilterSidebar = ({ form }) => {
             defaultValue={[]}
             render={({ field }) => (
               <div className="mt-4 space-y-3">
-                {["free", "paid"].map((value) => (
-                  <div key={value} className="flex items-center space-x-2">
+                {["free", "paid"].map((value, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
                       checked={field.value?.includes(value)}
                       onCheckedChange={(checked) => {
@@ -160,7 +143,7 @@ export const FilterSidebar = ({ form }) => {
                       }}
                     />
                     <label
-                      className="text-sm font-medium cursor-pointer"
+                      className="text-sm font-medium cursor-pointer capitalize"
                     >
                       {value}
                     </label>
@@ -190,8 +173,8 @@ export const FilterSidebar = ({ form }) => {
             defaultValue={[]}
             render={({ field }) => (
               <div className="mt-4 space-y-3">
-                {["Beginner", "Intermediate", "Advanced"].map((value) => (
-                  <div key={value} className="flex items-center space-x-2">
+                {["Beginner", "Intermediate", "Advanced"].map((value, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
                       checked={field.value?.includes(value)}
                       onCheckedChange={(checked) => {
@@ -239,9 +222,9 @@ export const FilterSidebar = ({ form }) => {
                   { id: "short", label: "0-2 hours" },
                   { id: "medium", label: "2-3 hours" },
                   { id: "long", label: "3+ hours" },
-                ].map((duration) => (
+                ].map((duration, idx) => (
                   <div
-                    key={duration.id}
+                    key={idx}
                     className="flex items-center space-x-2"
                   >
                     <Checkbox
@@ -287,16 +270,16 @@ export const FilterSidebar = ({ form }) => {
             defaultValue={[]}
             render={({ field }) => (
               <div className="mt-4 space-y-3">
-                {categories.map((category) => (
-                  <div key={category.id} className="flex items-center space-x-2">
+                {categories?.map((category, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
-                      checked={field.value?.includes(category.id)}
+                      checked={field.value?.includes(category.slug)}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          field.onChange([...field.value, category.id]);
+                          field.onChange([...field.value, category.slug]);
                         } else {
                           field.onChange(
-                            field.value.filter((v) => v !== category.id),
+                            field.value.filter((v) => v !== category.slug),
                           );
                         }
                       }}
@@ -313,12 +296,12 @@ export const FilterSidebar = ({ form }) => {
           />
         </CollapsibleContent>
       </Collapsible>
-      <Field orientation="horizontal">
+      {/* <Field orientation="horizontal">
         <Button type="button" variant="outline" onClick={() => form.reset()}>
           Reset
         </Button>
         <Button onClick={form.handleSubmit(onSubmit)}>Submit</Button>
-      </Field>
+      </Field> */}
     </div>
   );
 };

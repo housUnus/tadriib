@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true, // ignore TS errors during production build
   },
   productionBrowserSourceMaps: false, // disable source maps in prod to save memory
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {

@@ -38,3 +38,8 @@ class CategorySerializer(serializers.ModelSerializer):
             })
 
         return breadcrumbs
+    
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "name", "slug"]

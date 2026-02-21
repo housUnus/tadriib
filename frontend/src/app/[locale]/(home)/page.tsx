@@ -19,6 +19,7 @@ const page = async () => {
     const client = await useServerFetch();
   const res = await client.get("/courses/?limit=3");
   const { data, error } = res as { data: any; error?: any };
+  console.log("🚀 ~ page ~ data: ");
   return (
     <>
       {/* <Hero /> */}

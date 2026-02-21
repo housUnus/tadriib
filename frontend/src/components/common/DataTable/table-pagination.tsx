@@ -18,7 +18,6 @@ const component = (dt: any) => {
 
 }
 export default function TablePagination({ dt }: { dt: any }) {
-    console.log("🚀 ~ TablePagination ~ dt:", dt)
     return (
         <div className="sm:flex justify-between gap-2">
             <div className="flex items-center gap-2">

@@ -1,14 +1,16 @@
 import { Badge } from "@/components/ui/badge";
+import { countActiveFilters } from "./utils";
 
 export default function ActiveFilters({ values, form }) {
+  const active_filters = countActiveFilters(values);
   return (
     <>
       {/* Active Filters */}
-      {Object.keys(values).length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
+      {active_filters > 0 && (
+        <div className="flex flex-wrap gap-2 my-4">
           {/* Pricing Filter */}
-          {values.price?.map((price) => (
-            <Badge key={price} variant="secondary" className="px-2 py-1">
+          {values.price?.map((price, idx) => (
+            <Badge key={idx} variant="secondary" className="px-2 py-1">
               {price}
               <button
                 type="button"
@@ -22,8 +24,8 @@ export default function ActiveFilters({ values, form }) {
               </button>
             </Badge>
           ))}
-          {values.rating?.map((rating) => (
-            <Badge key={rating} variant="secondary" className="px-2 py-1">
+          {values.rating?.map((rating, idx) => (
+            <Badge key={idx} variant="secondary" className="px-2 py-1">
               {rating}+ stars
               <button
                 type="button"
@@ -37,8 +39,8 @@ export default function ActiveFilters({ values, form }) {
               </button>
             </Badge>
           ))}
-          {values.level?.map((level) => (
-            <Badge key={level} variant="secondary" className="px-2 py-1">
+          {values.level?.map((level, idx) => (
+            <Badge key={idx} variant="secondary" className="px-2 py-1">
               {level}
               <button
                 type="button"
@@ -52,8 +54,8 @@ export default function ActiveFilters({ values, form }) {
               </button>
             </Badge>
           ))}
-          {values.duration?.map((duration) => (
-            <Badge key={duration} variant="secondary" className="px-2 py-1">
+          {values.duration?.map((duration, idx) => (
+            <Badge key={idx} variant="secondary" className="px-2 py-1">
               {duration === "short"
                 ? "0-2 hours"
                 : duration === "medium"

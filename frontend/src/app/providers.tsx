@@ -11,7 +11,16 @@ function UserInitializer() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-    const [queryClient] = useState(() => new QueryClient());
+    const [queryClient] = useState(() => new QueryClient({
+        defaultOptions: {
+            queries: {
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+                refetchOnReconnect: false,
+                staleTime: 1000 * 60 * 5,
+            },
+        },
+    }));
 
     return (
         <QueryClientProvider client={queryClient}>

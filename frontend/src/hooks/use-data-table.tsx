@@ -13,6 +13,8 @@ import {
 import { useQuery } from "@tanstack/react-query"
 
 import { useClientFetch } from "./auth/use-client-fetch"
+import { useEffect } from "react"
+import { useUpdateEffect } from "./use-update-effect"
 
 interface FetchParams {
     pageIndex: number
@@ -37,13 +39,12 @@ interface UseDataTableProps<TData, TValue> {
 
 export function useDataTable<TData, TValue>({
     columns,
-    initialData = [],
+    initialData,
     fetchData,
     url,
     pageSize = 10,
 }: UseDataTableProps<TData, TValue>) {
     const client = useClientFetch();
-
 
     const [pagination, setPagination] = React.useState<PaginationState>({
         pageIndex: 0,
@@ -57,8 +58,6 @@ export function useDataTable<TData, TValue>({
        Fetcher
     ============================= */
 
-    const shouldFetch = !!url || !!fetchData
-
     const query = useQuery({
         queryKey: [
             "data-table",
@@ -68,7 +67,6 @@ export function useDataTable<TData, TValue>({
             columnFilters,
         ],
         queryFn: async () => {
-
             const params: FetchParams = {
                 pageIndex: pagination.pageIndex,
                 pageSize: pagination.pageSize,
@@ -108,9 +106,20 @@ export function useDataTable<TData, TValue>({
         },
         placeholderData: (previousData) => previousData,
         staleTime: 1000 * 60 * 2, // 2 minutes cache
+        enabled: false,
     })
 
-    const rows = query.data?.rows ?? []
+    useUpdateEffect(() => {
+        const params: FetchParams = {
+            pageIndex: pagination.pageIndex,
+            pageSize: pagination.pageSize,
+            globalFilter,
+            columnFilters,
+        }
+        query.refetch();
+    }, [pagination, globalFilter, columnFilters]);
+
+    const rows = query.data?.rows ?? initialData ?? []
     const pageCount = query.data?.pageCount ?? -1
 
     // const fetcher = React.useCallback(async () => {

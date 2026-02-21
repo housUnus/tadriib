@@ -3,17 +3,19 @@ import {
     flexRender,
 } from "@tanstack/react-table"
 
-export default function TableContent({ dt, renderRow }: { dt: any, renderRow?: (row: any) => React.ReactNode }) {
-
+export default function TableContent({ dt, renderRow }: { dt: any, renderRow?: (row: any) => React.ReactNode, initialData?: any[] }) {
+    
     if (renderRow) {
         return dt.rows.length ? (
             <>
-                {dt.rows.map((r: any, i:number) => (
+                {dt.rows.map((r: any, i: number) => (
                     <div key={i}>{renderRow(r)}</div>
                 ))}
             </>
         ) : (
-            <div className="text-center py-10">No results.</div>
+            <div className="h-24 text-center flex items-center justify-center">
+                No results.
+            </div>
         )
     }
 

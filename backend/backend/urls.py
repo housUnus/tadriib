@@ -17,6 +17,7 @@ urlpatterns = [
     path("api/v1/_allauth/", include("allauth.headless.urls")),
     path('api/v1/', include('courses.urls')),
     path('api/v1/', include('ratings.urls')),
+    path('api/v1/', include('categories.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

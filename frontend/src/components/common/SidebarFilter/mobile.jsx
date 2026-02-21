@@ -3,8 +3,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { SlidersHorizontal } from "lucide-react";
 import { FilterSidebar } from "./filters";
 import { Button } from "@/components/ui/button";
+import { countActiveFilters } from "./utils";
 
 export default function MobileFilter({ values, form }) {
+  const active_filters = countActiveFilters(values);
+  
   return (
     <>
       {/* Mobile Filter Button */}
@@ -13,9 +16,9 @@ export default function MobileFilter({ values, form }) {
           <Button variant="outline" className="lg:hidden bg-transparent">
             <SlidersHorizontal className="w-4 h-4 mr-2" />
             Filters
-            {Object.keys(values).length > 0 && (
+            {active_filters > 0 && (
               <Badge variant="secondary" className="ml-2">
-                {Object.keys(values).length}
+                {active_filters}
               </Badge>
             )}
           </Button>
