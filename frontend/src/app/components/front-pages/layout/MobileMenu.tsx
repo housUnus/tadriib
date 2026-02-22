@@ -1,72 +1,121 @@
 "use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetTrigger,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
-  SheetFooter,
-  SheetClose,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-import { IconMenu2 } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp, Menu } from "lucide-react";
+import { useState } from "react";
 import Link from "next/link";
-import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
-import Navigation from "./Navigation";
 
-const MobileMenu = () => {
-  const [open, setOpen] = useState(false);
+export default function MobileMenu({ categories, session }: { categories: any[], session: any }) {
+  const [expandedCategory, setExpandedCategory] = useState(null);
+
+  const toggleCategory = (categoryName: any) =>
+    setExpandedCategory(
+      expandedCategory === categoryName ? null : categoryName
+    );
 
   return (
-    <div className="xl:hidden flex">
-      <Sheet open={open} onOpenChange={setOpen}>
-        {/* Trigger Button */}
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            className="flex items-center justify-center text-dark h-10 w-10 rounded-full bg-transparent hover:bg-lightprimary"
-          >
-            <IconMenu2 className="shrink-0" />
-          </Button>
-        </SheetTrigger>
+    <Sheet >
+      <SheetTrigger asChild className="md:hidden">
+        <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side={"left"} className="px-2 pb-0 pt-2 flex flex-col">
+        <SheetHeader>
+          <SheetTitle className="font-bold text-xl">Ruwad Academy</SheetTitle>
+        </SheetHeader>
+        <nav className="py-1 overflow-y-scroll no-scrollbar flex flex-col gap-3">
+          <ul className="auth">
+            {session ?
+              <>
+                <li>
+                  <Link
+                    href=""
+                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
+                  >
+                    My Account
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href=""
+                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
+                  >
+                    Lout out
+                  </Link>
+                </li>
+              </> :
+              <>
+                <li>
+                  <Link
+                    href="/auth/login"
+                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/auth/register"
+                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
+                  >
+                    Register
+                  </Link>
+                </li>
+              </>
+            }
+          </ul>
+          <hr />
+          <ul>
+            {["courses"].map((parent, index) => (
+              <div key={parent}>
+                <span className="px-3 text-xs font-semibold text-black uppercase tracking-wider">
+                  {parent}
+                </span>
+                <div className="">
+                  {categories?.map((category) => (
+                    <li key={category.name}>
+                      <button
+                        onClick={() => toggleCategory(category.name)}
+                        className="flex justify-between items-center w-full text-sm p-2 text-left hover:bg-gray-100"
+                      >
+                        <span>{category.name}</span>
+                        {expandedCategory === category.name ? (
+                          <ChevronUp size={15} />
+                        ) : (
+                          <ChevronDown size={15} />
+                        )}
+                      </button>
+                      {expandedCategory === category.name && (
+                        <ul className="">
+                          {category.children.map((subcategory: any) => (
+                            <li key={subcategory.name}>
+                              <a
+                                href={subcategory.path_url}
+                                className="block px-5 py-1.5 text-sm text-gray-700 hover:bg-gray-10 border-b border-gray-100"
+                              >
+                                {subcategory.name}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </div>
 
-        {/* Sheet Content (acts like Drawer) */}
-        <SheetContent
-          side="left"
-          className="w-[280px] sm:w-[320px] bg-white dark:bg-darkgray p-6 flex flex-col justify-between"
-        >
-          <div>
-            <SheetHeader className="mb-6 p-0">
-              <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-              <SheetDescription className="sr-only">
-                Navigation drawer for mobile devices
-              </SheetDescription>
-              <FullLogo />
-            </SheetHeader>
-
-            <div className="flex flex-col gap-4">
-              <Navigation />
-            </div>
-          </div>
-
-          {/* Footer Button */}
-          <SheetFooter className="p-0 mt-6">
-            <SheetClose asChild>
-              <Button
-                asChild
-                className="font-bold w-full bg-sky hover:bg-sky/90 text-white"
-              >
-                <Link href="/auth/login">Log in</Link>
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </div>
+              </div>
+            ))}
+          </ul>
+        </nav>
+      </SheetContent>
+    </Sheet>
   );
-};
-
-export default MobileMenu;
+}

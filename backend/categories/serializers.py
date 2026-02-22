@@ -40,6 +40,14 @@ class CategorySerializer(serializers.ModelSerializer):
         return breadcrumbs
     
 class CategoryDetailSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        fields = ["id", "name", "slug"]
+        fields = ["id", "name", "slug", "path_name", "path_url", "children"]
+        
+    def get_children(self, obj: Category):
+        return self.__class__(
+            obj.children.all(),
+            many=True,
+            context=self.context
+        ).data

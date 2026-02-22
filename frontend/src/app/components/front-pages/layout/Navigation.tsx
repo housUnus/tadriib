@@ -17,23 +17,8 @@ const FrontNav = [
     badge: false,
   },
   {
-    menu: "Portfolio",
-    link: "/frontend-pages/portfolio",
-    badge: true,
-  },
-  {
-    menu: "Dashboard",
-    link: "/dashboards/dashboard1",
-    badge: false,
-  },
-  {
     menu: "Pricing",
     link: "/frontend-pages/pricing",
-    badge: false,
-  },
-  {
-    menu: "Contact",
-    link: "/frontend-pages/contact",
     badge: false,
   },
 ];

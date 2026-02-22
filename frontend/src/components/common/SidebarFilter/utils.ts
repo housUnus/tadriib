@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 export const countActiveFilters = (values: any) => {
-  const excludedKeys = ["page", "pageSize", "sortBy", "search"];
+  const excludedKeys = ["page", "pageSize", "sortBy"];
 
   return _.chain(values)
     .omit(excludedKeys)

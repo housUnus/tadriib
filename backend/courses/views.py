@@ -21,6 +21,7 @@ class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Course.objects.with_stats().select_related("primary_category")#type: ignore
     filterset_class = CourseFilter
+    search_fields = ["title"]
     ordering_fields = ["average_rating", "created_at"]  
     ordering = ["-average_rating"]
     

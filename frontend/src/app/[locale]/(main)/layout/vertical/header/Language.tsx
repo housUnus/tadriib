@@ -43,7 +43,7 @@ const Languages = [
   },
 ];
 
-export const Language = ({isHeader=true}) => {
+export const Language = ({ isHeader = true }) => {
   const { isLanguage, setIsLanguage, activeDir } =
     useContext(CustomizerContext);
   const [isPending, startTransition] = useTransition();
@@ -115,20 +115,20 @@ export const Language = ({isHeader=true}) => {
           <SelectContent>
             <SelectGroup>
               {Languages.filter((_lang) => _lang.active).map((item, index) => (
-                <SelectItem value={item.value}>
-                  <span className="rounded flex justify-center items-center">
-                    <Image
-                      src={item.icon}
-                      alt="language"
-                      width={100}
-                      height={100}
-                      className="rounded-full h-6 w-6 object-cover cursor-pointer"
-                    />
-                    <span className="text-sm font-medium ms-1">{t(item.flagnameKey)}</span>
-                  </span>
-
-
-                </SelectItem>
+                <div key={index}>
+                  <SelectItem value={item.value}>
+                    <span className="rounded flex justify-center items-center">
+                      <Image
+                        src={item.icon}
+                        alt="language"
+                        width={100}
+                        height={100}
+                        className="rounded-full h-6 w-6 object-cover cursor-pointer"
+                      />
+                      <span className="text-sm font-medium ms-1">{t(item.flagnameKey)}</span>
+                    </span>
+                  </SelectItem>
+                </div>
               ))}
             </SelectGroup>
           </SelectContent>

@@ -8,12 +8,12 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Star } from "lucide-react";
-import { Field } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
 import { useFilterQuery } from "@/hooks/useFilterQuery";
 import { Controller } from "react-hook-form";
 import { useClientFetch } from "@/hooks/auth/use-client-fetch";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { levels } from "./constants";
 
 export const FilterSidebar = ({ form }) => {
   const [ratingOpen, setRatingOpen] = useState(true);
@@ -21,12 +21,14 @@ export const FilterSidebar = ({ form }) => {
   const [levelOpen, setLevelOpen] = useState(true);
   const [durationOpen, setDurationOpen] = useState(true);
   const [categoryOpen, setCategoryOpen] = useState(true);
-  const client = useClientFetch()
-  
-  const {data: categories} = useQuery({
+  const client = useClientFetch();
+  const search_param = useSearchParams();
+  const search = search_param.get("search");
+
+  const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const {data, error} = await client.get("/categories/");
+      const { data, error } = await client.get("/categories?");
       return data?.results || [];
     },
   });
@@ -41,12 +43,9 @@ export const FilterSidebar = ({ form }) => {
       duration: { type: "array" },
       categories: { type: "array" },
       rating: { type: "array" },
+      search: { type: "string" },
     },
   });
-
-  const onSubmit = (data) => {
-    setParams(data);
-  };
 
   useEffect(() => {
     const subscription = form.watch((value) => {
@@ -57,15 +56,13 @@ export const FilterSidebar = ({ form }) => {
   }, [form]);
 
   useEffect(() => {
-    form.reset(params);
-  }, []);
-
-  useEffect(() => {
-    console.log("🚀 ~ Rendering....", params)
-  }, []);
+    form.reset({ ...params, search: search || "" });
+  }, [search]);
 
   return (
     <div className="space-y-6">
+      {/* Hidden search */}
+      {/* <InputField name="search" type="hidden" /> */}
       {/* Ratings Filter */}
       <Collapsible open={ratingOpen} onOpenChange={setRatingOpen}>
         <CollapsibleTrigger className="flex items-center justify-between w-full group">
@@ -142,9 +139,7 @@ export const FilterSidebar = ({ form }) => {
                         }
                       }}
                     />
-                    <label
-                      className="text-sm font-medium cursor-pointer capitalize"
-                    >
+                    <label className="text-sm font-medium cursor-pointer capitalize">
                       {value}
                     </label>
                   </div>
@@ -173,24 +168,22 @@ export const FilterSidebar = ({ form }) => {
             defaultValue={[]}
             render={({ field }) => (
               <div className="mt-4 space-y-3">
-                {["Beginner", "Intermediate", "Advanced"].map((value, idx) => (
+                {levels.map((level, idx) => (
                   <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
-                      checked={field.value?.includes(value)}
+                      checked={field.value?.includes(level.value)}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          field.onChange([...field.value, value]);
+                          field.onChange([...field.value, level.value]);
                         } else {
                           field.onChange(
-                            field.value.filter((v) => v !== value),
+                            field.value.filter((v) => v !== level.value),
                           );
                         }
                       }}
                     />
-                    <label
-                      className="text-sm font-medium cursor-pointer"
-                    >
-                      {value}
+                    <label className="text-sm font-medium cursor-pointer">
+                      {level.label}
                     </label>
                   </div>
                 ))}
@@ -223,10 +216,7 @@ export const FilterSidebar = ({ form }) => {
                   { id: "medium", label: "2-3 hours" },
                   { id: "long", label: "3+ hours" },
                 ].map((duration, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center space-x-2"
-                  >
+                  <div key={idx} className="flex items-center space-x-2">
                     <Checkbox
                       checked={field.value?.includes(duration.id)}
                       onCheckedChange={(checked) => {
@@ -239,9 +229,7 @@ export const FilterSidebar = ({ form }) => {
                         }
                       }}
                     />
-                    <label
-                      className="text-sm font-medium cursor-pointer"
-                    >
+                    <label className="text-sm font-medium cursor-pointer">
                       {duration.label}
                     </label>
                   </div>
@@ -264,7 +252,7 @@ export const FilterSidebar = ({ form }) => {
           )}
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-4 space-y-3">
-        <Controller
+          <Controller
             name="categories"
             control={form.control}
             defaultValue={[]}
@@ -284,9 +272,7 @@ export const FilterSidebar = ({ form }) => {
                         }
                       }}
                     />
-                    <label
-                      className="text-sm font-medium cursor-pointer"
-                    >
+                    <label className="text-sm font-medium cursor-pointer">
                       {category.name}
                     </label>
                   </div>

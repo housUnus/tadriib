@@ -8,6 +8,21 @@ export default function ActiveFilters({ values, form }) {
       {/* Active Filters */}
       {active_filters > 0 && (
         <div className="flex flex-wrap gap-2 my-4">
+          {/* Search Filter */}
+          {values.search && (
+            <Badge variant="secondary" className="px-2 py-1">
+              {values.search}
+              <button
+                type="button"
+                className="relative z-50 cursor-pointer ms-2"
+                onClick={() => {
+                  form.setValue("search", "");
+                }}
+              >
+                ✕
+              </button>
+            </Badge>
+          )}
           {/* Pricing Filter */}
           {values.price?.map((price, idx) => (
             <Badge key={idx} variant="secondary" className="px-2 py-1">
