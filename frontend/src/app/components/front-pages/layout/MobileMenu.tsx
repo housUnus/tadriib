@@ -98,7 +98,7 @@ export default function MobileMenu({ categories, session }: { categories: any[],
                           {category.children.map((subcategory: any) => (
                             <li key={subcategory.name}>
                               <a
-                                href={subcategory.path_url}
+                                href={`/courses?categories=${subcategory.slug}`}
                                 className="block px-5 py-1.5 text-sm text-gray-700 hover:bg-gray-10 border-b border-gray-100"
                               >
                                 {subcategory.name}

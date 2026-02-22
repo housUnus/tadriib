@@ -30,7 +30,7 @@ export default function Categories({categories}) {
               <ul>
                 {categories?.map((category, index) => (
                   <ListItem
-                    href={category.path_url}
+                    href={`/courses?categories=${category.slug}`}
                     title={category.name}
                     setSelectedCategory={setSelectedCategory}
                     key={index}
@@ -46,7 +46,7 @@ export default function Categories({categories}) {
               .find((category) => category.name === selectedCategory)
               .children.map((child, index) => (
                 <ListItem
-                  href={child.path_url}
+                  href={`/courses?categories=${child.slug}`}
                   title={child.name}
                   isChild={true}
                   key={index}

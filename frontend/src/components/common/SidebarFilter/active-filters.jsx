@@ -91,6 +91,23 @@ export default function ActiveFilters({ values, form }) {
               </button>
             </Badge>
           ))}
+          {values.categories?.map((category, idx) => (
+            <Badge key={idx} variant="secondary" className="px-2 py-1">
+              {category}
+              <button
+                type="button"
+                className="relative z-50 cursor-pointer ms-2"
+                onClick={() => {
+                  const newCategory = values.categories.filter(
+                    (c) => c !== category,
+                  );
+                  form.setValue("categories", newCategory);
+                }}
+              >
+                ✕
+              </button>
+            </Badge>
+          ))}
         </div>
       )}
     </>
