@@ -15,7 +15,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
-    "SIGNING_KEY": "complexsigningkey",  # generate a key and replace me
+    "SIGNING_KEY": os.getenv("JWT_SIGNING_KEY"),  # generate a key and replace me
     "ALGORITHM": "HS512",
 }
 

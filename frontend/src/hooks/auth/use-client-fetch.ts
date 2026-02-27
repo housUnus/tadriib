@@ -45,8 +45,8 @@ export const useClientFetch = () => {
       const options: RequestInit = {
         method,
         headers: {
-          Authorization: session?.token
-            ? `Bearer ${session.token}`
+          Authorization: session?.access_token
+            ? `Bearer ${session.access_token}`
             : "",
           "Content-Type": "application/json",
           ...headers,

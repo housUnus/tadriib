@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { Button } from '@/components/ui/button'
 import FullLogo from "@/app/[locale]/(main)/layout/shared/logo/FullLogo";
@@ -7,8 +7,6 @@ import MobileMenu from "./MobileMenu";
 import { Language } from "@/app/[locale]/(main)/layout/vertical/header/Language";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import { ActionButton } from "@/components/common/forms/generic/action-button";
-import { logoutAction } from "@/lib/actions/auth";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { GraduationCap, Search } from "lucide-react";
 import Categories from "./Categories";
@@ -16,6 +14,11 @@ import DesktopSearch from "./DesktopSearch";
 import { useClientFetch } from "@/hooks/auth/use-client-fetch";
 import { useQuery } from "@tanstack/react-query";
 import MobileSearch from "./MobileSearch";
+import Profile from "@/app/[locale]/(main)/layout/vertical/header/Profile";
+import MyNotifications from "@/app/[locale]/(main)/layout/vertical/header/Notification";
+import MyMessages from "@/app/[locale]/(main)/layout/vertical/header/Messages";
+import { Icon } from "@iconify/react";
+import { CustomizerContext } from "@/app/context/CustomizerContext";
 
 const FrontHeader = () => {
   const [isSticky, setIsSticky] = useState(true);
@@ -27,6 +30,13 @@ const FrontHeader = () => {
     queryFn: async () => client.get("/categories/as_nested").then((res: any) => res?.data?.results)
   });
 
+  const { setActiveMode, activeMode } =
+    useContext(CustomizerContext);
+  
+    const toggleMode = () => {
+    setActiveMode(activeMode === "light" ? "dark" : "light");
+  };
+
   return (
     <>
       <header
@@ -37,7 +47,7 @@ const FrontHeader = () => {
       >
 
         <div className="container-1218 mx-auto flex justify-between items-center">
-          <MobileMenu categories={categories} session={session}/>
+          <MobileMenu categories={categories} session={session} />
           <div className="flex flex-1 justify-center h-10 md:h-full md:justify-start md:flex-none">
             <FullLogo />
           </div>
@@ -95,9 +105,33 @@ const FrontHeader = () => {
             </NavigationMenu>
             <Language />
             {session ? (
-              <ActionButton action={logoutAction} className="rounded-full w-fit">
-                Logout
-              </ActionButton>
+              <div className="flex gap-3 items-center">
+                {/* Theme Toggle */}
+                {activeMode === "light" ? (
+                  <div
+                    className="h-10 w-10 hover:text-primary hover:bg-lightprimary dark:hover:bg-darkminisidebar  dark:hover:text-primary focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-darklink  dark:text-white"
+                    onClick={toggleMode}
+                  >
+                    <span className="flex items-center">
+                      <Icon icon="solar:moon-line-duotone" width="20" />
+                    </span>
+                  </div>
+                ) : (
+                  // Dark Mode Button
+                  <div
+                    className="h-10 w-10 hover:text-primary hover:bg-lightprimary dark:hover:bg-darkminisidebar  dark:hover:text-primary focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-darklink  dark:text-white"
+                    onClick={toggleMode}
+                  >
+                    <span className="flex items-center">
+                      <Icon icon="solar:sun-bold-duotone" width="20" />
+                    </span>
+                  </div>
+                )}
+
+                <MyMessages />
+                <MyNotifications />
+                <Profile />
+              </div>
             ) : (
               <div className="flex gap-2">
                 <Button asChild variant={"outline"} className="font-bold xl:flex hidden">

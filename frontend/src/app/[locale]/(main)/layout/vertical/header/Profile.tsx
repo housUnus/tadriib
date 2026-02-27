@@ -35,34 +35,32 @@ const Profile = () => {
           </span>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-screen sm:w-[360px] py-6 px-0 rounded-sm ">
+        <DropdownMenuContent className="w-screen sm:w-[360px] py-4 px-0 rounded-sm ">
           {/* Header */}
-          <div className="px-6">
-            <h3 className="text-lg font-semibold text-ld">User Profile</h3>
-            <div className="flex items-center gap-6 pb-5 border-b border-border dark:border-darkborder mt-5 mb-3">
-              <Image
-                unoptimized
-                src={user?.avatar || "/images/profile/user-1.jpg"}
-                alt="logo"
-                height="80"
-                width="80"
-                className="rounded-full"
-              />
-              <div>
-                <h5 className="card-title">{user?.first_name} {user?.last_name}</h5>
-
-                <span className="card-subtitle">{user?.country}</span>
-
-                <p className="card-subtitle mb-0 mt-1 flex items-center">
-                  <Icon
-                    icon="solar:mailbox-line-duotone"
-                    className="text-base me-1"
-                  />
-                  {user?.email}
-                </p>
+          <Link href="/account/settings">
+            <div className="px-6">
+              <div className="flex items-center gap-6 pb-5 border-b border-border dark:border-darkborder mt-2 mb-2">
+                <Image
+                  unoptimized
+                  src={user?.avatar || "/images/profile/user-1.jpg"}
+                  alt="logo"
+                  height="40"
+                  width="40"
+                  className="rounded-full"
+                />
+                <div>
+                  <h6 className="card-title hover:text-primary">{user?.first_name} {user?.last_name}</h6>
+                  <p className="card-subtitle mb-0 flex items-center">
+                    <Icon
+                      icon="solar:mailbox-line-duotone"
+                      className="text-base me-1"
+                    />
+                    {user?.email}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Dropdown items */}
           <SimpleBar>
@@ -70,22 +68,22 @@ const Profile = () => {
               <DropdownMenuItem
                 key={index}
                 asChild
-                className="px-6 py-2 flex justify-between items-center bg-hover group/link w-full cursor-pointer "
+                className="px-6 py-1 flex justify-between items-center bg-hover group/link w-full cursor-pointer"
               >
                 <Link href={items.url} className="flex items-center w-full">
                   <div className="flex items-center w-full">
                     <div
-                      className={`h-11 w-11 flex-shrink-0 rounded-md flex justify-center items-center ${items.bgcolor}`}
+                      className={`h-8 w-8 shrink-0 rounded-md flex justify-center items-center ${items.bgcolor}`}
                     >
                       <Icon
                         icon={items.icon}
-                        height={20}
+                        height={14}
                         className={items.color}
                       />
                     </div>
                     <div className="ps-4 flex justify-between w-full">
                       <div className="w-3/4 ">
-                        <h5 className="mb-1 text-sm  group-hover/link:text-primary">
+                        <h5 className="mb-0 text-sm  group-hover/link:text-primary">
                           {items.title}
                         </h5>
                         <div className="text-xs  text-darklink">

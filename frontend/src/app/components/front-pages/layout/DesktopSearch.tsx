@@ -73,6 +73,7 @@ export default function DesktopSearch() {
                 }}
               >
                 <div className="flex items-center h-11 rounded-full border bg-muted">
+                  <Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
                   <input
                     value={query}
                     onChange={(e: any) => {

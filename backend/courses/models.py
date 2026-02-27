@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from core.models import BaseModel
-from courses.constants import CourseStatus, ContentType, CourseLevel, CourseLanguageTypes
+from courses.constants import CourseStatus, ContentType, CourseLevel, CourseLanguageTypes, AccessTypes
 from .contents.models import *
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
@@ -9,8 +9,8 @@ from .querysets import CourseQuerySet
 from ratings.constants import RatingStatus
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from users.models import User
     from ratings.models import Rating
+    from wishlist.models import Wishlist
 
 class CourseLearningOutcome(models.Model):
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE, related_name="learning_outcomes")
@@ -23,6 +23,7 @@ class CourseRequirement(models.Model):
 class Course(BaseModel):
     sections: models.Manager[Section]
     ratings: models.Manager["Rating"]
+    wishlist_items: models.Manager["Wishlist"]
 
     slug_field = 'title'
     
@@ -47,6 +48,11 @@ class Course(BaseModel):
     
     duration = models.PositiveIntegerField(null=True, blank=True, help_text=_("Total duration of all contents in minutes"))
 
+    #----- SUBSCRIPTIONS FIELDS -----#
+    access_duration_days = models.PositiveIntegerField(null=True, blank=True, help_text="Required if access_type is limited")
+    access_type = models.CharField(max_length=20, choices=AccessTypes.choices, default=AccessTypes.LIFETIME)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0) #type: ignore
+    
     def is_public(self):
         return self.status == CourseStatus.PUBLISHED
     
@@ -124,6 +130,8 @@ class Course(BaseModel):
 
         return distribution
         
+    def __str__(self):
+        return self.title
     
 class Section(BaseModel):
     contents: models.Manager[Content]

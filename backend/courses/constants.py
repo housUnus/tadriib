@@ -43,3 +43,7 @@ class CourseLanguageTypes(models.TextChoices):
     ARABIC = "ar", "Arabic"
     FRENCH = "fr", "French"
     SPANISH = "es", "Spanish"
+    
+class AccessTypes(models.TextChoices):
+    LIFETIME = "lifetime", "Lifetime"
+    LIMITED = "limited", "Limited"

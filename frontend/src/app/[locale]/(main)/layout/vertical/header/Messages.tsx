@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { CustomizerContext } from "@/app/context/CustomizerContext";
 import { Button } from "@/components/ui/button";
 
-const Messages = () => {
+const MyMessages = () => {
   const { activeDir } = useContext(CustomizerContext);
 
   return (
@@ -87,4 +87,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default MyMessages;

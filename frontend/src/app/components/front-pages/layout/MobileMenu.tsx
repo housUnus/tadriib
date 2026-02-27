@@ -10,6 +10,19 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Menu } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { ActionButton } from "@/components/common/forms/generic/action-button";
+import { logoutAction } from "@/lib/actions/auth";
+
+const links = [
+  {
+    name: 'My Account',
+    url: '/account/settings'
+  },
+  {
+    name: 'My Learning',
+    url: '/account/my-courses?tab=courses'
+  },
+]
 
 export default function MobileMenu({ categories, session }: { categories: any[], session: any }) {
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -35,21 +48,22 @@ export default function MobileMenu({ categories, session }: { categories: any[],
           <ul className="auth">
             {session ?
               <>
+                {links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.url}
+                      className="block py-2 px-2 text-sm text-primary hover:bg-gray-100"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
                 <li>
-                  <Link
-                    href=""
-                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
-                  >
-                    My Account
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href=""
-                    className="block p-2 text-sm text-blue-900 hover:bg-gray-100"
-                  >
-                    Lout out
-                  </Link>
+                  {session ? (
+                    <ActionButton variant="link" action={logoutAction} className="items-start justify-start hover:bg-gray-100 gap-0 px-2">
+                      Logout
+                    </ActionButton>
+                  ) : null}
                 </li>
               </> :
               <>

@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Search from "./Search";
 import { Icon } from "@iconify/react";
 import AppLinks from "./AppLinks";
-import Notification from "./Notification";
+import MyNotifications from "./Notification";
 import Profile from "./Profile";
 import { CustomizerContext } from "@/app/context/CustomizerContext";
 
@@ -21,8 +21,8 @@ import Sidebar from "@/app/[locale]/(main)/layout/vertical/sidebar/Sidebar";
 
 import { useSidebar } from "@/components/ui/sidebar";
 import Messages from "./Messages";
-import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { usePathname } from "next/navigation";
+import DesktopSearch from "@/app/components/front-pages/layout/DesktopSearch";
 
 interface HeaderPropsType {
   layoutType: string;
@@ -81,7 +81,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
   return (
     <>
       <header
-        className={`sticky top-0 text-ld z-[2] ${
+        className={`sticky top-0 text-ld z-2 ${
           isSticky
             ? "bg-lightgray dark:bg-dark shadow-md fixed w-full"
             : "bg-transparent"
@@ -90,7 +90,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
         <nav
           className={`rounded-none bg-transparent dark:bg-transparent py-4 sm:px-7.5 px-4 ${
             layoutType == "horizontal" ? "container mx-auto" : ""
-          }  ${isLayout == "full" ? "!max-w-full" : ""}`}
+          }  ${isLayout == "full" ? "max-w-full!" : ""}`}
         >
           <div className="mx-auto flex flex-wrap items-center justify-between">
             <span
@@ -101,7 +101,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
             </span>
 
             {/* Toggle Icon   */}
-            <div className="xl:!block !hidden">
+            <div className="xl:block! hidden! flex-2/3">
               <div className="flex gap-3 items-center relative">
                 {layoutType == "horizontal" ? (
                   <div className="me-3">
@@ -129,14 +129,14 @@ const Header = ({ layoutType }: HeaderPropsType) => {
 
                 <AppLinks />
 
-                <Search />
+                <DesktopSearch />
               </div>
             </div>
             {/* mobile-logo */}
             <div className="block xl:hidden">
               <FullLogo />
             </div>
-            <div className="xl:!block !hidden md:!hidden">
+            <div className="xl:block! hidden! md:hidden! flex-1/3!">
               <div className="flex gap-3 items-center">
                 {/* Theme Toggle */}
                 {activeMode === "light" ? (
@@ -166,7 +166,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
                 <Messages />
 
                 {/* Notification Dropdown */}
-                <Notification />
+                <MyNotifications />
 
                 {/* Profile Dropdown */}
                 <Profile />

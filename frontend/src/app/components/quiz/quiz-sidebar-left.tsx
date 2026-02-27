@@ -43,7 +43,7 @@ export function QuizSidebarLeft({
 
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
-          <div className="space-y-6 p-4">
+          <div className="space-y-6 p-2">
             {sections.map((section) => (
               <QuestionGrid
                 key={section.name}

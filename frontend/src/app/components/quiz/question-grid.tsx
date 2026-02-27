@@ -15,7 +15,7 @@ interface QuestionGridProps {
 const statusStyles: Record<QuestionStatus, string> = {
   "not-visited": "bg-card border-border text-foreground hover:border-primary/50",
   visited: "bg-muted border-border text-foreground hover:border-primary/50",
-  answered: "bg-success text-success-foreground border-success",
+  answered: "bg-success text-white border-success",
   marked: "bg-info text-info-foreground border-info",
   flagged: "bg-violet-600 text-white border-violet-600",
 }
@@ -58,7 +58,7 @@ export function QuestionGrid({
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-md border text-xs font-medium transition-all",
                 statusStyles[status],
-                isActive && "ring-2 ring-primary ring-offset-1 ring-offset-background",
+                isActive && "ring-1 ring-primary ring-offset-1 ring-offset-background",
               )}
             >
               {id}

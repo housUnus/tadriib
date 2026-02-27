@@ -39,6 +39,7 @@ import { formatDate } from "date-fns"
 import { StarRating } from "@/components/common/StartRating"
 import * as _ from "lodash"
 import CourseReviews from "./reviews"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 
 // Mock course data
 const courseData = {
@@ -201,12 +202,19 @@ const courseData = {
 }
 
 export default function Detail({ course }: { course: any }) {
-
+  const client = useClientFetch();
   const [expandedSections, setExpandedSections] = useState<string[]>([course.sections[0].id])
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [previewContent, setPreviewContent] = useState<typeof course.sections[0]["contents"][0] | null>(null)
   const [previewModalOpen, setPreviewModalOpen] = useState(false)
+
+  const toggleWishlist = async () => {
+    const {data, error }: any = await client.post(`/wishlist/`, { course: course.id })
+    if (!error){
+      setIsWishlisted(data?.is_wishlisted)
+    }
+  }
 
   const handlePreview = (content: typeof course.sections[0]["contents"][0]) => {
     setPreviewContent(content)
@@ -313,7 +321,7 @@ export default function Detail({ course }: { course: any }) {
                     variant="outline"
                     size="lg"
                     className="bg-transparent"
-                    onClick={() => setIsWishlisted(!isWishlisted)}
+                    onClick={toggleWishlist}
                   >
                     <Heart className={`h-5 w-5 ${isWishlisted ? "fill-red-500 text-red-500" : ""}`} />
                   </Button>

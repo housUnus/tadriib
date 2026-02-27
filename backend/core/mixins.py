@@ -45,3 +45,6 @@ class ListQueryMixin:
     search_fields = []
     ordering_fields = []
     ordering = ("-id",)
+    
+class PublicViewsMixin:
+    lookup_field = "public_id"

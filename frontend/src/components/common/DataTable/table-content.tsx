@@ -1,10 +1,11 @@
+import { Spinner } from "@/components/ui/spinner"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
 import {
     flexRender,
 } from "@tanstack/react-table"
 
 export default function TableContent({ dt, renderRow }: { dt: any, renderRow?: (row: any) => React.ReactNode, initialData?: any[] }) {
-    
+    if(dt.isFetching || dt.isLoading) return null
     if (renderRow) {
         return dt.rows.length ? (
             <>

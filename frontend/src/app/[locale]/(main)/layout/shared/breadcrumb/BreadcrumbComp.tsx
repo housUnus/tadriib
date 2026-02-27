@@ -24,7 +24,7 @@ interface BreadCrumbType {
 const BreadcrumbComp = ({ title, items }: BreadCrumbType) => {
   return (
     <>
-      <CardBox className={`mb-[30px]`}>
+      <CardBox className={`mb-[30px] p-4`}>
         <div className="flex justify-between">
           <h6 className="text-base">{title}</h6>
 

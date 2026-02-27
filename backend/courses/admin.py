@@ -244,27 +244,3 @@ class EssayAdmin(ModelAdmin):
 @admin.register(FileUploadAnswer)
 class FileUploadAdmin(ModelAdmin):
     list_display = ("question", "max_file_size_mb")
-
-
-# ======================================================
-# QUIZ SUBMISSIONS
-# ======================================================
-
-class QuestionSubmissionInline(TabularInline):
-    model = QuestionSubmission
-    extra = 0
-    readonly_fields = (
-        "question",
-        "text_answer",
-        "boolean_answer",
-        "uploaded_file",
-        "is_correct",
-        "score",
-    )
-
-
-@admin.register(QuizSubmission)
-class QuizSubmissionAdmin(ModelAdmin):
-    list_display = ("user", "quiz", "status", "score", "submitted_at")
-    list_filter = ("status",)
-    inlines = [QuestionSubmissionInline]

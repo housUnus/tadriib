@@ -27,14 +27,16 @@ function CourseCard({ item }) {
           </div>
 
           {/* Image */}
-          <div className="relative h-36 sm:h-43 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
-            <img
-              src={course.poster || "https://picsum.photos/200/300"}
-              alt={course.title}
-              className="w-full h-full object-cover transition-transform duration-300"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
-          </div>
+          <Link href={`/courses/${course.slug}`}>
+            <div className="relative h-36 sm:h-43 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
+              <img
+                src={course.poster || "https://picsum.photos/200/300"}
+                alt={course.title}
+                className="w-full h-full object-cover transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
+            </div>
+          </Link>
 
           <div className="p-2 sm:p-3 flex-1 flex flex-col">
             {/* Category & Availability */}
@@ -52,12 +54,16 @@ function CourseCard({ item }) {
             </div>
 
             {/* Title & Description */}
-            <h3 className="text-base line-clamp-2 group-hover:text-primary h-14">
-              {course.title}
-            </h3>
-            <span className="text-sm text-gray-500 mb-2 block">
-              by {course.instructor_name}
-            </span>
+            <Link href={`/courses/${course.slug}`}>
+              <h3 className="text-base line-clamp-2 group-hover:text-primary h-14">
+                {course.title}
+              </h3>
+            </Link>
+            <Link href={`/user/${course.instructor_slug}`}>
+              <span className="text-sm text-gray-500 mb-2 block">
+                by {course.instructor_name}
+              </span>
+            </Link>
             <h3 className="font-bold mb-1">
               {course.price} <span className="uppercase">{t("sar")}</span>
               <span className="line-through font-normal text-gray-500 text-xs mx-1">

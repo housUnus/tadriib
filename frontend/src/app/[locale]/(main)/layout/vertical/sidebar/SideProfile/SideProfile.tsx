@@ -75,9 +75,6 @@ const SideProfile = () => {
                           <h5 className="mb-1 text-sm  group-hover/link:text-primary">
                             {items.title}
                           </h5>
-                          <div className="text-xs  text-darklink">
-                            {items.subtitle}
-                          </div>
                         </div>
                       </div>
                     </div>

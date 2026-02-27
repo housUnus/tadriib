@@ -42,8 +42,20 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
   const isMobile = useIsMobile()
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(true)
-  const [rightSidebarOpen, setRightSidebarOpen] = useState(true)
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
   const [fontSize, setFontSize] = useState(16)
+
+  useEffect(() => {
+    if (leftSidebarOpen) {
+      setRightSidebarOpen(false)
+    }
+  }, [leftSidebarOpen])
+
+  useEffect(() => {
+    if (rightSidebarOpen) {
+      setLeftSidebarOpen(false)
+    }
+  }, [rightSidebarOpen])
 
   const stats = getStats()
 
@@ -82,7 +94,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
           <ResizablePanelGroup direction="horizontal" className="h-full">
             {leftSidebarOpen && (
               <>
-                <ResizablePanel defaultSize={18} minSize={12} maxSize={25}>
+                <ResizablePanel defaultSize={20} minSize={12} maxSize={25}>
                   <div className="h-full border-r bg-card">
                     <QuizSidebarLeft
                       currentQuestion={state.currentQuestion}

@@ -70,6 +70,7 @@ class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
         
 class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
+    instructor_slug = serializers.SlugField(source="instructor.profile.slug", read_only=True)
     # total_students = serializers.IntegerField(read_only=True)
     primary_category = CategorySerializer(read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
@@ -86,6 +87,7 @@ class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
             "status",
             "published_at",
             "instructor_name",
+            "instructor_slug",
             "primary_category",
             "total_reviews",
             "average_rating",
@@ -113,6 +115,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     latest_reviews=RatingSerializer(many=True, read_only=True)
     rating_distribution = serializers.SerializerMethodField()
     main_preview=serializers.SerializerMethodField()
+    is_wishlisted = serializers.SerializerMethodField()
     
     def get_rating_distribution(self, obj: Course):
         return obj.get_rating_distribution()
@@ -122,6 +125,13 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             return None
         video = Video.objects.select_related("content").get(pk=obj.main_preview_video_id)
         return VideoSerializer(video, context=self.context).data
+    
+    def get_is_wishlisted(self, obj:"Course"):
+        user = self.context["request"].user
+        if not user.is_authenticated:
+            return False
+        return obj.wishlist_items.filter(user=user).exists()
+
     class Meta:
         model = Course
         fields = [
@@ -155,6 +165,7 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "latest_reviews",
             "rating_distribution",
             "main_preview",
+            "is_wishlisted",
             ]
 
 
@@ -168,4 +179,24 @@ class CourseCreateUpdateSerializer(PublicSerializerMixin, serializers.ModelSeria
             "level",
             "status",
             "categories",
+        ]
+
+# -----------------------------------------
+# Minimal Course Serializer
+# -----------------------------------------
+class CourseMinimalSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
+    class Meta:
+        model = Course
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "description",
+            "language",
+            "level",
+            "status",
+            "published_at",
+            "instructor_name",
+            "poster",
         ]

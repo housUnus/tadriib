@@ -7,8 +7,7 @@ from .serializers import (
     CourseDetailSerializer,
     CourseCreateUpdateSerializer,
 )
-from core.views import PublicViewsMixin
-from core.mixins import ListQueryMixin
+from core.mixins import ListQueryMixin, PublicViewsMixin
 from core.authentication import OptionalJWTAuthentication
 from users.models import User
 from ratings.models import Rating

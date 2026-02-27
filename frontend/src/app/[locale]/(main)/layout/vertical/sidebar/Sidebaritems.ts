@@ -57,9 +57,9 @@ const SidebarContent: MenuItem[] = [
         heading: "Front End Pages",
         children: [
           {
-            name: "Homepage",
+            name: "My Courses",
             id: uniqueId(),
-            url: "/frontend-pages/homepage",
+            url: "/accounts/my-courses",
             icon: "solar:home-smile-line-duotone"
           },
           {

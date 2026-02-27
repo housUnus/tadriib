@@ -110,70 +110,16 @@ export function useDataTable<TData, TValue>({
     })
 
     useUpdateEffect(() => {
-        const params: FetchParams = {
-            pageIndex: pagination.pageIndex,
-            pageSize: pagination.pageSize,
-            globalFilter,
-            columnFilters,
-        }
         query.refetch();
     }, [pagination, globalFilter, columnFilters]);
 
+    useEffect(() => {
+        if (!initialData)
+        query.refetch();
+    }, []);
+
     const rows = query.data?.rows ?? initialData ?? []
     const pageCount = query.data?.pageCount ?? -1
-
-    // const fetcher = React.useCallback(async () => {
-    //     if (!shouldFetch) return
-
-    //     const params: FetchParams = {
-    //         pageIndex: pagination.pageIndex,
-    //         pageSize: pagination.pageSize,
-    //         globalFilter,
-    //         columnFilters,
-    //     }
-
-    //     if (fetchData) {
-    //         const res = await fetchData(params)
-    //         (res.rows)
-    //         if (res.pageCount !== undefined) setPageCount(res.pageCount)
-    //         return
-    //     }
-
-    //     if (url) {
-    //         const query = new URLSearchParams({
-    //             page: String(pagination.pageIndex + 1),
-    //             page_size: String(pagination.pageSize),
-    //             search: globalFilter || "",
-    //         })
-
-    //         const res = await client.get(`${url}?${query.toString()}`)
-    //         const data: any = await res.data
-
-    //         // Common DRF format support
-    //         if (Array.isArray(data)) {
-    //             (data)
-    //         } else {
-    //             (data.results ?? data.data ?? [])
-    //             if (data.count && pagination.pageSize) {
-    //                 setPageCount(Math.ceil(data.count / pagination.pageSize))
-    //             }
-    //         }
-    //     }
-    // }, [url, fetchData, pagination, globalFilter, columnFilters, shouldFetch])
-
-    // Initial load if no initialData
-    // React.useEffect(() => {
-    //     if (!initialData && shouldFetch) fetcher()
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
-
-    // Refetch on controls change
-    // React.useEffect(() => {
-    //     if (shouldFetch) fetcher()
-    // }, [pagination, globalFilter, columnFilters, shouldFetch, fetcher])
-    /* =============================
-       Page Size Management
-    ============================= */
 
     const setPageSize = (size: number) => {
         setPagination((prev) => ({

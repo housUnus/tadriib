@@ -25,7 +25,6 @@ class CourseFilter(django_filters.FilterSet):
         ratings = value.split(",")
         ratings = [float(r) for r in ratings if  1 <= float(r) <= 5]
         min_rating = min(ratings) if ratings else 0
-        queryset = queryset.annotate(average_rating=models.Avg("ratings__value"))
         return queryset.filter(average_rating__gte=min_rating)
 
     # def filter_price(self, queryset, name, value):
