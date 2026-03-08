@@ -1,25 +1,25 @@
 from rest_framework import serializers
 
-from .models import Enrollment, CourseProgress
+from .models import Enrollment, EnrollmentProgress, LectureProgress
 from core.serializers import PublicSerializerMixin
-from courses.serializers import CourseMinimalSerializer
+from courses.serializers import CourseMinimalSerializer, CourseEnrollmentSerializer
+from core.serializers import PublicSerializerMixin
 
-class CourseProgressSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+class EnrollmentProgressSerializer(serializers.ModelSerializer):
+    active_lecture = serializers.UUIDField(
+        source="active_lecture.public_id",
+        read_only=True
+    )
     class Meta:
-        model = CourseProgress
-        fields = (
-            "progress_percent",
-            "completed_contents",
-            "total_contents",
-            "is_completed",
-            "completed_at",
-        )
+        model = EnrollmentProgress
+        fields = "__all__"
+        read_only_fields = ("active_lecture",)
 # -----------------------------------------
 # Enrollment Serializer
 # -----------------------------------------
-class EnrollmentSerializer(serializers.ModelSerializer):
+class EnrollmentSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     course = CourseMinimalSerializer(read_only=True)
-    course_progress = CourseProgressSerializer(source="progress", read_only=True)
+    course_progress_value = serializers.IntegerField(source="progress.progress_percent", read_only=True)
     is_active = serializers.BooleanField(read_only=True)
     remaining_time = serializers.IntegerField(read_only=True)
 
@@ -29,7 +29,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "course",
-            "course_progress",
+            "course_progress_value",
             "order_item",
             "status",
             "expires_at",
@@ -42,3 +42,26 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             "status",
             "user",
         )
+        
+class EnrollmentDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    course = CourseEnrollmentSerializer(read_only=True)
+    progress = EnrollmentProgressSerializer(read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
+    remaining_time = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Enrollment
+        fields = (
+            "id",
+            "user",
+            "course",
+            "progress",
+            "expires_at",
+            "is_active",
+            "remaining_time",
+        )
+        
+class LectureProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LectureProgress
+        fields = ('lecture', 'is_completed', 'last_position_seconds', 'last_accessed_at', 'completed_at')

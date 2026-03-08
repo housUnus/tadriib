@@ -670,7 +670,7 @@
 }
 
 /* Ensure the big play button is centered */
-.vjs-icon-play:before, .video-js .vjs-play-control .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
   top: 10px!important;
 }
 /* shimmer animation with smooth fade in/out using opacity on certificates cards*/

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 import { PanelRightClose, PanelRightOpen, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,16 +8,13 @@ import { QuizContent } from "./contents/Quiz"
 import { PdfContent } from "./contents/Document"
 import { AssignmentContent } from "./contents/Assignement"
 import { ContentTabs } from "./ContentTabs"
-import type { ContentItem, Course } from "@/lib/data/course-data"
-import { calculateProgress } from "@/lib/data/course-data"
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts"
 import Link from "next/link"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { useQuery } from "@tanstack/react-query"
+import { Content, useEnrollmentStore } from "@/app/stores/enrollment"
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false })
-
-interface CircularProgressProps {
-  progress: number
-}
 
 function CircularProgress({ progress }: { progress: number }) {
   const data = [{ name: "progress", value: progress, fill: "var(--color-primary)" }]
@@ -58,8 +55,7 @@ function CircularProgress({ progress }: { progress: number }) {
 }
 
 interface MainPlayerProps {
-  course: Course
-  activeContent: ContentItem
+  activeContent: Content
   onMarkComplete: (contentId: string) => void
   onNavigate: (direction: "previous" | "next") => void
   hasPrevious: boolean
@@ -69,7 +65,6 @@ interface MainPlayerProps {
 }
 
 export function MainContent({
-  course,
   activeContent,
   onMarkComplete,
   onNavigate,
@@ -78,12 +73,25 @@ export function MainContent({
   onToggleSidebar,
   sidebarOpen,
 }: MainPlayerProps) {
-  const progress = calculateProgress(course)
+
+  const client = useClientFetch()
+  const {course} = useEnrollmentStore((state) => state)
+  const enrollment_id = useEnrollmentStore((state) => state.id)
+
+  const progress = 0
   const [activeTab, setActiveTab] = useState("overview")
 
+  const {data} = useQuery({
+    queryKey: ['enrollments', enrollment_id, activeContent.id],
+    queryFn: () => client.get(`/enrollments/${enrollment_id}/content/${activeContent.id}/`),
+  })
+
+
+
+  const loaded_content: any = data?.data
   const renderContent = () => {
     const commonProps = {
-      content: activeContent,
+      content: ({...activeContent, content: loaded_content.content} as any),
       onMarkComplete: () => onMarkComplete(activeContent.id),
       onPrevious: () => onNavigate("previous"),
       onNext: () => onNavigate("next"),
@@ -96,7 +104,7 @@ export function MainContent({
         return <VideoContent {...commonProps} />
       case "quiz":
         return <QuizContent {...commonProps} />
-      case "pdf":
+      case "article":
         return <PdfContent {...commonProps} />
       case "assignment":
         return <AssignmentContent {...commonProps} />
@@ -104,6 +112,8 @@ export function MainContent({
         return null
     }
   }
+
+  if(!loaded_content) return null
 
   return (
     <div className="flex h-full flex-col ">

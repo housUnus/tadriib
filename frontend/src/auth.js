@@ -113,7 +113,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 
       // Token is still valid
-      if (token.expiry.access > Date.now()) {
+      if (token.expiry.access - 60000 > Date.now()) {
         return token;
       }
 
@@ -131,6 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.access_token = token.access_token;
         session.refresh_token = token.refresh_token;
         session.user = token.user;
+        session.error = token.error;
       }
       // session.refresh_token = token.refresh_token;
       // session.expiry = token.expiry;

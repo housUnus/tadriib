@@ -117,7 +117,6 @@ export function DataTable<TData, TValue>({
 
       const res = await client.get(`${url}?${query.toString()}`)
       const data: any = await res.data
-      console.log("🚀 ~ DataTable ~ data:", res)
 
       // Common DRF format support
       if (Array.isArray(data)) {

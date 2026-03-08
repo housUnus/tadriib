@@ -59,7 +59,7 @@ const SidebarContent: MenuItem[] = [
           {
             name: "My Courses",
             id: uniqueId(),
-            url: "/accounts/my-courses",
+            url: "/account/my-courses",
             icon: "solar:home-smile-line-duotone"
           },
           {

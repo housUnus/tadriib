@@ -439,8 +439,8 @@ export default function Detail({ course }: { course: any }) {
                       {section.contents.map((content: any) => (
                         <div
                           key={content.id}
-                          onClick={() => content.is_preview && handlePreview(content)}
-                          className={`flex items-center justify-between px-4 py-3 border-t ${content.is_preview ? "hover:bg-muted/30 cursor-pointer" : ""}`}
+                          onClick={() => !!content.preview && handlePreview(content)}
+                          className={`flex items-center justify-between px-4 py-3 border-t ${!!content.preview ? "hover:bg-muted/30 cursor-pointer" : ""}`}
                         >
                           <div className="flex items-center gap-3">
                             {content.type === "video" ? (
@@ -451,7 +451,7 @@ export default function Detail({ course }: { course: any }) {
                               <FileText className="h-4 w-4 text-muted-foreground" />
                             )}
                             <span className="text-sm">{content.title}</span>
-                            {content.is_preview && (
+                            {!!content.preview && (
                               <Badge variant="secondary" className="text-xs">
                                 Preview
                               </Badge>
@@ -538,9 +538,9 @@ export default function Detail({ course }: { course: any }) {
             title: previewContent.title,
             duration: previewContent.duration,
             type: previewContent.type,
-            videoUrl: previewContent.type === "video" ? (previewContent.content?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
-            articleContent: previewContent.type === "article" ? previewContent.content?.text : undefined,
-            quizContent: previewContent.type === "quiz" ? previewContent.content?.description : undefined,
+            videoUrl: previewContent.type === "video" ? (previewContent.preview?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
+            articleContent: previewContent.type === "article" ? previewContent.preview?.text : undefined,
+            quizContent: previewContent.type === "quiz" ? previewContent.preview?.description : undefined,
           }}
         />
       )}

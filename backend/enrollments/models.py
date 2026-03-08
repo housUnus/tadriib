@@ -10,6 +10,7 @@ from core.models import BaseModel
 from .progress.models import *
 
 class Enrollment(BaseModel):
+    progress: "EnrollmentProgress"
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     order_item = models.OneToOneField("subscriptions.OrderItem", on_delete=models.CASCADE, related_name="enrollment")
@@ -30,6 +31,12 @@ class Enrollment(BaseModel):
         if self.expires_at:
             return (self.expires_at - datetime.now()).days
         return None
+    
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+        if not hasattr(self, "progress"):
+            EnrollmentProgress.objects.create(enrollment=self)
+        return instance
 
     class Meta:
         unique_together = ("user", "course")

@@ -22,7 +22,6 @@ export default function SubmitButton<T extends FieldValues>({
     control,
     formState: { errors },
   } = useFormContext();
-    console.log("🚀 ~ SubmitButton ~ errors:", errors)
   const { isSubmitting, isValid, isDirty } = useFormState({ control });
 
   return (

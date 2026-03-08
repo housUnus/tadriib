@@ -5,7 +5,6 @@ import { ListItem } from "./ListItem";
 export default function Categories({categories}) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  console.log("🚀 ~ Categories ~ categories:", categories)
   
   return (
     <>

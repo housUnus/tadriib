@@ -192,6 +192,7 @@ class SectionAdmin(ModelAdmin):
 
 @admin.register(Content)
 class ContentAdmin(ModelAdmin):
+    save_as = True
     list_display = ("title", "section", "type", "order", "is_preview")
     list_filter = ("type",)
     ordering = ("section", "order")

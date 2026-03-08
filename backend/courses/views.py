@@ -30,6 +30,11 @@ class CourseViewSet(PublicViewsMixin, ListQueryMixin, ModelViewSet):
         if self.action == "retrieve":
             return CourseDetailSerializer
         return CourseCreateUpdateSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"view_type": 'course'})
+        return context
 
     def get_permissions(self):
         if self.action in ["create", "update", "partial_update", "destroy"]:

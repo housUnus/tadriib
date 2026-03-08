@@ -16,7 +16,7 @@ interface PdfContentProps {
 const SAMPLE_PDF_URL = "https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf"
 
 export function PdfContent({ content, onMarkComplete, onPrevious, onNext, hasPrevious, hasNext }: PdfContentProps) {
-  const pdfUrl = content.pdfUrl || SAMPLE_PDF_URL
+  const pdfUrl = content.content?.pdfUrl || SAMPLE_PDF_URL
 
   const handleDownload = () => {
     const link = document.createElement("a")

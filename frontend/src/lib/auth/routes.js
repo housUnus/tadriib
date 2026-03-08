@@ -12,6 +12,7 @@ export const PRIVATE_ROUTE_PREFIXES = [
   "/dashboard",
   "/app",
   "/learn",
+  "/account",
   "/settings",
 ];
 

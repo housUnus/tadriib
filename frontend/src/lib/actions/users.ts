@@ -30,7 +30,6 @@ export async function updateUser(id: number, payload: any) {
 
     const client = await useServerFetch();
     const { data, error } = await client.put(`/users/${id}/`, form_data);
-    console.log("🚀 ~ updateUser ~ error:", error)
     if (error) {
         return { success: false, error, data: null };
     }
@@ -42,7 +41,6 @@ export async function updateUser(id: number, payload: any) {
 export async function getMe() {
     const client = await useServerFetch();
     const { data, error } = await client.get("/users/me/");
-    console.log("🚀 ~ getMe ~ error:", error)
     if (error) {
         return null;
     }

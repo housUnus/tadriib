@@ -4,16 +4,15 @@ import type React from "react"
 
 import { useState, useMemo, useEffect } from "react"
 import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, formatMinutes } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import type { Course, ContentItem, Section } from "@/lib/data/course-data"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { Content, Section, useEnrollmentStore } from "@/app/stores/enrollment"
 
 interface CourseSidebarProps {
-  course: Course
   activeContentId: string
-  onContentSelect: (content: ContentItem) => void
+  onContentSelect: (content: Content) => void
   onToggleComplete: (contentId: string) => void
   isOpen: boolean
   onClose: () => void
@@ -22,19 +21,20 @@ interface CourseSidebarProps {
 const contentIcons = {
   video: Play,
   quiz: HelpCircle,
-  pdf: FileText,
+  article: FileText,
   assignment: FileCode,
 }
 
 export function CourseSidebar({
-  course,
   activeContentId,
   onContentSelect,
   onToggleComplete,
   isOpen,
   onClose,
 }: CourseSidebarProps) {
-  const [expandedSections, setExpandedSections] = useState<string[]>(course.sections.map((s) => s.id))
+  const course = useEnrollmentStore((state) => state.course)
+
+  const [expandedSections, setExpandedSections] = useState<string[]>(course.sections.map((s) => s.id)) // Start with all sections expanded
   const [searchQuery, setSearchQuery] = useState("")
   const isMobile = useIsMobile()
 
@@ -45,11 +45,11 @@ export function CourseSidebar({
   }
 
   const filteredSections = useMemo(() => {
-    if (!searchQuery.trim()) return course.sections
+    if (!searchQuery.trim()) return course?.sections
 
     const query = searchQuery.toLowerCase()
-    return course.sections
-      .map((section) => {
+    return (course?.sections as Section[])
+      .map((section: Section) => {
         const matchingContents = section.contents.filter(
           (content) =>
             content.title.toLowerCase().includes(query) || content.description?.toLowerCase().includes(query),
@@ -64,7 +64,7 @@ export function CourseSidebar({
         return null
       })
       .filter(Boolean) as Section[]
-  }, [course.sections, searchQuery])
+  }, [course?.sections, searchQuery])
 
   const displayExpandedSections = searchQuery.trim() ? filteredSections.map((s) => s.id) : expandedSections
 
@@ -147,7 +147,7 @@ interface SectionItemProps {
   isExpanded: boolean
   onToggle: () => void
   activeContentId: string
-  onContentSelect: (content: ContentItem) => void
+  onContentSelect: (content: Content) => void
   onToggleComplete: (contentId: string) => void
   searchQuery?: string
 }
@@ -161,11 +161,11 @@ function SectionItem({
   onToggleComplete,
   searchQuery = "",
 }: SectionItemProps) {
-  const completedCount = section.contents.filter((c) => c.completed).length
+  const completedCount = section.contents.filter((c) => c.progress?.is_completed).length
   const totalDuration = section.contents
-    .filter((c) => c.duration)
+    .filter((c) => c.duration_minutes)
     .reduce((acc, c) => {
-      const mins = Number.parseInt(c.duration?.replace("min", "") || "0")
+      const mins = c.duration_minutes || 0
       return acc + mins
     }, 0)
 
@@ -209,7 +209,7 @@ function SectionItem({
 }
 
 interface ContentItemButtonProps {
-  content: ContentItem
+  content: Content
   isActive: boolean
   onSelect: () => void
   onToggleComplete: () => void
@@ -239,7 +239,7 @@ function ContentItemButton({
     >
       {/* Checkbox - only toggles completion */}
       <button onClick={handleCheckboxClick} className="mt-0.5 shrink-0 hover:scale-110 transition-transform">
-        {content.completed ? (
+        {content.progress?.is_completed ? (
           <CheckCircle className="h-4 w-4 text-primary" />
         ) : (
           <div className="h-4 w-4 rounded border border-muted-foreground hover:border-primary" />
@@ -251,10 +251,10 @@ function ContentItemButton({
         <p className={cn("text-sm", isActive ? "text-primary font-medium" : "text-foreground")}>
           <HighlightText text={content.title} query={searchQuery} />
         </p>
-        {content.duration && (
+        {content.duration_minutes && (
           <div className="flex items-center gap-1.5 mt-1">
             <Icon className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{content.duration}</span>
+            <span className="text-xs text-muted-foreground">{formatMinutes(content.duration_minutes || 0)}</span>
           </div>
         )}
       </button>

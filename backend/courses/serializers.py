@@ -13,14 +13,17 @@ from .contents.serializers import (
     QuizSerializer,
     AttachmentSerializer,
     ArticleSerializer,
-    AssignmentSerializer,
 )
 from .constants import ContentType
 from core.serializers import PublicSerializerMixin
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from categories.serializers import CategorySerializer
-from users.serializers import UserWithStatesSerializer
+from users.serializers import UserWithStatesSerializer, ShortUserSerializer
 from ratings.serializers import RatingSerializer
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from enrollments.models import Enrollment
 
 
 class CourseLearningOutcomeSerializer(PublicSerializerMixin, serializers.ModelSerializer):
@@ -35,21 +38,47 @@ class CourseRequirementSerializer(PublicSerializerMixin, serializers.ModelSerial
 
 class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
     content = serializers.SerializerMethodField()
-
-    def get_content(self, obj):
+    preview = serializers.SerializerMethodField()
+    progress = serializers.SerializerMethodField()
+    
+    def _get_content(self, obj:"Content"):
         if obj.type == ContentType.VIDEO and hasattr(obj, "video"):
             return VideoSerializer(obj.video, context=self.context).data
-
         elif obj.type == ContentType.QUIZ and hasattr(obj, "quiz"):
             return QuizSerializer(obj.quiz, context=self.context).data
-        
         elif obj.type == ContentType.ARTICLE and hasattr(obj, "article"):
             return ArticleSerializer(obj.article, context=self.context).data
-        
         elif obj.type == ContentType.ATTACHMENT and hasattr(obj, "attachment"):
             return AttachmentSerializer(obj.attachment, context=self.context).data
-
         return None
+        
+    
+    def get_preview(self, obj:"Content"):
+        view_type = self.context.get("view_type")
+        if view_type == "course":
+            if obj.is_preview:
+                return self._get_content(obj)
+        return None
+    
+    def get_content(self, obj:"Content"):
+        view_type = self.context.get("view_type")
+        if view_type == "load_content":
+            return self._get_content(obj)
+        return None
+    
+    def get_progress(self, obj):
+        enrollment: Optional["Enrollment"] = self.context.get("enrollment")
+        if not enrollment:
+            return None
+        
+        from enrollments.serializers import LectureProgressSerializer
+        progress = enrollment.progress
+
+        if progress:
+            content_progress = progress.lectures.filter(lecture=obj).first()#type: ignore
+            return LectureProgressSerializer(content_progress).data if content_progress else None
+        return None
+            
     class Meta:
         model = Content
         fields = [
@@ -57,10 +86,12 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
             "title",
             "type",
             "order",
-            "is_preview",
             "duration_minutes",
             "content",
+            "preview",
+            "progress",
         ]
+        read_only_fields = ["content", "preview", "progress"]
         
 class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     contents = ContentSerializer(many=True, read_only=True)
@@ -200,3 +231,39 @@ class CourseMinimalSerializer(PublicSerializerMixin, serializers.ModelSerializer
             "instructor_name",
             "poster",
         ]
+        
+class CourseEnrollmentSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    sections = SectionSerializer(many=True, read_only=True)
+    learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
+    requirements = CourseRequirementSerializer(many=True, read_only=True)
+    total_videos=serializers.IntegerField(read_only=True)
+    total_articles=serializers.IntegerField(read_only=True)
+    total_attachments=serializers.IntegerField(read_only=True)
+    total_assignments=serializers.IntegerField(read_only=True)
+    total_quizzes=serializers.IntegerField(read_only=True)
+    total_contents=serializers.IntegerField(read_only=True)
+    total_videos_duration_hours = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    instructor = ShortUserSerializer(read_only=True)
+
+    class Meta:
+        model = Course
+        fields = [
+            "id",
+            "slug",
+            "title",
+            "short_description",
+            "description",
+            "language",
+            "sections",
+            "learning_outcomes",
+            "requirements",
+            "instructor",
+            "poster",
+            "total_videos",
+            "total_articles",
+            "total_attachments",
+            "total_assignments",
+            "total_quizzes",
+            "total_contents",
+            "total_videos_duration_hours",
+            ]

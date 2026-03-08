@@ -7,7 +7,6 @@ import TablePagination from "@/components/common/DataTable/table-pagination";
 import CourseCard from "@/components/common/CourseCard/course-taken";
 
 const Enrollments = ({ enrollments }: { enrollments: any[] }) => {
-  console.log("🚀 ~ Enrollments ~ enrollments:", enrollments)
   const dt = useDataTable({
     columns: [],
     initialData: enrollments || [],
