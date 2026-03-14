@@ -4,17 +4,42 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { RotateCcw, ArrowRight, Flag } from "lucide-react"
-import type { Question } from "@/lib/data/quiz-data"
+import type { Question, QuizSuggestion } from "@/lib/data/quiz-data"
+import { QuestionBlocks } from "./question-block"
+import { useEffect, useState } from "react"
+import { useDebounce } from "use-debounce"
+import { useUpdateEffect } from "@/hooks/use-update-effect"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Icon } from "@iconify/react";
+import CardBox from "@/app/components/shared/CardBox";
+
+type AnswerValue =
+  | number
+  | string[]
+  | string
+  | boolean
+  | File
+  | null
 
 interface QuestionDisplayProps {
   question: Question
-  selectedAnswer?: string
+  selectedAnswer?: AnswerValue
   isFlagged: boolean
   fontSize: number
-  onSelectAnswer: (answer: string) => void
+  onSelectAnswer: (answer: AnswerValue) => void
   onClearAnswer: () => void
   onToggleFlag: () => void
   onSaveAndNext: () => void
+}
+
+function getFileName(file: File | string | null) {
+  if (!file) return "No file selected"
+
+  if (file instanceof File) return file.name
+
+  const name = file.split("/").pop() || ""
+  return decodeURIComponent(name)
 }
 
 export function QuestionDisplay({
@@ -27,65 +52,239 @@ export function QuestionDisplay({
   onToggleFlag,
   onSaveAndNext,
 }: QuestionDisplayProps) {
-  return (
-    <div className="flex flex-col gap-6">
-      <Card className="border-border bg-card p-1">
-        <CardContent className="p-1 mt-2">
-          <p className="leading-relaxed text-card-foreground whitespace-pre-line" style={{ fontSize: `${fontSize}px` }}>
-            {question.text}
-          </p>
-        </CardContent>
-      </Card>
 
-      <div className="space-y-3">
-        {question.options.map((option) => (
-          <button
-            key={option.label}
-            onClick={() => onSelectAnswer(option.label)}
-            className={cn(
-              "flex w-full items-center gap-4 rounded-lg border p-3 text-left transition-all",
-              selectedAnswer === option.label
-                ? "border-primary bg-primary/5 text-foreground"
-                : "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50",
+  useEffect(() => {
+    console.log('rerendring.....')
+  }, [])
+
+
+  const [value, setValue] = useState((selectedAnswer as string) || "")
+  console.log("🚀 ~ QuestionDisplay ~ selectedAnswer:", selectedAnswer)
+
+  const [debouncedValue] = useDebounce(value, 500)
+
+  useUpdateEffect(() => {
+    if (selectedAnswer === debouncedValue) return
+    onSelectAnswer(debouncedValue)
+  }, [debouncedValue])
+
+  const renderAnswerInput = () => {
+    switch (question.answer_type) {
+
+      case "multiple_choice": {
+        const isMultiple = question.allow_multiple_answers
+
+        return (
+          <div className="space-y-3">
+
+            {isMultiple && (
+              <p className="text-sm text-muted-foreground">
+                Select all correct answers
+              </p>
             )}
-          >
-            <span
-              className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-medium",
-                selectedAnswer === option.label
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-muted text-muted-foreground",
-              )}
-              style={{ fontSize: `${fontSize - 2}px` }}
+
+            {question.suggestions?.map((option: QuizSuggestion) => {
+
+              const isSelected = isMultiple
+                ? Array.isArray(selectedAnswer) && selectedAnswer.includes(option.label)
+                : selectedAnswer === option.label
+
+              const handleClick = () => {
+
+                if (isMultiple) {
+
+                  const current = Array.isArray(selectedAnswer)
+                    ? selectedAnswer
+                    : []
+
+                  const updated = current.includes(option.label)
+                    ? current.filter((label) => label !== option.label)
+                    : [...current, option.label]
+
+                  onSelectAnswer(updated)
+
+                } else {
+                  onSelectAnswer(option.id)
+                }
+              }
+
+              return (
+                <button
+                  key={option.id}
+                  onClick={handleClick}
+                  className={cn(
+                    "flex w-full items-center gap-4 rounded-lg border p-3 text-left transition-all",
+                    isSelected
+                      ? "border-primary bg-primary/5 text-foreground"
+                      : "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50",
+                  )}
+                >
+
+                  <span
+                    className={cn(
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-medium",
+                      isSelected
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {option.label}
+                  </span>
+
+                  <span style={{ fontSize: `${fontSize}px` }}>
+                    {option.text}
+                  </span>
+
+                </button>
+              )
+            })}
+          </div>
+        )
+      }
+
+      case "true_false":
+        return (
+          <div className="flex gap-4">
+            <Button
+              variant={selectedAnswer === true ? "default" : "outline"}
+              onClick={() => onSelectAnswer(true)}
             >
-              {option.label}
-            </span>
-            <span style={{ fontSize: `${fontSize}px` }}>{option.text}</span>
-          </button>
-        ))}
+              True
+            </Button>
+
+            <Button
+              variant={selectedAnswer === false ? "default" : "outline"}
+              onClick={() => onSelectAnswer(false)}
+            >
+              False
+            </Button>
+          </div>
+        )
+
+      case "fill_blank":
+        return (
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-full border rounded-md p-3"
+            placeholder="Type your answer..."
+          />
+        )
+
+      case "essay":
+        return (
+          <textarea
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-full border rounded-md p-3 min-h-[150px]"
+            placeholder="Write your answer..."
+          />
+        )
+
+      case "file_upload":
+        return (
+          <div className="space-y-2">
+            <h6>Upload the file Below</h6>
+            <CardBox className="p-0 shadow-none!">
+              <div className='flex w-full items-center justify-center'>
+                <Label
+                  htmlFor='dropzone-file'
+                  className='flex h-32 w-full cursor-pointer flex-col items-center mb-0 justify-center rounded-lg border border-dashed border-primary bg-lightprimary dark:bg-darkprimary'>
+                  <div className='flex flex-col items-center justify-center pb-6 pt-5'>
+                    <Icon
+                      icon='solar:cloud-upload-outline'
+                      height={32}
+                      className='mb-3 text-ld'
+                    />
+                    <p className='mb-2 text-sm text-ld'>
+                      <span className='font-semibold'>Click to upload</span> or drag
+                      and drop
+                    </p>
+                    <p className='text-xs text-ld uppercase'>
+                      {question.file_upload?.allowed_extensions.map((ext: string) => `.${ext}`).join(", ")}
+                    </p>
+                  </div>
+                  <Input type="file" id='dropzone-file' className='hidden'
+                    onChange={(e) =>
+                      onSelectAnswer(e.target.files?.[0] || null)
+                    } />
+                </Label>
+              </div>
+            </CardBox >
+            <p className="text-xs text-ld mt-2 text-center">
+              {selectedAnswer instanceof File ? (
+                selectedAnswer.name
+              ) : typeof selectedAnswer === "string" ? (
+                <a
+                  href={`${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}${selectedAnswer}`}
+                  download
+                  target="_blank"
+                  className="underline text-blue-600 hover:text-blue-800"
+                >
+                  {getFileName(selectedAnswer)}
+                </a>
+              ) : (
+                "No file selected"
+              )}
+            </p>
+          </div>
+        )
+
+      default:
+        return null
+    }
+
+  }
+
+  return (<div className="flex flex-col gap-6">
+
+    <Card className="border shadow">
+      <CardContent className="p-2 mt-0">
+        <QuestionBlocks
+          blocks={question.blocks}
+          fontSize={fontSize}
+        />
+      </CardContent>
+    </Card>
+
+    {renderAnswerInput()}
+
+    <div className="flex items-center justify-between border-t pt-4">
+
+      <div className="flex gap-2">
+
+        <Button
+          variant={isFlagged ? "error" : "outlineerror"}
+          size="sm"
+          onClick={onToggleFlag}
+        >
+          <Flag className="mr-2 h-4 w-4" />
+          {isFlagged ? "Unflag" : "Flag"}
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setValue("")
+            onClearAnswer()
+          }}
+        >
+          <RotateCcw className="mr-2 h-4 w-4" />
+          Clear
+        </Button>
+
       </div>
 
-      <div className="flex items-center justify-between border-t pt-4">
-        <div className="flex items-center gap-2">
-          <Button
-            variant={isFlagged ? "secondary" : "outline"}
-            size="sm"
-            onClick={onToggleFlag}
-            className={cn(isFlagged && "bg-violet-600 text-white hover:bg-violet-700")}
-          >
-            <Flag className={cn("mr-2 h-4 w-4", isFlagged && "fill-current")} />
-            <span className="hidden md:block">{isFlagged ? "Flagged" : "Flag for Later"}</span>
-          </Button>
-          <Button variant="outline" size="sm" onClick={onClearAnswer}>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            <span className="hidden md:block">Clear Response</span>
-          </Button>
-        </div>
-        <Button onClick={onSaveAndNext} className="bg-primary text-primary-foreground hover:bg-primary/90">
-          Save and Next
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <Button onClick={onSaveAndNext}>
+        Save and Next
+        <ArrowRight className="ml-2 h-4 w-4" />
+      </Button>
+
     </div>
+
+  </div>
+
   )
 }

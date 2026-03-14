@@ -13,14 +13,13 @@ import Link from "next/link"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { useQuery } from "@tanstack/react-query"
 import { Content, useEnrollmentStore } from "@/app/stores/enrollment"
-
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false })
+import { ArticleContent } from "./contents/Article"
 
 function CircularProgress({ progress }: { progress: number }) {
-  const data = [{ name: "progress", value: progress, fill: "var(--color-primary)" }]
+  const data = [{ name: "progress", value: progress, fill: progress === 100 ? "var(--color-success)" : "var(--color-primary)" }]
 
   return (
-    <div className="flex items-center justify-center w-[50px] h-[50px]">
+    <div className="flex items-center justify-center w-[50px] h-[50px] opacity-60">
       <RadialBarChart
         width={70}
         height={70}
@@ -30,7 +29,7 @@ function CircularProgress({ progress }: { progress: number }) {
         startAngle={90}
         endAngle={-270}
       >
-         <PolarAngleAxis
+        <PolarAngleAxis
           type="number"
           domain={[0, 100]}
           dataKey="value"
@@ -48,7 +47,7 @@ function CircularProgress({ progress }: { progress: number }) {
 
       {/* Center label */}
       <span className="absolute text-[11px] card-subtitle">
-        <Trophy className="w-4 h-4" />
+        <Trophy className={`w-4 h-4 ${progress === 100 ? "text-success" : "text-primary"}`} />
       </span>
     </div>
   )
@@ -75,13 +74,14 @@ export function MainContent({
 }: MainPlayerProps) {
 
   const client = useClientFetch()
-  const {course} = useEnrollmentStore((state) => state)
+  const { course } = useEnrollmentStore((state) => state)
   const enrollment_id = useEnrollmentStore((state) => state.id)
 
-  const progress = 0
+  const { progress } = useEnrollmentStore((state) => state)
+
   const [activeTab, setActiveTab] = useState("overview")
 
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: ['enrollments', enrollment_id, activeContent.id],
     queryFn: () => client.get(`/enrollments/${enrollment_id}/content/${activeContent.id}/`),
   })
@@ -91,7 +91,7 @@ export function MainContent({
   const loaded_content: any = data?.data
   const renderContent = () => {
     const commonProps = {
-      content: ({...activeContent, content: loaded_content.content} as any),
+      content: ({ ...activeContent, content: loaded_content.content } as any),
       onMarkComplete: () => onMarkComplete(activeContent.id),
       onPrevious: () => onNavigate("previous"),
       onNext: () => onNavigate("next"),
@@ -104,16 +104,18 @@ export function MainContent({
         return <VideoContent {...commonProps} />
       case "quiz":
         return <QuizContent {...commonProps} />
-      case "article":
+      case "attachment":
         return <PdfContent {...commonProps} />
       case "assignment":
         return <AssignmentContent {...commonProps} />
+      case "article":
+        return <ArticleContent {...commonProps} />
       default:
         return null
     }
   }
 
-  if(!loaded_content) return null
+  if (!loaded_content) return null
 
   return (
     <div className="flex h-full flex-col ">
@@ -121,14 +123,16 @@ export function MainContent({
         <div className="flex h-14 items-center justify-between px-4 rounded">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-xl font-bold text-primary">Learn</Link>
-            <span className="text-sm text-foreground line-clamp-1">{course.title}</span>
+            <span className="text-sm text-foreground line-clamp-1 leading-normal">{course.title}</span>
           </div>
 
           <div className="flex items-center gap-2 h-full">
             <Button variant="ghost" size="sm" className="h-full rounded-none">
               <div className="flex items-center">
-                <CircularProgress progress={progress} />
-                <span className="hidden sm:inline text-sm">2/13 Completed</span>
+                <CircularProgress progress={progress?.progress_percent || 0} />
+                <span className={`hidden sm:inline text-sm opacity-60 ${(progress?.progress_percent || 0) === 100 ? "text-success" : "text-primary"}`}>
+                  {progress?.completed_lectures || 0}/{progress?.total_lectures || 0} Completed
+                </span>
                 {/* <ChevronDown className="h-4 w-4" /> */}
               </div>
             </Button>

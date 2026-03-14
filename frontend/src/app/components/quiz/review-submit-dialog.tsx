@@ -78,7 +78,7 @@ export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDia
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-sm font-medium">Section Summary</h4>
+                <h4 className="text-sm font-medium">Quiz Summary</h4>
                 <div className="space-y-1.5">
                   {[
                     { name: "Section A", answered: 18, total: 25 },

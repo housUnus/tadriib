@@ -10,12 +10,15 @@ import { QuestionDisplay } from "@/app/components/quiz/question-display"
 import { SidebarExpandButton } from "@/app/components/quiz/sidebar-expand-button"
 import { useQuiz } from "@/hooks/use-quiz"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { ContentItem } from "@/lib/data/course-data"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { Content } from "@/app/stores/enrollment"
+import { Quiz } from "@/lib/data/quiz-data"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import QuizStart from "@/app/components/quiz/quiz-start"
 
 
 interface QuizContentProps {
-  content: ContentItem
+  content: Content
   onMarkComplete: () => void
   onPrevious: () => void
   onNext: () => void
@@ -27,6 +30,8 @@ type QuizState = "intro" | "in-progress" | "completed"
 
 export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPrevious, hasNext }: QuizContentProps) {
   const router = useRouter()
+  const client = useClientFetch()
+  const quiz = content.content as Quiz
   const {
     state,
     currentQuestion,
@@ -37,7 +42,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     saveAndNext,
     getQuestionStatus,
     getStats,
-  } = useQuiz()
+  } = useQuiz(quiz, content.progress.active_quiz_submission?.id || null, client)
 
   const isMobile = useIsMobile()
 
@@ -65,6 +70,20 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
       setRightSidebarOpen(false)
     }
   }, [isMobile])
+
+  if(!content.progress.active_quiz_submission?.id) {
+    return (
+      <QuizStart
+        content={content}
+        onStart={async () => {
+          await client.post(`/quiz-submissions/start/`, {
+            lecture_id: content.id,
+          })
+          router.refresh()
+        }}
+      />
+    )
+  }
 
   if (!currentQuestion) {
     return (
@@ -94,15 +113,17 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
           <ResizablePanelGroup direction="horizontal" className="h-full">
             {leftSidebarOpen && (
               <>
-                <ResizablePanel defaultSize={20} minSize={12} maxSize={25}>
+                <ResizablePanel defaultSize={25} minSize={12} maxSize={25}>
                   <div className="h-full border-r bg-card">
                     <QuizSidebarLeft
+                      segments={quiz.segments}
                       currentQuestion={state.currentQuestion}
                       getStatus={getQuestionStatus}
                       onSelectQuestion={goToQuestion}
                       answers={state.answers}
                       marked={state.marked}
                       flagged={state.flagged}
+                      visited={state.visited}
                       onCollapse={() => setLeftSidebarOpen(false)}
                     />
                   </div>
@@ -118,6 +139,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
               <ScrollArea className="h-full">
                 <div className="mx-auto max-w-3xl p-6">
                   <QuestionDisplay
+                    key={currentQuestion.id}
                     question={currentQuestion}
                     selectedAnswer={state.answers[currentQuestion.id]}
                     isFlagged={state.flagged.has(currentQuestion.id)}
@@ -173,6 +195,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
               <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setLeftSidebarOpen(false)} />
               <div className="fixed left-0 top-0 bottom-0 z-50 w-80 max-w-[85vw] bg-card shadow-xl border-r animate-in slide-in-from-left duration-200">
                 <QuizSidebarLeft
+                  segments={quiz.segments}
                   currentQuestion={state.currentQuestion}
                   getStatus={getQuestionStatus}
                   onSelectQuestion={(id) => {
@@ -182,6 +205,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
                   answers={state.answers}
                   marked={state.marked}
                   flagged={state.flagged}
+                  visited={state.visited}
                   onCollapse={() => setLeftSidebarOpen(false)}
                 />
               </div>

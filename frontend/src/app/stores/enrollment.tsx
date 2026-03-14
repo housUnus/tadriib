@@ -1,12 +1,17 @@
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { create } from "zustand"
 
-export type ContentType = "video" | "quiz" | "article" | "assignment"
+export type ContentType = "video" | "quiz" | "article" | "assignment" | "attachment"
 
 export type CourseProgress = {
     active_lecture: string | null
     completed_lectures: number
     progress_percent: number
+    total_lectures: number
+}
+
+export type QuizSubmission = {
+    id: number
 }
 
 export type LectureProgress = {
@@ -16,6 +21,7 @@ export type LectureProgress = {
     last_accessed_at: string | null
     last_position_seconds: number
     lecture: string
+    active_quiz_submission?: QuizSubmission
 }
 
 export type Content = {
@@ -54,9 +60,6 @@ export type EnrollmentStore = {
     startHeartbeat: (client: any, lectureId: string, getPosition: () => number) => void
     stopHeartbeat: () => void
 }
-
-
-
 
 export const useEnrollmentStore = create<EnrollmentStore>((set, get) => {
     let heartbeatInterval: NodeJS.Timeout | null = null

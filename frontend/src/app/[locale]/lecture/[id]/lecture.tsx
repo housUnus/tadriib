@@ -13,7 +13,8 @@ export default function LectureContent({ enrollment }: { enrollment: Enrolment }
     const client = useClientFetch()
     const [activeContentId, setActiveContentId] = useState<string>(enrollment.progress?.active_lecture || enrollment.course.sections[0].contents[0].id)
     const [sidebarOpen, setSidebarOpen] = useState(true)
-    const {setState, markLectureCompleted, course, setActiveLecture} = useEnrollmentStore((state) => state)
+    const {setState, markLectureCompleted, course, setActiveLecture, progress} = useEnrollmentStore((state) => state)
+    console.log("🚀 ~ LectureContent ~ progress:", progress)
 
     useEffect(() => {
         setState(enrollment)
@@ -22,7 +23,6 @@ export default function LectureContent({ enrollment }: { enrollment: Enrolment }
     useUpdateEffect(() => {
         setActiveLecture(client, activeContentId)
     }, [activeContentId])
-
 
     const isMobile = useIsMobile()
 

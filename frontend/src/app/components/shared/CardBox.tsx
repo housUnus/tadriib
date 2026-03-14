@@ -16,7 +16,7 @@ const CardBox: React.FC<MyAppProps> = ({ children, className }) => {
     <Card
       className={`card no-inset no-ring bg-white dark:bg-darkgray flex flex-col gap-2 ${className} ${
         isCardShadow
-          ? "dark:shadow-dark-md shadow-md !border-none dark:!border-none"
+          ? "dark:shadow-dark-md shadow-md border-none! dark:border-none!"
           : "shadow-none border border-ld"
       } `}
       style={{

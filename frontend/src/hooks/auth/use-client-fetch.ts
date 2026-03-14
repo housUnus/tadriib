@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import {JwtSession} from "../../lib/schemas/auth";
+import { JwtSession } from "../../lib/schemas/auth";
 
 /* -------------------------
    Types
@@ -27,7 +27,7 @@ type RequestArgs<TPayload> = {
 -------------------------- */
 
 export const useClientFetch = () => {
-  const { data: session } = useSession() as {data: JwtSession | null};
+  const { data: session } = useSession() as { data: JwtSession | null };
 
   const [isPending, setIsPending] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,20 +42,22 @@ export const useClientFetch = () => {
     setError(null);
 
     try {
+
+      const isFormData = payload instanceof FormData;
+
       const options: RequestInit = {
         method,
         headers: {
-          Authorization: session?.access_token
-            ? `Bearer ${session.access_token}`
-            : "",
-          "Content-Type": "application/json",
+          ...(session && session.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(isFormData ? {} : { "Content-Type": "application/json" }),
           ...headers,
         },
+        body: payload
+          ? isFormData
+            ? payload
+            : JSON.stringify(payload)
+          : undefined,
       };
-
-      if (payload !== undefined) {
-        options.body = JSON.stringify(payload);
-      }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}${url}`, options);
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Avg
-from unfold.admin import ModelAdmin, TabularInline
+from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from django import forms
 from tinymce.widgets import TinyMCE
 
@@ -9,18 +9,6 @@ from .models import *
 # ======================================================
 # QUIZ DEEP STRUCTURE
 # ======================================================
-
-class QuestionBlockInline(TabularInline):
-    model = QuestionBlock
-    extra = 0
-    fields = ("type", "order", "text", "image", "file")
-
-
-class AnswerInline(TabularInline):
-    model = Answer
-    extra = 2
-    fields = ("text", "is_correct")
-
 
 class QuestionInline(TabularInline):
     model = Question
@@ -197,51 +185,95 @@ class ContentAdmin(ModelAdmin):
     list_filter = ("type",)
     ordering = ("section", "order")
 
-    inlines = [
-        VideoInline,
-        ArticleInline,
-        AttachmentInline,
-        AssignmentInline,
-        QuizInline,
-    ]
+    def get_inlines(self, request, obj):
+        if not obj:
+            return []
+
+        if obj.type == "video":
+            return [VideoInline]
+
+        if obj.type == "article":
+            return [ArticleInline]
+
+        if obj.type == "attachment":
+            return [AttachmentInline]
+
+        if obj.type == "assignment":
+            return [AssignmentInline]
+
+        if obj.type == "quiz":
+            return [QuizInline]
+
+        return []
 
 
 # ======================================================
 # QUIZ EDITOR
 # ======================================================
+class QuestionBlockInline(StackedInline):
+    model = QuestionBlock
+    extra = 0
+    class Media:
+        js = ("admin/js/question_block_inline.js",)
+
+class SuggestionInline(TabularInline):
+    model = Suggestion
+    extra = 0
+
+class TrueFalseInline(StackedInline):
+    model = TrueFalseAnswer
+    extra = 0
+    max_num = 1
+
+class FillBlankInline(StackedInline):
+    model = FillBlankAnswer
+    extra = 0
+    max_num = 1
+
+class EssayInline(StackedInline):
+    model = EssayAnswer
+    extra = 0
+    max_num = 1
+
+class FileUploadInline(StackedInline):
+    model = FileUploadAnswer
+    extra = 0
+    max_num = 1
+    
+class SegmentInline(StackedInline):
+    model = Segment
+    extra = 0
+    show_change_link = True
+    
+@admin.register(Segment)
+class SegmentAdmin(ModelAdmin):
+    list_display = ("title", "quiz", "order")
+    ordering = ("quiz", "order")
+    inlines = [QuestionInline]
 
 @admin.register(Quiz)
 class QuizAdmin(ModelAdmin):
-    list_display = ("title", "content", "time_limit_minutes")
-    inlines = [QuestionInline]
-
+    list_display = ("title", "time_limit_minutes")
+    ordering = ("id",)
+    inlines = [SegmentInline]
 
 @admin.register(Question)
 class QuestionAdmin(ModelAdmin):
-    list_display = ("quiz", "answer_type", "points", "order")
-    ordering = ("quiz", "order")
-    inlines = [QuestionBlockInline, AnswerInline]
+    save_as = True
+    list_display = ("segment", "answer_type", "points", "order")
+    ordering = ("segment", "order")
+    inlines = [QuestionBlockInline, SuggestionInline, TrueFalseInline, FillBlankInline, EssayInline, FileUploadInline]
 
-
-# ======================================================
-# ANSWER TYPE MODELS
-# ======================================================
-
-@admin.register(TrueFalseAnswer)
-class TrueFalseAdmin(ModelAdmin):
-    list_display = ("question", "correct")
-
-
-@admin.register(FillBlankAnswer)
-class FillBlankAdmin(ModelAdmin):
-    list_display = ("question", "correct_text", "case_sensitive")
-
-
-@admin.register(EssayAnswer)
-class EssayAdmin(ModelAdmin):
-    list_display = ("question", "min_words")
-
-
-@admin.register(FileUploadAnswer)
-class FileUploadAdmin(ModelAdmin):
-    list_display = ("question", "max_file_size_mb")
+    def get_inlines(self, request, obj=None):
+        """Show only the relevant inline depending on question type"""
+        inlines = [QuestionBlockInline, SuggestionInline]
+        if obj:
+            if obj.answer_type == "true_false":
+                inlines.append(TrueFalseInline)
+            elif obj.answer_type == "fill_blank":
+                inlines.append(FillBlankInline)
+            elif obj.answer_type == "essay":
+                inlines.append(EssayInline)
+            elif obj.answer_type == "file_upload":
+                inlines.append(FileUploadInline)
+        return inlines

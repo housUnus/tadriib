@@ -1,10 +1,44 @@
 export type QuestionStatus = "not-visited" | "visited" | "answered" | "marked" | "flagged"
 
+export interface QuestionBlock {
+  id: number
+  type: "text" | "image" | "file"
+  text?: string
+  image?: string
+  file?: string
+}
+
+export interface QuizSuggestion {
+  text: string
+  label: string
+  id: number
+  is_correct: boolean
+}
+
 export interface Question {
   id: number
+  order: number
   text: string
-  options: { label: string; text: string }[]
   section: string
+  answer_type: string
+  allow_multiple_answers: boolean
+  blocks?: QuestionBlock[]
+  suggestions?: QuizSuggestion[]
+  file_upload?: any
+}
+
+export interface QuizSegment {
+  id: number
+  title: string
+  order: number
+  questions: Question[]
+}
+
+export interface Quiz {
+  id: number
+  title: string
+  time_limit_minutes: number
+  segments: QuizSegment[]
 }
 
 export interface Section {

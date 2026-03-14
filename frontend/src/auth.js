@@ -118,11 +118,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // Token is not valid && refresh token is still valid
-      if (token.expiry.refresh > Date.now()) {
+      if (token.expiry.refresh - 60000 > Date.now()) {
         const new_token = await refreshAccessToken(token);
         return new_token;
       }
-
+      return token
       // Token is not valid && refresh token is not valid
       return { ...token, error: "RefreshTokenExpired" };
     },

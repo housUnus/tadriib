@@ -1,15 +1,15 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import type { QuestionStatus } from "@/lib/data/quiz-data"
+import type { Question, QuestionStatus } from "@/lib/data/quiz-data"
 
 interface QuestionGridProps {
-  questions: number[]
+  questions: Question[]
   sectionName: string
   currentQuestion: number
   getStatus: (id: number) => QuestionStatus
   onSelect: (id: number) => void
-  stats: { answered: number; marked: number; flagged: number }
+  stats: { answered: number; marked: number; flagged: number, visited: number }
 }
 
 const statusStyles: Record<QuestionStatus, string> = {
@@ -17,7 +17,7 @@ const statusStyles: Record<QuestionStatus, string> = {
   visited: "bg-muted border-border text-foreground hover:border-primary/50",
   answered: "bg-success text-white border-success",
   marked: "bg-info text-info-foreground border-info",
-  flagged: "bg-violet-600 text-white border-violet-600",
+  flagged: "bg-error text-white border-error",
 }
 
 export function QuestionGrid({
@@ -38,30 +38,34 @@ export function QuestionGrid({
             {stats.answered}
           </span>
           <span className="flex items-center gap-1">
+            <span className="h-2 w-2 rounded-full bg-muted" />
+            {stats.visited}
+          </span>
+          {/* <span className="flex items-center gap-1">
             <span className="h-2 w-2 rounded-full bg-info" />
             {stats.marked}
-          </span>
+          </span> */}
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-violet-600" />
+            <span className="h-2 w-2 rounded-full bg-error" />
             {stats.flagged}
           </span>
         </div>
       </div>
       <div className="grid grid-cols-5 gap-1.5">
-        {questions.map((id) => {
-          const status = getStatus(id)
-          const isActive = id === currentQuestion
+        {questions.map((question, idx) => {
+          const status = getStatus(question.id)
+          const isActive = question.id === currentQuestion
           return (
             <button
-              key={id}
-              onClick={() => onSelect(id)}
+              key={question.id}
+              onClick={() => onSelect(question.id)}
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-md border text-xs font-medium transition-all",
                 statusStyles[status],
                 isActive && "ring-1 ring-primary ring-offset-1 ring-offset-background",
               )}
             >
-              {id}
+              {idx + 1}
             </button>
           )
         })}

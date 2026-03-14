@@ -4,32 +4,37 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { PanelLeftClose } from "lucide-react"
 import { QuestionGrid } from "./question-grid"
-import { sections } from "@/lib/data/quiz-data"
-import type { QuestionStatus } from "@/lib/data/quiz-data"
+import type { Question, QuestionStatus, QuizSegment } from "@/lib/data/quiz-data"
+import { isAnswered } from "@/hooks/use-quiz"
 
 interface QuizSidebarLeftProps {
+  segments: QuizSegment[]
   currentQuestion: number
   getStatus: (id: number) => QuestionStatus
   onSelectQuestion: (id: number) => void
   answers: Record<number, string>
   marked: Set<number>
   flagged: Set<number>
+  visited: Set<number>
   onCollapse: () => void
 }
 
 export function QuizSidebarLeft({
+  segments,
   currentQuestion,
   getStatus,
   onSelectQuestion,
   answers,
   marked,
   flagged,
+  visited,
   onCollapse,
 }: QuizSidebarLeftProps) {
-  const getSectionStats = (questions: number[]) => ({
-    answered: questions.filter((q) => answers[q]).length,
-    marked: questions.filter((q) => marked.has(q)).length,
-    flagged: questions.filter((q) => flagged.has(q)).length,
+  const getSectionStats = (questions: Question[]) => ({
+    answered: questions.filter((q) => isAnswered(answers[q.id])).length,
+    marked: questions.filter((q) => marked.has(q.id)).length,
+    flagged: questions.filter((q) => flagged.has(q.id)).length,
+    visited: questions.filter((q) => visited.has(q.id)).length,
   })
 
   return (
@@ -44,15 +49,15 @@ export function QuizSidebarLeft({
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
           <div className="space-y-6 p-2">
-            {sections.map((section) => (
+            {segments.map((segment: QuizSegment) => (
               <QuestionGrid
-                key={section.name}
-                questions={section.questions}
-                sectionName={section.name}
+                key={segment.title}
+                questions={segment.questions}
+                sectionName={segment.title}
                 currentQuestion={currentQuestion}
                 getStatus={getStatus}
                 onSelect={onSelectQuestion}
-                stats={getSectionStats(section.questions)}
+                stats={getSectionStats(segment.questions)}
               />
             ))}
           </div>

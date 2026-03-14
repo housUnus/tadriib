@@ -1,7 +1,6 @@
 from django.db import models
 from core.models import BaseModel
-from courses.constants import QuestionBlockType, AnswerType, QuizStatus
-from django.conf import settings
+from courses.constants import QuestionBlockType, AnswerType
 from django.utils.translation import gettext_lazy as _
 
 class Quiz(BaseModel):
@@ -20,21 +19,45 @@ class Quiz(BaseModel):
     class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
-
-
-class Question(models.Model):
+        
+class Segment(models.Model):
     quiz = models.ForeignKey(
         Quiz,
         on_delete=models.CASCADE,
-        related_name="questions"
+        related_name="segments"
+    )
+    title = models.CharField(max_length=255)
+    order = models.PositiveIntegerField()
+    
+    class Meta:
+        verbose_name = _("Segment")
+        verbose_name_plural = _("Segments")
+
+
+class Question(models.Model):
+    segment = models.ForeignKey(
+        Segment,
+        on_delete=models.CASCADE,
+        related_name="questions",
+        null=True,
+        blank=True,
     )
     answer_type = models.CharField(
         max_length=30,
         choices=AnswerType.choices
     )
+    allow_multiple_answers = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=1)
     order = models.PositiveIntegerField()
     
+    
+    def get_answer_field(self):
+        if self.answer_type == AnswerType.TRUE_FALSE:
+            return "boolean_answer"
+        elif self.answer_type == AnswerType.FILE_UPLOAD:
+            return "uploaded_file"
+        else:
+            return "text_answer"
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
@@ -68,19 +91,20 @@ class QuestionBlock(BaseModel):
 
 
 #------------------ ANSWERS -------------------
-class Answer(BaseModel):
+class Suggestion(BaseModel):
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
-        related_name="answers"
+        related_name="suggestions"
     )
     text = models.CharField(max_length=255)
+    label = models.CharField(max_length=10, blank=True)
     is_correct = models.BooleanField(default=False)
     
     class Meta:
-        verbose_name = _("Answer")
-        verbose_name_plural = _("Answers")
-    
+        verbose_name = _("Suggestion")
+        verbose_name_plural = _("Suggestions")
+
 class TrueFalseAnswer(models.Model):
     question = models.OneToOneField(
         Question,

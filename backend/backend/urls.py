@@ -20,9 +20,11 @@ urlpatterns = [
     path('api/v1/', include('categories.urls')),
     path('api/v1/', include('enrollments.urls')),
     path('api/v1/', include('wishlist.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 
 
-
+if settings.DEBUG:
+    urlpatterns += static(f'api/v1{settings.MEDIA_URL}', document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(f'api/v1{settings.STATIC_URL}', document_root=settings.STATIC_ROOT)
 
 
 

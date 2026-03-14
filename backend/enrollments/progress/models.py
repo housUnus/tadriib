@@ -1,7 +1,9 @@
 from django.db import models
-from courses.models import QuizStatus, Question, Content
+from courses.models import Question, Content
 from django.utils import timezone
 import typing
+from enrollments.constants import QuizStatus
+from courses.constants import AnswerType
 
 if typing.TYPE_CHECKING:
     from enrollments.models import Enrollment
@@ -71,25 +73,95 @@ class Notes(models.Model):
 
 #----------------------- Quiz Submission -----------------------
 class QuizSubmission(models.Model):
-    progress = models.ForeignKey(LectureProgress, on_delete=models.CASCADE, related_name="quiz_submissions")
-    status = models.CharField(max_length=20, choices=QuizStatus.choices, default=QuizStatus.IN_PROGRESS)
+    user = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="quiz_submissions"
+    )
+    
+    progress = models.ForeignKey(
+        LectureProgress,
+        on_delete=models.CASCADE,
+        related_name="quiz_submissions"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=QuizStatus.choices,
+        default=QuizStatus.IN_PROGRESS
+    )
 
     started_at = models.DateTimeField(auto_now_add=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
 
+    # navigation state
+    current_question = models.ForeignKey(
+        "courses.Question",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    # timer tracking
+    time_spent_seconds = models.IntegerField(default=0)
+    last_activity_at = models.DateTimeField(null=True, blank=True)
+
     score = models.FloatField(null=True, blank=True)
 
+    class Meta:
+        ordering = ["-started_at"]
 
 class QuestionSubmission(models.Model):
-    submission = models.ForeignKey(QuizSubmission, on_delete=models.CASCADE, related_name="answers")
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
-    # Used depending on answer_type
-    text_answer = models.TextField(blank=True)
+    submission = models.ForeignKey(
+        QuizSubmission,
+        on_delete=models.CASCADE,
+        related_name="answers"
+    )
+
+    question_id: int # Store question ID directly for easier access
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE
+    )
+
+    text_answer = models.JSONField(null=True, blank=True)
     boolean_answer = models.BooleanField(null=True, blank=True)
-
-    uploaded_file = models.FileField(upload_to="quiz/submissions/", null=True, blank=True)
+    uploaded_file = models.FileField(
+        upload_to="quiz/submissions/",
+        null=True,
+        blank=True
+    )
 
     is_correct = models.BooleanField(null=True, blank=True)
+    flagged = models.BooleanField(default=False)
+    visited = models.BooleanField(default=False)
     score = models.FloatField(null=True, blank=True)
-    reviewed_by = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
+
+    reviewed_by = models.ForeignKey(
+        "users.User",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("submission", "question")
+        
+    def get_answer_value(self):
+        question:"Question" = self.question
+        if question.answer_type == AnswerType.MULTIPLE_CHOICE:
+            return self.text_answer if self.text_answer else []
+        elif question.answer_type == AnswerType.TRUE_FALSE:
+            return self.boolean_answer
+        elif question.answer_type == AnswerType.FILL_BLANK:
+            return self.text_answer
+        elif question.answer_type == AnswerType.ESSAY:
+            return self.text_answer
+        elif question.answer_type == AnswerType.FILE_UPLOAD:
+            return self.uploaded_file.url if self.uploaded_file else None
+        else:
+            return None

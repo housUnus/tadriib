@@ -76,9 +76,10 @@ const middleware = async (request: NextRequest) => {
 
   // Token & Refresh are expired 
   const RefreshTokenExpired = session?.error === "RefreshTokenExpired"
+  console.log("🚀 ~ middleware ~ session:", session)
 
   if (RefreshTokenExpired) {
-    const response = isPrivateRoute? intlMiddleware(request) : NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
+    const response = (isPrivateRoute || isAuthRoute)? intlMiddleware(request) : NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
     response.cookies.set("authjs.csrf-token", "", { maxAge: 0 });
     response.cookies.set("authjs.session-token", "", { maxAge: 0 });
     return response;

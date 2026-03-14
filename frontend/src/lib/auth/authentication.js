@@ -30,6 +30,7 @@ export async function refreshAccessToken(token) {
   );
 
   const new_token = await response.json();
+  console.log("🚀 ~ refreshAccessToken ~ new_token:", new_token)
 
   if (!response.ok) {
     throw new_token;

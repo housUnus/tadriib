@@ -6,6 +6,7 @@ from .models import (
     Article,
     Assignment
 )
+from courses.contents.quiz.serializers import SegmentSerializer
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,9 +15,11 @@ class VideoSerializer(serializers.ModelSerializer):
         
 class QuizSerializer(serializers.ModelSerializer):
     duration = serializers.ReadOnlyField(source="time_limit_minutes")
+    segments = SegmentSerializer(many=True, read_only=True)
+    total_questions = serializers.IntegerField(source="segments__questions__count", read_only=True)
     class Meta:
         model = Quiz
-        fields = ["id", "description", "time_limit_minutes", "duration"]
+        fields = ["id", "description", "time_limit_minutes", "duration", "segments", "total_questions"]
         
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:

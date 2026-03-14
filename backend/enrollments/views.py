@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from courses.models import Course, Content
-from .models import Enrollment, EnrollmentProgress, LectureProgress
-from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, EnrollmentProgressSerializer, LectureProgressSerializer
+from .models import Enrollment, EnrollmentProgress, LectureProgress, QuizSubmission, QuestionSubmission, Question
+from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, EnrollmentProgressSerializer, QuizSubmissionSerializer
 from courses.serializers import ContentSerializer
 from core.mixins import ListQueryMixin, StandardResultsSetPagination, PublicViewsMixin
 
@@ -151,3 +151,114 @@ class EnrollmentProgressViewSet(GenericViewSet):
 
         return Response({"status": "completed"})
     
+    
+class QuizSubmissionViewSet(ModelViewSet):
+    queryset = QuizSubmission.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = QuizSubmissionSerializer
+
+    def get_queryset(self):
+        return QuizSubmission.objects.filter(
+            progress__course_progress__enrollment__user=self.request.user
+        )
+    
+    @action(detail=False, methods=["post"])
+    def start(self, request):
+        lecture_id = request.data["lecture_id"]
+
+        progress = get_object_or_404(
+            LectureProgress,
+            lecture__public_id=lecture_id,
+            course_progress__enrollment__user=request.user
+        )
+
+        submission = QuizSubmission.objects.create(
+            progress=progress,
+            last_activity_at=timezone.now(),
+            user = request.user,
+        )
+
+        serializer = self.get_serializer(submission)
+
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=["put"])
+    def answer(self, request, pk=None):
+
+        submission = self.get_object()
+
+        question_id = request.data["question_id"]
+        answer = request.data["answer"]
+        
+        question:"Question" = get_object_or_404(
+            Question,
+            id=question_id,
+        )
+
+        QuestionSubmission.objects.update_or_create(
+            submission=submission,
+            question_id=question_id,
+            defaults={question.get_answer_field(): answer}
+        )
+
+        return Response({"status": "saved"})
+    
+    @action(detail=True, methods=["put"])
+    def flag(self, request, pk=None):
+
+        submission = self.get_object()
+
+        question_id = request.data["question_id"]
+        flagged = request.data["flagged"]
+
+        QuestionSubmission.objects.update_or_create(
+            submission=submission,
+            question_id=question_id,
+            defaults={"flagged": flagged}
+        )
+
+        return Response({"status": "saved"})
+
+    @action(detail=True, methods=["put"])
+    def navigate(self, request, pk=None):
+
+        submission = self.get_object()
+
+        question_id = request.data["question_id"]
+        
+        QuestionSubmission.objects.update_or_create(
+            submission=submission,
+            question_id=question_id,
+            defaults={"visited": True}
+        )
+        
+        submission.current_question_id = question_id
+        submission.save(update_fields=["current_question"])
+
+        return Response({"status": "ok"})
+        
+    @action(detail=True, methods=["post"])
+    def heartbeat(self, request, pk=None):
+
+        submission = self.get_object()
+
+        delta = request.data.get("time_spent_delta", 0)
+
+        submission.time_spent_seconds += int(delta)
+        submission.last_activity_at = timezone.now()
+
+        submission.save(update_fields=["time_spent_seconds", "last_activity_at"])
+
+        return Response({"status": "ok"})
+        
+    @action(detail=True, methods=["post"])
+    def submit(self, request, pk=None):
+
+        submission = self.get_object()
+
+        submission.status = QuizStatus.SUBMITTED
+        submission.submitted_at = timezone.now()
+
+        submission.save()
+
+        return Response({"status": "submitted"})
