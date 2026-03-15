@@ -1,4 +1,3 @@
-import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { create } from "zustand"
 
 export type ContentType = "video" | "quiz" | "article" | "assignment" | "attachment"
@@ -32,6 +31,7 @@ export type Content = {
     type: ContentType
     content?: any
     progress: LectureProgress
+    invalidate: () => void
 }
 
 export type Section = {

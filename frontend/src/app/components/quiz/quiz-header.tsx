@@ -32,8 +32,8 @@ export function QuizHeader({ testName, sectionName, stats, onExit, onSubmit }: Q
         <div className="flex items-center justify-between col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 text-sm font-medium">
             <span className="text-foreground">{testName}</span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{sectionName}</span>
+            {/* <ChevronRight className="h-4 w-4 text-muted-foreground" /> */}
+            {/* <span className="text-muted-foreground">{sectionName}</span> */}
           </div>
         </div>
           {/* Center section with timer and calculator */}

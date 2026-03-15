@@ -11,9 +11,11 @@ import { ContentTabs } from "./ContentTabs"
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts"
 import Link from "next/link"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Content, useEnrollmentStore } from "@/app/stores/enrollment"
 import { ArticleContent } from "./contents/Article"
+
+
 
 function CircularProgress({ progress }: { progress: number }) {
   const data = [{ name: "progress", value: progress, fill: progress === 100 ? "var(--color-success)" : "var(--color-primary)" }]
@@ -74,6 +76,8 @@ export function MainContent({
 }: MainPlayerProps) {
 
   const client = useClientFetch()
+  const queryClient = useQueryClient()
+
   const { course } = useEnrollmentStore((state) => state)
   const enrollment_id = useEnrollmentStore((state) => state.id)
 
@@ -82,7 +86,7 @@ export function MainContent({
   const [activeTab, setActiveTab] = useState("overview")
 
   const { data } = useQuery({
-    queryKey: ['enrollments', enrollment_id, activeContent.id],
+    queryKey: ['enrollments', activeContent.id],
     queryFn: () => client.get(`/enrollments/${enrollment_id}/content/${activeContent.id}/`),
   })
 
@@ -91,7 +95,11 @@ export function MainContent({
   const loaded_content: any = data?.data
   const renderContent = () => {
     const commonProps = {
-      content: ({ ...activeContent, content: loaded_content.content } as any),
+      content: ({ 
+        ...activeContent, 
+        content: loaded_content.content, 
+        progress: loaded_content.progress,
+        invalidate: () => queryClient.invalidateQueries({queryKey: ['enrollments', activeContent.id]}) } as any),
       onMarkComplete: () => onMarkComplete(activeContent.id),
       onPrevious: () => onNavigate("previous"),
       onNext: () => onNavigate("next"),

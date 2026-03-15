@@ -36,7 +36,6 @@ export interface QuizSegment {
 
 export interface Quiz {
   id: number
-  title: string
   time_limit_minutes: number
   segments: QuizSegment[]
 }

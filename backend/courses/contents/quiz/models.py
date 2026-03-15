@@ -9,12 +9,14 @@ class Quiz(BaseModel):
         on_delete=models.CASCADE,
         related_name="quiz"
     )
-    title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     time_limit_minutes = models.PositiveIntegerField(null=True, blank=True)
+    show_correct_answers = models.BooleanField(default=False)
+    can_pause = models.BooleanField(default=False)
+    can_retake = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.content.title
     
     class Meta:
         verbose_name = _("Quiz")

@@ -3,6 +3,8 @@
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { Quiz, type QuizState } from "@/lib/data/quiz-data"
 import { isNil } from "lodash"
+import { useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 export function isAnswered(value: any) {
@@ -13,9 +15,11 @@ export function isAnswered(value: any) {
 
 
 
-export function useQuiz(quiz: Quiz, submissionId: number | null, client: any) {
+export function useQuiz(quiz: Quiz, content: any, client: any) {
 
+  const submissionId = content?.progress?.active_quiz_submission?.id || null
 
+  const router = useRouter()
   useEffect(() => {
     if (!submissionId) return
     const interval = setInterval(() => {
@@ -44,7 +48,6 @@ export function useQuiz(quiz: Quiz, submissionId: number | null, client: any) {
   })
 
   const [state, setState] = useState<QuizState>(createInitialState)
-  console.log("🚀 ~ useQuiz ~ state:", state)
 
   const loadSubmission = useCallback(async () => {
     if (!submissionId) return
@@ -61,7 +64,7 @@ export function useQuiz(quiz: Quiz, submissionId: number | null, client: any) {
 
   useEffect(() => {
     loadSubmission()
-  }, [])
+  }, [submissionId])
 
   const goToQuestion = useCallback(async (questionId: number) => {
 
@@ -128,7 +131,7 @@ export function useQuiz(quiz: Quiz, submissionId: number | null, client: any) {
       if (newFlagged.has(questionId)) newFlagged.delete(questionId)
       else newFlagged.add(questionId)
 
-      
+
       client.put(`/quiz-submissions/${submissionId}/flag/`, {
         question_id: questionId,
         flagged: newFlagged.has(questionId),
@@ -184,6 +187,8 @@ export function useQuiz(quiz: Quiz, submissionId: number | null, client: any) {
 
   const submitQuiz = async () => {
     await client.post(`/quiz-submissions/${submissionId}/submit/`)
+    router.refresh()
+    content.invalidate()
   }
 
   return {

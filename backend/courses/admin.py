@@ -20,7 +20,7 @@ class QuestionInline(TabularInline):
 class QuizInline(TabularInline):
     model = Quiz
     extra = 0
-    fields = ("title", "time_limit_minutes")
+    fields = ("time_limit_minutes", )
     show_change_link = True
 
 
@@ -253,7 +253,7 @@ class SegmentAdmin(ModelAdmin):
 
 @admin.register(Quiz)
 class QuizAdmin(ModelAdmin):
-    list_display = ("title", "time_limit_minutes")
+    list_display = ("time_limit_minutes", "can_pause", "can_retake", "show_correct_answers")
     ordering = ("id",)
     inlines = [SegmentInline]
 

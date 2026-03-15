@@ -26,8 +26,6 @@ interface QuizContentProps {
   hasNext: boolean
 }
 
-type QuizState = "intro" | "in-progress" | "completed"
-
 export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPrevious, hasNext }: QuizContentProps) {
   const router = useRouter()
   const client = useClientFetch()
@@ -42,7 +40,8 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     saveAndNext,
     getQuestionStatus,
     getStats,
-  } = useQuiz(quiz, content.progress.active_quiz_submission?.id || null, client)
+    submitQuiz
+  } = useQuiz(quiz, content || null, client)
 
   const isMobile = useIsMobile()
 
@@ -80,6 +79,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
             lecture_id: content.id,
           })
           router.refresh()
+          content.invalidate()
         }}
       />
     )
@@ -97,11 +97,11 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
   return (
     <div className="flex h-full flex-col bg-background">
       <QuizHeader
-        testName="AFCAT Test Series 2023 I"
+        testName={content.title}
         sectionName="Reasoning"
         stats={stats}
         onExit={() => router.push("/")}
-        onSubmit={() => router.push("/")}
+        onSubmit={submitQuiz}
       />
 
       <div className="relative flex-1 overflow-hidden">

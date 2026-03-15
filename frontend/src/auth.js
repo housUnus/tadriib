@@ -113,6 +113,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 
       // Token is still valid
+      console.log("🚀 ~ token:", token)
       if (token.expiry.access - 60000 > Date.now()) {
         return token;
       }
@@ -127,6 +128,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return { ...token, error: "RefreshTokenExpired" };
     },
     session: async ({ session, token }) => {
+      console.log("🚀 ~ token 1111111:", token)
+      console.log("🚀 ~ session:", session)
       if (token) {
         session.access_token = token.access_token;
         session.refresh_token = token.refresh_token;

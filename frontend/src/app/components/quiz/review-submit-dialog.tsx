@@ -14,6 +14,7 @@ interface ReviewSubmitDialogProps {
     total: number
     answered: number
     notAnswered: number
+    flagged: number
     marked: number
     visited: number
   }
@@ -71,8 +72,8 @@ export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDia
                 <div className="flex items-center gap-3 rounded-lg border bg-blue-50 p-3 dark:bg-blue-950/30">
                   <Flag className="h-5 w-5 text-blue-600" />
                   <div>
-                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">{stats.marked}</p>
-                    <p className="text-sm text-blue-600 dark:text-blue-500">Marked for Review</p>
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">{stats.flagged}</p>
+                    <p className="text-sm text-blue-600 dark:text-blue-500">Flagged</p>
                   </div>
                 </div>
               </div>
@@ -80,30 +81,23 @@ export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDia
               <div className="space-y-2">
                 <h4 className="text-sm font-medium">Quiz Summary</h4>
                 <div className="space-y-1.5">
-                  {[
-                    { name: "Section A", answered: 18, total: 25 },
-                    { name: "Section B", answered: 20, total: 25 },
-                    { name: "Section C", answered: 12, total: 25 },
-                    { name: "Section D", answered: 5, total: 25 },
-                  ].map((section) => (
-                    <div
-                      key={section.name}
-                      className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2"
-                    >
-                      <span className="text-sm font-medium">{section.name}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-24 overflow-hidden rounded-full bg-muted">
-                          <div
-                            className="h-full bg-primary transition-all"
-                            style={{ width: `${(section.answered / section.total) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          {section.answered}/{section.total}
-                        </span>
+                  <div
+                    className="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2"
+                  >
+                    <span className="text-sm font-medium">Performance</span>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-48 overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full bg-primary transition-all"
+                          style={{ width: `${(stats.answered / stats.total) * 100}%` }}
+                        />
                       </div>
+                      <span className="text-sm text-muted-foreground">
+                        {stats.answered}/{stats.total}
+
+                      </span>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
 

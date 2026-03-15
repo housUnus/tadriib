@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    Quiz, Question, QuestionBlock, Suggestion, Segment,
+    Question, QuestionBlock, Suggestion, Segment,
     TrueFalseAnswer, FillBlankAnswer, EssayAnswer, FileUploadAnswer
 )
 

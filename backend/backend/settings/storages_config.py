@@ -32,9 +32,9 @@ if USE_DCN:
 else:
     STATIC_ROOT = BASE_DIR / "staticfiles"
     MEDIA_ROOT = BASE_DIR / "mediafiles"
-    STATIC_URL = 'static/'
-    MEDIA_URL = 'media/'
-    
+    STATIC_URL = 'api/v1/static/'
+    MEDIA_URL = 'api/v1/media/'
+
     STATICFILES_DIRS = [
         BASE_DIR / "static",
     ]

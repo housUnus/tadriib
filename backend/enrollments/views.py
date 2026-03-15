@@ -4,11 +4,16 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from courses.models import Course, Content
+from courses.models import Course, Content, Quiz, Content
+from enrollments.constants import QuizStatus
 from .models import Enrollment, EnrollmentProgress, LectureProgress, QuizSubmission, QuestionSubmission, Question
 from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, EnrollmentProgressSerializer, QuizSubmissionSerializer
 from courses.serializers import ContentSerializer
 from core.mixins import ListQueryMixin, StandardResultsSetPagination, PublicViewsMixin
+from datetime import timedelta
+from django.utils.timezone import now
+from pydash import get
+from typing import cast
 
 class EnrollmentViewSet(ListQueryMixin, PublicViewsMixin, ModelViewSet):
     queryset = Enrollment.objects.select_related("course", "progress").all()
@@ -166,7 +171,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     def start(self, request):
         lecture_id = request.data["lecture_id"]
 
-        progress = get_object_or_404(
+        progress:"LectureProgress" = get_object_or_404(
             LectureProgress,
             lecture__public_id=lecture_id,
             course_progress__enrollment__user=request.user
@@ -177,6 +182,15 @@ class QuizSubmissionViewSet(ModelViewSet):
             last_activity_at=timezone.now(),
             user = request.user,
         )
+        
+        lecture:"Content" = progress.lecture
+        quiz:"Quiz" = get(lecture, 'quiz')
+        
+        if quiz.time_limit_minutes:
+            submission.expires_at = now() + timedelta(minutes=quiz.time_limit_minutes)
+        else:
+            submission.expires_at = None
+        submission.save()
 
         serializer = self.get_serializer(submission)
 
@@ -185,7 +199,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     @action(detail=True, methods=["put"])
     def answer(self, request, pk=None):
 
-        submission = self.get_object()
+        submission = cast(QuizSubmission, self.get_object())
 
         question_id = request.data["question_id"]
         answer = request.data["answer"]
@@ -206,7 +220,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     @action(detail=True, methods=["put"])
     def flag(self, request, pk=None):
 
-        submission = self.get_object()
+        submission = cast(QuizSubmission, self.get_object())
 
         question_id = request.data["question_id"]
         flagged = request.data["flagged"]
@@ -222,7 +236,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     @action(detail=True, methods=["put"])
     def navigate(self, request, pk=None):
 
-        submission = self.get_object()
+        submission = cast(QuizSubmission, self.get_object())
 
         question_id = request.data["question_id"]
         
@@ -240,7 +254,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     @action(detail=True, methods=["post"])
     def heartbeat(self, request, pk=None):
 
-        submission = self.get_object()
+        submission = cast(QuizSubmission, self.get_object())
 
         delta = request.data.get("time_spent_delta", 0)
 
@@ -254,7 +268,7 @@ class QuizSubmissionViewSet(ModelViewSet):
     @action(detail=True, methods=["post"])
     def submit(self, request, pk=None):
 
-        submission = self.get_object()
+        submission = cast(QuizSubmission, self.get_object())
 
         submission.status = QuizStatus.SUBMITTED
         submission.submitted_at = timezone.now()
@@ -262,3 +276,47 @@ class QuizSubmissionViewSet(ModelViewSet):
         submission.save()
 
         return Response({"status": "submitted"})
+    
+    @action(detail=True, methods=["post"])
+    def pause(self, request, pk=None):
+        submission = cast(QuizSubmission, self.get_object())
+        quiz:Quiz = submission.progress.lecture.quiz
+
+        if not quiz.can_pause:
+            return Response({"error": "This quiz cannot be paused"}, status=400)
+
+        if submission.status != QuizStatus.IN_PROGRESS:
+            return Response({"error": "Only in-progress quizzes can be paused"}, status=400)
+
+        submission.status = QuizStatus.IS_PAUSED
+        
+        remaining = (submission.expires_at - now()).total_seconds()
+
+        submission.remaining_seconds = max(0, int(remaining))
+        submission.paused_at = now()
+        submission.save()
+
+        return Response({"status": "paused"})
+    
+    @action(detail=True, methods=["post"])
+    def resume(self, request, pk=None):
+        submission = cast(QuizSubmission, self.get_object())
+        quiz:Quiz = submission.progress.lecture.quiz
+
+        if not quiz.can_pause:
+            return Response({"error": "This quiz cannot be resumed"}, status=400)
+
+        if submission.status != QuizStatus.IS_PAUSED:
+            return Response({"error": "Only paused quizzes can be resumed"}, status=400)
+
+        submission.status = QuizStatus.IN_PROGRESS
+        
+        if submission.remaining_seconds:
+            submission.expires_at = now() + timedelta(seconds=submission.remaining_seconds)
+        else:
+            submission.expires_at = None
+
+        submission.paused_at = None
+        submission.save()
+
+        return Response({"status": "resumed"})

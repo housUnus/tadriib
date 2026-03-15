@@ -23,8 +23,8 @@ urlpatterns = [
 ] 
 
 if settings.DEBUG:
-    urlpatterns += static(f'api/v1{settings.MEDIA_URL}', document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(f'api/v1{settings.STATIC_URL}', document_root=settings.STATIC_ROOT)
+    urlpatterns += static(f'{settings.MEDIA_URL}', document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(f'{settings.STATIC_URL}', document_root=settings.STATIC_ROOT)
 
 
 
