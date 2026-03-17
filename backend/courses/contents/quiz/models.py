@@ -52,7 +52,6 @@ class Question(models.Model):
     points = models.PositiveIntegerField(default=1)
     order = models.PositiveIntegerField()
     
-    
     def get_answer_field(self):
         if self.answer_type == AnswerType.TRUE_FALSE:
             return "boolean_answer"
@@ -60,6 +59,8 @@ class Question(models.Model):
             return "uploaded_file"
         else:
             return "text_answer"
+        
+    
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
@@ -113,7 +114,7 @@ class TrueFalseAnswer(models.Model):
         on_delete=models.CASCADE,
         related_name="true_false"
     )
-    correct = models.BooleanField()
+    is_correct = models.BooleanField()
     
     class Meta:
         verbose_name = _("True/False Answer")

@@ -183,7 +183,6 @@ class QuizSubmissionViewSet(ModelViewSet):
 
         submission = QuizSubmission.objects.create(
             progress=progress,
-            last_activity_at=timezone.now(),
             user = request.user,
         )
         
@@ -192,8 +191,10 @@ class QuizSubmissionViewSet(ModelViewSet):
         
         if quiz.time_limit_minutes:
             submission.expires_at = now() + timedelta(minutes=quiz.time_limit_minutes)
+            submission.remaining_seconds = quiz.time_limit_minutes * 60
         else:
             submission.expires_at = None
+            submission.remaining_seconds = None
         submission.save()
 
         serializer = self.get_serializer(submission)
@@ -252,20 +253,6 @@ class QuizSubmissionViewSet(ModelViewSet):
         
         submission.current_question_id = question_id
         submission.save(update_fields=["current_question"])
-
-        return Response({"status": "ok"})
-        
-    @action(detail=True, methods=["post"])
-    def heartbeat(self, request, pk=None):
-
-        submission = cast(QuizSubmission, self.get_object())
-
-        delta = request.data.get("time_spent_delta", 0)
-
-        submission.time_spent_seconds += int(delta)
-        submission.last_activity_at = timezone.now()
-
-        submission.save(update_fields=["time_spent_seconds", "last_activity_at"])
 
         return Response({"status": "ok"})
         

@@ -58,6 +58,7 @@ class EnrollmentProgress(models.Model):
         self.save()
 
 class LectureProgress(models.Model):
+    quiz_submissions: models.Manager["QuizSubmission"]
     course_progress = models.ForeignKey(EnrollmentProgress, on_delete=models.CASCADE, related_name="lectures")
     lecture = models.ForeignKey("courses.Content", on_delete=models.CASCADE)
 
@@ -65,6 +66,10 @@ class LectureProgress(models.Model):
     last_accessed_at = models.DateTimeField(auto_now=True)
     last_position_seconds = models.PositiveIntegerField(default=0)
     completed_at = models.DateTimeField(null=True, blank=True)
+    
+    @property
+    def active_quiz_submission(self):
+        return self.quiz_submissions.filter(status__in=[QuizStatus.IN_PROGRESS, QuizStatus.IS_PAUSED]).first()
     
 class Notes(models.Model):
     content_progress = models.ForeignKey(LectureProgress, on_delete=models.CASCADE, related_name="notes")
@@ -107,11 +112,16 @@ class QuizSubmission(models.Model):
         on_delete=models.SET_NULL
     )
 
-    # timer tracking
-    time_spent_seconds = models.IntegerField(default=0)
-    last_activity_at = models.DateTimeField(null=True, blank=True)
-
     score = models.FloatField(null=True, blank=True)
+    
+    @property
+    def computed_remaining(self):
+        if self.status == QuizStatus.IN_PROGRESS and self.expires_at:
+            remaining = (self.expires_at - timezone.now()).total_seconds()
+            return max(0, int(remaining))
+        elif self.status == QuizStatus.IS_PAUSED and self.remaining_seconds is not None:
+            return self.remaining_seconds
+        return None
 
     class Meta:
         ordering = ["-started_at"]

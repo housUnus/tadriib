@@ -53,10 +53,6 @@ export function QuestionDisplay({
   onSaveAndNext,
 }: QuestionDisplayProps) {
 
-  useEffect(() => {
-    console.log('rerendring.....')
-  }, [])
-
 
   const [value, setValue] = useState((selectedAnswer as string) || "")
   console.log("🚀 ~ QuestionDisplay ~ selectedAnswer:", selectedAnswer)
@@ -104,7 +100,7 @@ export function QuestionDisplay({
                   onSelectAnswer(updated)
 
                 } else {
-                  onSelectAnswer(option.id)
+                  onSelectAnswer(option.label)
                 }
               }
 
@@ -278,7 +274,7 @@ export function QuestionDisplay({
       </div>
 
       <Button onClick={onSaveAndNext}>
-        Save and Next
+        Next
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
 

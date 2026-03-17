@@ -9,9 +9,6 @@ export type CourseProgress = {
     total_lectures: number
 }
 
-export type QuizSubmission = {
-    id: number
-}
 
 export type LectureProgress = {
     completed_at: string | null
@@ -20,7 +17,7 @@ export type LectureProgress = {
     last_accessed_at: string | null
     last_position_seconds: number
     lecture: string
-    active_quiz_submission?: QuizSubmission
+    active_quiz_submission?: number | null
 }
 
 export type Content = {
@@ -31,6 +28,9 @@ export type Content = {
     type: ContentType
     content?: any
     progress: LectureProgress
+    show_correct_answers?: boolean
+    can_pause?: boolean
+    can_retake?: boolean
     invalidate: () => void
 }
 

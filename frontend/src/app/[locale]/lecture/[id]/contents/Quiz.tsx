@@ -70,7 +70,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     }
   }, [isMobile])
 
-  if(!content.progress.active_quiz_submission?.id) {
+  if(!content.progress.active_quiz_submission) {
     return (
       <QuizStart
         content={content}
@@ -97,8 +97,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
   return (
     <div className="flex h-full flex-col bg-background">
       <QuizHeader
-        testName={content.title}
-        sectionName="Reasoning"
+        content={content}
         stats={stats}
         onExit={() => router.push("/")}
         onSubmit={submitQuiz}

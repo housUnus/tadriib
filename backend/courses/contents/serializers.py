@@ -19,7 +19,15 @@ class QuizSerializer(serializers.ModelSerializer):
     total_questions = serializers.IntegerField(source="segments__questions__count", read_only=True)
     class Meta:
         model = Quiz
-        fields = ["id", "description", "time_limit_minutes", "duration", "segments", "total_questions"]
+        fields = ["id", 
+                  "description", 
+                  "time_limit_minutes", 
+                  "duration", "segments", 
+                  "total_questions",
+                  "can_pause",
+                  "can_retake",
+                  "show_correct_answers",
+                  ]
         
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:

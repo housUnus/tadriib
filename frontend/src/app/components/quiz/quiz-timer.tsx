@@ -4,32 +4,90 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Pause, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { intervalToDuration } from "date-fns"
 
 interface QuizTimerProps {
-  initialSeconds?: number
+  remainingSeconds?: number
   compact?: boolean
+  isPaused?: boolean
+  allowPause?: boolean
+  onPause?: () => Promise<void>
+  onResume?: () => Promise<void>
 }
 
-export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerProps) {
-  const [seconds, setSeconds] = useState(initialSeconds)
-  const [isPaused, setIsPaused] = useState(false)
+export function QuizTimer({
+  remainingSeconds = 10800,
+  isPaused: initialPaused = false,
+  allowPause = false,
+  compact = true,
+  onPause,
+  onResume,
+}: QuizTimerProps) {
+  const [seconds, setSeconds] = useState(remainingSeconds)
+  const [isPaused, setIsPaused] = useState(initialPaused)
+  const [loading, setLoading] = useState(false)
 
+  /* -------------------------
+     Sync with backend
+  -------------------------- */
+  useEffect(() => {
+    setSeconds(remainingSeconds)
+  }, [remainingSeconds])
+
+  useEffect(() => {
+    setIsPaused(initialPaused)
+  }, [initialPaused])
+
+  /* -------------------------
+     Timer
+  -------------------------- */
   useEffect(() => {
     if (isPaused) return
 
     const interval = setInterval(() => {
       setSeconds((prev) => Math.max(0, prev - 1))
     }, 1000)
+
     return () => clearInterval(interval)
   }, [isPaused])
 
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = seconds % 60
+  /* -------------------------
+     Pause / Resume
+  -------------------------- */
+  const togglePause = async () => {
+    if (!allowPause || loading) return
 
-  const pad = (n: number) => n.toString().padStart(2, "0")
+    setLoading(true)
 
-  const togglePause = () => setIsPaused((prev) => !prev)
+    try {
+      if (isPaused) {
+        setIsPaused(false)
+        await onResume?.()
+      } else {
+        setIsPaused(true)
+        await onPause?.()
+      }
+    } catch {
+      setIsPaused((prev) => !prev)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  /* -------------------------
+     Format with date-fns
+  -------------------------- */
+  const duration = intervalToDuration({
+    start: 0,
+    end: seconds * 1000,
+  })
+
+
+  const pad = (n?: number) => String(n ?? 0).padStart(2, "0")
+
+  const hh = pad(duration.hours)
+  const mm = pad(duration.minutes)
+  const ss = pad(duration.seconds)
 
   if (compact) {
     return (
@@ -40,13 +98,13 @@ export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerP
         )}
       >
         <div className={cn("flex items-center gap-1 font-mono", isPaused && "animate-pulse")}>
-          <span className="text-lg font-semibold text-foreground">{pad(hours)}</span>
+          <span className="text-lg font-semibold text-foreground">{hh}</span>
           <span className="text-muted-foreground">:</span>
-          <span className="text-lg font-semibold text-foreground">{pad(minutes)}</span>
+          <span className="text-lg font-semibold text-foreground">{mm}</span>
           <span className="text-muted-foreground">:</span>
-          <span className="text-lg font-semibold text-foreground">{pad(secs)}</span>
+          <span className="text-lg font-semibold text-foreground">{ss}</span>
         </div>
-        <Button
+        {allowPause && <Button
           variant="ghost"
           size="icon"
           className={cn("h-7 w-7 transition-colors", isPaused && "bg-amber-500/10 hover:bg-amber-500/20")}
@@ -57,7 +115,7 @@ export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerP
           ) : (
             <Pause className="h-3.5 w-3.5 text-muted-foreground" />
           )}
-        </Button>
+        </Button>}
         {isPaused && (
           <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400 hidden md:block">
             Paused
@@ -76,11 +134,11 @@ export function QuizTimer({ initialSeconds = 10800, compact = true }: QuizTimerP
         )}
       >
         <div className={cn("flex items-baseline justify-center gap-1 font-mono", isPaused && "animate-pulse")}>
-          <span className="text-3xl font-bold text-foreground">{pad(hours)}</span>
+          <span className="text-3xl font-bold text-foreground">{hh}</span>
           <span className="text-xl text-muted-foreground">:</span>
-          <span className="text-3xl font-bold text-foreground">{pad(minutes)}</span>
+          <span className="text-3xl font-bold text-foreground">{mm}</span>
           <span className="text-xl text-muted-foreground">:</span>
-          <span className="text-3xl font-bold text-foreground">{pad(secs)}</span>
+          <span className="text-3xl font-bold text-foreground">{ss}</span>
         </div>
         <div className="mt-1 flex justify-center gap-6 text-xs text-muted-foreground">
           <span>Hrs</span>

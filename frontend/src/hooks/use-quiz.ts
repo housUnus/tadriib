@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useCallback, useMemo, useEffect } from "react"
-import { Quiz, type QuizState } from "@/lib/data/quiz-data"
+import { Quiz, QuizStats, type QuizState } from "@/lib/data/quiz-data"
 import { isNil } from "lodash"
 import { useRouter } from "next/navigation"
-import { useQueryClient } from "@tanstack/react-query"
 
 
 export function isAnswered(value: any) {
@@ -17,19 +16,9 @@ export function isAnswered(value: any) {
 
 export function useQuiz(quiz: Quiz, content: any, client: any) {
 
-  const submissionId = content?.progress?.active_quiz_submission?.id || null
+  const submissionId = content?.progress?.active_quiz_submission || null
 
   const router = useRouter()
-  useEffect(() => {
-    if (!submissionId) return
-    const interval = setInterval(() => {
-      client.post(`/quiz-submissions/${submissionId}/heartbeat/`, {
-        delta: 30,
-      })
-    }, 30000)
-
-    return () => clearInterval(interval)
-  }, [])
 
   const questions = useMemo(() => {
     return quiz.segments
@@ -45,6 +34,7 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
     marked: new Set<number>(),
     flagged: new Set<number>(),
     visited: new Set<number>([questions[0]?.id]),
+    status: "not_started",
   })
 
   const [state, setState] = useState<QuizState>(createInitialState)
@@ -59,6 +49,11 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
       marked: new Set(),
       flagged: new Set(data.flagged ?? []),
       visited: new Set(data.visited ?? []),
+      computed_remaining: data.computed_remaining ?? 0,
+      status: data.status,
+      started_at: data.started_at,
+      paused_at: data.paused_at,
+      expires_at: data.expires_at,
     })
   }, [submissionId])
 
@@ -177,6 +172,8 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
       notAnswered: questions.length - Object.keys(state.answers).length,
       marked: state.marked.size,
       flagged: state.flagged.size,
+      is_paused: state.status === "is_paused",
+      computed_remaining: state.computed_remaining,
     }),
     [state, questions]
   )

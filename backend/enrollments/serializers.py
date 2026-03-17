@@ -7,6 +7,11 @@ from core.serializers import PublicSerializerMixin
 from .progress.models import QuizSubmission, QuestionSubmission
 from django.db.models import QuerySet
 from enrollments.constants import QuizStatus
+from typing import TYPE_CHECKING
+from courses.constants import ContentType
+
+if TYPE_CHECKING:
+    from courses.models import Content
 
 class EnrollmentProgressSerializer(serializers.ModelSerializer):
     active_lecture = serializers.UUIDField(
@@ -67,10 +72,13 @@ class EnrollmentDetailSerializer(PublicSerializerMixin, serializers.ModelSeriali
 class LectureProgressSerializer(serializers.ModelSerializer):
     active_quiz_submission = serializers.SerializerMethodField()
     
-    def get_active_quiz_submission(self, obj):
-        active_submission = obj.quiz_submissions.filter(status=QuizStatus.IN_PROGRESS).first()
+    def get_active_quiz_submission(self, obj:"LectureProgress"):
+        lecture:"Content" = obj.lecture
+        if lecture.type != ContentType.QUIZ:
+            return None
+        active_submission = obj.active_quiz_submission
         if active_submission:
-            return QuizSubmissionSerializer(active_submission).data
+            return active_submission.pk
         return None
     class Meta:
         model = LectureProgress
@@ -94,17 +102,16 @@ class QuizSubmissionSerializer(serializers.ModelSerializer):
             "id",
             "status",
             "current_question",
-            "time_spent_seconds",
             "answers",
             "flagged",
             "visited",
             "status",
             "started_at",
             "expires_at",
-            "remaining_seconds",
             "paused_at",
             "submitted_at",
             "score",
+            "computed_remaining",
         ]
     
     def get_visited(self, obj):
