@@ -95,6 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       );
     },
     jwt: async ({ user, token, account, trigger }) => {
+      console.log("🚀 ~ trigger:", trigger)
       if (trigger === "update") {
         const new_token = await refreshAccessToken(token);
         return new_token;
@@ -113,7 +114,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 
       // Token is still valid
-      console.log("🚀 ~ token:", token)
       if (token.expiry.access - 60000 > Date.now()) {
         return token;
       }
@@ -123,18 +123,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const new_token = await refreshAccessToken(token);
         return new_token;
       }
-      return token
       // Token is not valid && refresh token is not valid
       return { ...token, error: "RefreshTokenExpired" };
     },
     session: async ({ session, token }) => {
-      console.log("🚀 ~ token 1111111:", token)
-      console.log("🚀 ~ session:", session)
       if (token) {
         session.access_token = token.access_token;
         session.refresh_token = token.refresh_token;
         session.user = token.user;
         session.error = token.error;
+        session.expiry = token.expiry;
       }
       // session.refresh_token = token.refresh_token;
       // session.expiry = token.expiry;

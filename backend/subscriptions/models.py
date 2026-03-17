@@ -8,6 +8,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from courses.models import Course
+from enrollments.models import EnrollmentProgress
 from .constants import OrderStatus, PlanStatus, SubscriptionStatus
 from core.models import BaseModel
 from enrollments.models import Enrollment
@@ -275,12 +276,13 @@ class OrderItem(models.Model):
             if __.get(self, 'enrollment'):
                 return 
             expires_at = timezone.now() + timedelta(days=self.course.access_duration_days) if self.course.access_duration_days else None
-            Enrollment.objects.create(
+            enrollment = Enrollment.objects.create(
                 user=self.order.user,
                 course=self.course,
                 order_item=self,
                 expires_at=expires_at,
             )
+            EnrollmentProgress.objects.create(enrollment=enrollment)
             
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

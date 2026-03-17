@@ -41,9 +41,13 @@ class EnrollmentViewSet(ListQueryMixin, PublicViewsMixin, ModelViewSet):
         
     @action(detail=True, methods=["get"], url_path=r"content/(?P<content_id>[0-9a-f-]+)")
     def load_content(self, request, pk=None, content_id=None, *args, **kwargs):
-        enrollment:"Enrollment" = self.get_object()
+        enrollment = cast(Enrollment, self.get_object())
         course:"Course" = enrollment.course
         content = Content.objects.get(public_id=content_id, section__course=course)
+        LectureProgress.objects.get_or_create(
+            course_progress=enrollment.progress,
+            lecture=content
+        )
         data = ContentSerializer(content, context=self.get_serializer_context()).data
         return Response(data)
         

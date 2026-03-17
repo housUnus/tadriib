@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { UpdateSession, useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 import { JwtSession } from "../../lib/schemas/auth";
 
 /* -------------------------
@@ -26,8 +26,36 @@ type RequestArgs<TPayload> = {
    Hook
 -------------------------- */
 
+
+
+
 export const useClientFetch = () => {
-  const { data: session } = useSession() as { data: JwtSession | null };
+
+  const { data: session, update } = useSession() as { data: JwtSession | null, update: UpdateSession };
+
+  const checkTokenValidity = async () => {
+    const session = sessionRef.current
+
+    if (!session) return
+
+    const accessExpired = session.expiry.access - 60000 <= Date.now()
+    const refreshExpired = session.expiry.refresh - 60000 <= Date.now()
+
+    if (refreshExpired) {
+      window.location.href = "/login"
+      return
+    }
+
+    if (accessExpired) {
+      await update({ refresh: true })
+    }
+  }
+
+  const sessionRef = useRef(session)
+
+  useEffect(() => {
+    sessionRef.current = session
+  }, [session])
 
   const [isPending, setIsPending] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,19 +64,23 @@ export const useClientFetch = () => {
     url: string,
     method: HttpMethod = "GET",
     payload?: TPayload,
-    headers: HeadersInit = {}
+    headers: HeadersInit = {},
+    retry = true
   ): Promise<FetchResult<TResponse>> => {
-    setIsPending(true);
-    setError(null);
+    setIsPending(true)
+    setError(null)
 
     try {
+      const isFormData = payload instanceof FormData
 
-      const isFormData = payload instanceof FormData;
+      await checkTokenValidity()
 
       const options: RequestInit = {
         method,
         headers: {
-          ...(session && session.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          ...(sessionRef.current?.access_token
+            ? { Authorization: `Bearer ${sessionRef.current.access_token}` }
+            : {}),
           ...(isFormData ? {} : { "Content-Type": "application/json" }),
           ...headers,
         },
@@ -57,26 +89,43 @@ export const useClientFetch = () => {
             ? payload
             : JSON.stringify(payload)
           : undefined,
-      };
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}${url}`, options);
-
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || response.statusText);
       }
 
-      const data = (await response.json()) as TResponse;
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}${url}`,
+        options
+      )
 
-      return { data, error: null };
+      /* ---------- TOKEN EXPIRED ---------- */
+
+      if (response.status === 401 && retry) {
+        console.log("🚀 ~ updating")
+        await update({ refresh: true }) // triggers NextAuth refresh token flow
+
+        return request<TResponse, TPayload>(
+          url,
+          method,
+          payload,
+          headers,
+          false // avoid infinite loop
+        )
+      }
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(message || response.statusText)
+      }
+
+      const data = (await response.json()) as TResponse
+
+      return { data, error: null }
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Unknown error";
+      const message = err instanceof Error ? err.message : "Unknown error"
 
-      setError(message);
-      return { data: null, error: message };
+      setError(message)
+      return { data: null, error: message }
     } finally {
-      setIsPending(false);
+      setIsPending(false)
     }
   };
 

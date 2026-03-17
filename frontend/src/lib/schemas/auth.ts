@@ -34,7 +34,7 @@ export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export interface AppJWT extends JWT {
   access_token?: string
-  expiry?: {
+  expiry: {
     access: number
     refresh: number
   },

@@ -98,6 +98,13 @@ class QuizSubmissionSerializer(serializers.ModelSerializer):
             "answers",
             "flagged",
             "visited",
+            "status",
+            "started_at",
+            "expires_at",
+            "remaining_seconds",
+            "paused_at",
+            "submitted_at",
+            "score",
         ]
     
     def get_visited(self, obj):
