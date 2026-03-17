@@ -72,5 +72,5 @@ export interface QuizStats {
   marked: number,
   flagged: number,
   is_paused: boolean,
-  computed_remaining: number,
+  computed_remaining?: number,
 }
