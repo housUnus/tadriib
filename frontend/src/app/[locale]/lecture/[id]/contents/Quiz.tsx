@@ -12,7 +12,7 @@ import { useQuiz } from "@/hooks/use-quiz"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Content } from "@/app/stores/enrollment"
-import { Quiz } from "@/lib/data/quiz-data"
+import { Quiz, QuizStats } from "@/lib/data/quiz-data"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import QuizStart from "@/app/components/quiz/quiz-start"
 
@@ -61,7 +61,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     }
   }, [rightSidebarOpen])
 
-  const stats = getStats()
+  const stats: QuizStats = getStats()
 
   useEffect(() => {
     if (isMobile) {
