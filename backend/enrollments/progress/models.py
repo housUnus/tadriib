@@ -1,9 +1,10 @@
 from django.db import models
-from courses.models import Question, Content
+from courses.models import Question, Content, TrueFalseAnswer, FillBlankAnswer, Quiz
 from django.utils import timezone
 import typing
 from enrollments.constants import QuizStatus
 from courses.constants import AnswerType
+from typing import cast
 
 if typing.TYPE_CHECKING:
     from enrollments.models import Enrollment
@@ -78,6 +79,8 @@ class Notes(models.Model):
 
 #----------------------- Quiz Submission -----------------------
 class QuizSubmission(models.Model):
+    answers: models.Manager["QuestionSubmission"]
+    
     user = models.ForeignKey(
         "users.User",
         on_delete=models.SET_NULL,
@@ -112,7 +115,7 @@ class QuizSubmission(models.Model):
         on_delete=models.SET_NULL
     )
 
-    score = models.FloatField(null=True, blank=True)
+    score = models.FloatField(default=0)
     
     @property
     def computed_remaining(self):
@@ -122,6 +125,50 @@ class QuizSubmission(models.Model):
         elif self.status == QuizStatus.IS_PAUSED and self.remaining_seconds is not None:
             return self.remaining_seconds
         return None
+    
+    @property
+    def score_percent(self):
+        return round(self.answers.filter(is_correct=True).count() / max(self.answers.count(), 1) * 100, 2)
+    
+    def calculate_score(self):
+        self.score = self.answers.filter(is_correct=True).count()
+        self.save(update_fields=["score"])
+        
+    @property
+    def total_answered(self):
+        answers: models.QuerySet[QuestionSubmission] = self.answers.all()
+        count = 0
+
+        for a in answers:
+            if a.get_answer_value(): count += 1
+        return count
+    
+    @property
+    def total_flagged(self):
+        answers: models.QuerySet[QuestionSubmission] = self.answers.filter(flagged=True)
+        return answers.count()
+    
+    @property
+    def total_visited(self):
+        answers: models.QuerySet[QuestionSubmission] = self.answers.filter(visited=True)
+        return answers.count()
+    
+    @property
+    def total_questions(self):
+        lecture:"Content" = self.progress.lecture
+        quiz:"Quiz" = lecture.quiz #type: ignore
+        return Question.objects.filter(segment__quiz=quiz).count()
+    
+    @property
+    def total_correct(self):
+        answers: models.QuerySet[QuestionSubmission] = self.answers.filter(is_correct=True)
+        return answers.count()
+    
+    @property
+    def total_duration(self):
+        lecture:"Content" = self.progress.lecture
+        return lecture.duration_minutes
+
 
     class Meta:
         ordering = ["-started_at"]
@@ -161,10 +208,26 @@ class QuestionSubmission(models.Model):
     )
 
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def set_validity(self):
+        question:"Question" = self.question
+        if question.answer_type == AnswerType.MULTIPLE_CHOICE:
+            correct_suggestions = list(question.suggestions.filter(is_correct=True).values_list("label", flat=True))
+            self.is_correct = correct_suggestions == self.text_answer
+        elif question.answer_type == AnswerType.TRUE_FALSE:
+            true_false_answer:"TrueFalseAnswer" = question.true_false#type: ignore
+            self.is_correct = self.boolean_answer == true_false_answer.is_correct
+        elif question.answer_type == AnswerType.FILL_BLANK:
+            fill_in_blank_answer:"FillBlankAnswer" = question.fill_blank#type: ignore
+            correct_text = cast(str, fill_in_blank_answer.correct_text)
+            if fill_in_blank_answer.case_sensitive:
+                self.is_correct = correct_text == self.text_answer
+            else:
+                self.is_correct = correct_text.lower() == (self.text_answer or '').lower()
+        else:
+            pass
+        self.save(update_fields=["is_correct"])
 
-    class Meta:
-        unique_together = ("submission", "question")
-        
     def get_answer_value(self):
         question:"Question" = self.question
         if question.answer_type == AnswerType.MULTIPLE_CHOICE:
@@ -179,3 +242,9 @@ class QuestionSubmission(models.Model):
             return self.uploaded_file.url if self.uploaded_file else None
         else:
             return None
+        
+
+    
+    class Meta:
+        unique_together = ("submission", "question")
+        

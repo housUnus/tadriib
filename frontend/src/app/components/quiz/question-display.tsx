@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { RotateCcw, ArrowRight, Flag } from "lucide-react"
+import { RotateCcw, ArrowRight, Flag, Lightbulb, Check, X } from "lucide-react"
 import type { Question, QuizSuggestion } from "@/lib/data/quiz-data"
 import { QuestionBlocks } from "./question-block"
 import { useEffect, useState } from "react"
@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icon } from "@iconify/react";
 import CardBox from "@/app/components/shared/CardBox";
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
 
 type AnswerValue =
   | number
@@ -26,7 +28,11 @@ interface QuestionDisplayProps {
   question: Question
   selectedAnswer?: AnswerValue
   isFlagged: boolean
+  isCorrect?: boolean
+  correctAnswer?: string | string[]
   fontSize: number
+  isReadOnly?: boolean
+  showAnswers?: boolean
   onSelectAnswer: (answer: AnswerValue) => void
   onClearAnswer: () => void
   onToggleFlag: () => void
@@ -46,16 +52,20 @@ export function QuestionDisplay({
   question,
   selectedAnswer,
   isFlagged,
+  isCorrect,
+  correctAnswer,
   fontSize,
   onSelectAnswer,
   onClearAnswer,
   onToggleFlag,
   onSaveAndNext,
+  isReadOnly = false,
+  showAnswers = true
 }: QuestionDisplayProps) {
-
+  console.log("🚀 ~ QuestionDisplay ~ correctAnswer:", correctAnswer)
 
   const [value, setValue] = useState((selectedAnswer as string) || "")
-  console.log("🚀 ~ QuestionDisplay ~ selectedAnswer:", selectedAnswer)
+  const [showHint, setShowHint] = useState(false)
 
   const [debouncedValue] = useDebounce(value, 500)
 
@@ -105,11 +115,13 @@ export function QuestionDisplay({
               }
 
               return (
-                <button
+                <Button
+                  // variant={'ghost'}
+                  disabled={isReadOnly}
                   key={option.id}
                   onClick={handleClick}
                   className={cn(
-                    "flex w-full items-center gap-4 rounded-lg border p-3 text-left transition-all",
+                    "disabled:opacity-100 disabled:pointer-events-none flex w-full justify-start items-center gap-4 rounded-lg border p-3 h-auto text-left transition-all",
                     isSelected
                       ? "border-primary bg-primary/5 text-foreground"
                       : "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50",
@@ -131,7 +143,7 @@ export function QuestionDisplay({
                     {option.text}
                   </span>
 
-                </button>
+                </Button>
               )
             })}
           </div>
@@ -142,15 +154,19 @@ export function QuestionDisplay({
         return (
           <div className="flex gap-4">
             <Button
+              disabled={isReadOnly}
               variant={selectedAnswer === true ? "default" : "outline"}
               onClick={() => onSelectAnswer(true)}
+              className="disabled:opacity-100 disabled:pointer-events-none"
             >
               True
             </Button>
 
             <Button
+              disabled={isReadOnly}
               variant={selectedAnswer === false ? "default" : "outline"}
               onClick={() => onSelectAnswer(false)}
+              className="disabled:opacity-100 disabled:pointer-events-none"
             >
               False
             </Button>
@@ -159,8 +175,8 @@ export function QuestionDisplay({
 
       case "fill_blank":
         return (
-          <input
-            type="text"
+          <Input
+            disabled={isReadOnly}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             className="w-full border rounded-md p-3"
@@ -170,8 +186,9 @@ export function QuestionDisplay({
 
       case "essay":
         return (
-          <textarea
+          <Textarea
             value={value}
+            disabled={isReadOnly}
             onChange={(e) => setValue(e.target.value)}
             className="w-full border rounded-md p-3 min-h-[150px]"
             placeholder="Write your answer..."
@@ -202,6 +219,7 @@ export function QuestionDisplay({
                     </p>
                   </div>
                   <Input type="file" id='dropzone-file' className='hidden'
+                    disabled={isReadOnly}
                     onChange={(e) =>
                       onSelectAnswer(e.target.files?.[0] || null)
                     } />
@@ -235,7 +253,7 @@ export function QuestionDisplay({
 
   return (<div className="flex flex-col gap-6">
 
-    <Card className="border shadow">
+    <Card className={`border shadow-md ${isReadOnly ? "bg-muted/50" : ""} ${isReadOnly && isCorrect !== undefined  &&(isCorrect ? "border-green-500" : "border-red-500")}`}>
       <CardContent className="p-2 mt-0">
         <QuestionBlocks
           blocks={question.blocks}
@@ -246,14 +264,91 @@ export function QuestionDisplay({
 
     {renderAnswerInput()}
 
+    {!isReadOnly && question.answer_hint && (
+      <div className="flex flex-col gap-2">
+        <Button
+          variant="ghostwarning"
+          size="sm"
+          className="w-fit"
+          onClick={() => setShowHint(!showHint)}
+        >
+          <Lightbulb className="mr-2 h-4 w-4" /> {showHint ? "Hide hint" : "Show hint"}
+        </Button>
+
+        {showHint && (
+          <div className="p-3 rounded-lg border bg-amber-50 text-amber-800 text-sm">
+            {question.answer_hint}
+          </div>
+        )}
+
+      </div>
+    )}
+
+    {isReadOnly && showAnswers && isCorrect !== undefined &&
+      <div className="">
+        <span className={`text-sm font-semibold ${isCorrect ? "text-green-500" : "text-red-500"}`} >
+          {isCorrect ?
+            <span className="flex items-center">
+              <Check className="mr-2 h-4 w-4" /> Correct
+            </span> :
+            <span className="flex items-center">
+              <X className="mr-2 h-4 w-4" /> Incorrect:
+              {correctAnswer !== null &&
+                correctAnswer !== undefined &&
+                correctAnswer !== "" && (
+                  <span className="text-sm text-muted-foreground ms-1">
+                    Correct answer:{" "}
+                    <span>
+                      {(Array.isArray(correctAnswer)
+                        ? correctAnswer
+                        : [correctAnswer]
+                      )
+                        .filter((ans) => ans !== null && ans !== "")
+                        .map((ans, i) => (
+                          <span
+                            key={i}
+                            className="px-1 py-0.5 font-extrabold"
+                          >
+                            {typeof ans === "boolean"
+                              ? ans
+                                ? "True"
+                                : "False"
+                              : ans}
+                          </span>
+                        ))} 
+                    </span>
+                  </span>
+                )}
+            </span>
+          }
+        </span>
+      </div>
+    }
+
+    {isReadOnly && showAnswers && question.answer_explanation && (
+      <div
+        className="mt-0 rounded-lg border border-green-200 bg-green-50 p-4 text-sm
+             dark:border-green-900/40 dark:bg-green-950/30"
+      >
+        <div className="flex items-center gap-2 mb-2 text-green-700 dark:text-green-400">
+          <span className="font-semibold">Answer explanation</span>
+        </div>
+
+        <div
+          className="leading-relaxed [&_p]:mb-2 [&_strong]:text-green-700 dark:[&_strong]:text-green-400"
+          dangerouslySetInnerHTML={{ __html: question.answer_explanation }}
+        />
+      </div>
+    )}
+
     <div className="flex items-center justify-between border-t pt-4">
 
-      <div className="flex gap-2">
-
+      {<div className="flex gap-2">
         <Button
           variant={isFlagged ? "error" : "outlineerror"}
           size="sm"
           onClick={onToggleFlag}
+          disabled={isReadOnly}
         >
           <Flag className="mr-2 h-4 w-4" />
           {isFlagged ? "Unflag" : "Flag"}
@@ -262,6 +357,7 @@ export function QuestionDisplay({
         <Button
           variant="outline"
           size="sm"
+          disabled={isReadOnly}
           onClick={() => {
             setValue("")
             onClearAnswer()
@@ -270,8 +366,7 @@ export function QuestionDisplay({
           <RotateCcw className="mr-2 h-4 w-4" />
           Clear
         </Button>
-
-      </div>
+      </div>}
 
       <Button onClick={onSaveAndNext}>
         Next

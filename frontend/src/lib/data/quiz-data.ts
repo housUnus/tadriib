@@ -1,4 +1,22 @@
 export type QuestionStatus = "not-visited" | "visited" | "answered" | "marked" | "flagged"
+export type SubmissionStatus = "in_progress" | "is_paused" | "completed" | "submitted" | "expired"
+
+export interface Submission {
+    id: string
+    status: SubmissionStatus
+    total_questions: number
+    total_visited: number
+    total_answered: number
+    total_flagged: number
+    total_duration: number // in minutes
+    started_at: string
+    expires_at: string
+    paused_at: string | null
+    submitted_at: string | null
+    score: number | null
+    score_percent: number | null
+    computed_remaining: number | null
+}
 
 export interface QuestionBlock {
   id: number
@@ -25,6 +43,9 @@ export interface Question {
   blocks?: QuestionBlock[]
   suggestions?: QuizSuggestion[]
   file_upload?: any
+  correct_answer?: string | string[]
+  answer_explanation?: string
+  answer_hint?: string
 }
 
 export interface QuizSegment {
@@ -37,7 +58,13 @@ export interface QuizSegment {
 export interface Quiz {
   id: number
   time_limit_minutes: number
+  description: string
+  duration:  number
+  can_retake?: boolean
+  can_pause?: boolean
+  show_correct_answers?: boolean
   segments: QuizSegment[]
+  max_attempts?: number
 }
 
 export interface Section {
@@ -56,11 +83,10 @@ export interface QuizState {
   marked: Set<number>
   flagged: Set<number>
   visited: Set<number>
+  correct_answers: Record<number, string | string[]>
+  answers_is_correct: Record<number, boolean>
   computed_remaining?: number
-  status: "not_started" | "in_progress" | "is_paused" | "submitted" | "in_review" | "completed"
-  started_at?: string
-  paused_at?: string
-  expires_at?: string
+  current_submission: Submission | null
 }
 
 export interface QuizStats {

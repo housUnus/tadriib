@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { QuizHeader } from "@/app/components/quiz/quiz-header"
 import { QuizSidebarLeft } from "@/app/components/quiz/quiz-sidebar-left"
@@ -14,22 +14,18 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { Content } from "@/app/stores/enrollment"
 import { Quiz, QuizStats } from "@/lib/data/quiz-data"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
-import QuizStart from "@/app/components/quiz/quiz-start"
-
 
 interface QuizContentProps {
   content: Content
-  onMarkComplete: () => void
-  onPrevious: () => void
-  onNext: () => void
-  hasPrevious: boolean
-  hasNext: boolean
+  selectedSubmission: string
+  onBack: () => void
 }
 
-export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPrevious, hasNext }: QuizContentProps) {
+export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContentProps) {
   const router = useRouter()
   const client = useClientFetch()
   const quiz = content.content as Quiz
+
   const {
     state,
     currentQuestion,
@@ -41,7 +37,9 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     getQuestionStatus,
     getStats,
     submitQuiz
-  } = useQuiz(quiz, content || null, client)
+  } = useQuiz(quiz, content.invalidate, content.progress.active_quiz_submission || selectedSubmission, client)
+
+  const isReadOnly: boolean = state.current_submission?.status !== 'in_progress' && state.current_submission?.status !== 'is_paused'
 
   const isMobile = useIsMobile()
 
@@ -70,20 +68,6 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     }
   }, [isMobile])
 
-  if(!content.progress.active_quiz_submission) {
-    return (
-      <QuizStart
-        content={content}
-        onStart={async () => {
-          await client.post(`/quiz-submissions/start/`, {
-            lecture_id: content.id,
-          })
-          router.refresh()
-          content.invalidate()
-        }}
-      />
-    )
-  }
 
   if (!currentQuestion) {
     return (
@@ -98,8 +82,11 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
     <div className="flex h-full flex-col bg-background">
       <QuizHeader
         content={content}
+        state={state}
         stats={stats}
-        onExit={() => router.push("/")}
+        isReadOnly={isReadOnly}
+        onExit={() => router.replace(`?submission=`)}
+        onBack={onBack}
         onSubmit={submitQuiz}
       />
 
@@ -120,6 +107,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
                       getStatus={getQuestionStatus}
                       onSelectQuestion={goToQuestion}
                       answers={state.answers}
+                      answers_is_correct={state.answers_is_correct}
                       marked={state.marked}
                       flagged={state.flagged}
                       visited={state.visited}
@@ -139,9 +127,12 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
                 <div className="mx-auto max-w-3xl p-6">
                   <QuestionDisplay
                     key={currentQuestion.id}
+                    isReadOnly={isReadOnly}
                     question={currentQuestion}
                     selectedAnswer={state.answers[currentQuestion.id]}
                     isFlagged={state.flagged.has(currentQuestion.id)}
+                    isCorrect = {state.answers_is_correct[currentQuestion.id]}
+                    correctAnswer={state.correct_answers[currentQuestion.id]}
                     fontSize={fontSize}
                     onSelectAnswer={(answer) => selectAnswer(currentQuestion.id, answer)}
                     onClearAnswer={() => clearAnswer(currentQuestion.id)}
@@ -176,9 +167,12 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <div className="p-4 min-w-0 w-full">
               <QuestionDisplay
+                isReadOnly={isReadOnly}
                 question={currentQuestion}
                 selectedAnswer={state.answers[currentQuestion.id]}
                 isFlagged={state.flagged.has(currentQuestion.id)}
+                isCorrect = {state.answers_is_correct[currentQuestion.id]}
+                correctAnswer={state.correct_answers[currentQuestion.id]}
                 fontSize={fontSize}
                 onSelectAnswer={(answer) => selectAnswer(currentQuestion.id, answer)}
                 onClearAnswer={() => clearAnswer(currentQuestion.id)}
@@ -202,6 +196,7 @@ export function QuizContent({ content, onMarkComplete, onPrevious, onNext, hasPr
                     setLeftSidebarOpen(false)
                   }}
                   answers={state.answers}
+                  answers_is_correct={state.answers_is_correct}
                   marked={state.marked}
                   flagged={state.flagged}
                   visited={state.visited}

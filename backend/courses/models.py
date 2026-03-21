@@ -176,12 +176,6 @@ class Section(BaseModel):
         return total if total else 0
 
 class Content(BaseModel):
-    video: models.Manager[Content]
-    article: models.Manager[Content]
-    attachment: models.Manager[Content]
-    assignment: models.Manager[Content]
-    quiz: models.Manager[Content]
-    
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="contents")
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=ContentType.choices)

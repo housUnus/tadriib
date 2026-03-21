@@ -36,7 +36,7 @@
     "**/*.jsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-, "src/components/common/Carousel/index.tsx", "src/components/common/Carousel/index.tsx", "src/components/common/forms/generic/InputField.jtsx"  ],
+, "src/components/common/Carousel/index.tsx", "src/components/common/Carousel/index.tsx", "src/components/common/forms/generic/InputField.jtsx", "src/app/[locale]/learn/[id]/lecture/[contentId]/contents/utils/VideoPlayer.tsx"  ],
   "exclude": [
     "node_modules"
   ]

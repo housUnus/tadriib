@@ -257,8 +257,19 @@ class QuizAdmin(ModelAdmin):
     ordering = ("id",)
     inlines = [SegmentInline]
 
+class QuestionAdminForm(forms.ModelForm):
+    answer_explanation = forms.CharField(
+        widget=TinyMCE(attrs={"cols": 80, "rows": 15}),
+        required=False,
+    )
+
+    class Meta:
+        model = Question
+        fields = "__all__"
+
 @admin.register(Question)
 class QuestionAdmin(ModelAdmin):
+    form = QuestionAdminForm
     save_as = True
     list_display = ("segment", "answer_type", "points", "order")
     ordering = ("segment", "order")

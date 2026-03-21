@@ -20,7 +20,7 @@ class SuggestionSerializer(serializers.ModelSerializer):
 class TrueFalseAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrueFalseAnswer
-        fields = ['id', 'correct']
+        fields = ['id', 'is_correct']
 
 
 class FillBlankAnswerSerializer(serializers.ModelSerializer):
@@ -47,13 +47,24 @@ class QuestionSerializer(serializers.ModelSerializer):
     fill_blank = FillBlankAnswerSerializer(read_only=True)
     essay = EssayAnswerSerializer(read_only=True)
     file_upload = FileUploadAnswerSerializer(read_only=True)
-    
+    correct_answer = serializers.SerializerMethodField()
+
+    def get_correct_answer(self, obj:"Question"):
+        segment = obj.segment
+        assert segment
+        quiz = segment.quiz
+        
+        if not quiz.show_correct_answers:
+            return None
+
+        return obj.get_correct_answer()
 
     class Meta:
         model = Question
         fields = [
             'id', 'answer_type', 'points', 'order', 'allow_multiple_answers', 
-            'blocks', 'suggestions', 'true_false', 'fill_blank', 'essay', 'file_upload'
+            'blocks', 'suggestions', 'true_false', 'fill_blank', 'essay', 'file_upload',
+            'answer_explanation', 'answer_hint', 'correct_answer',
         ]
 
 class SegmentSerializer(serializers.ModelSerializer):

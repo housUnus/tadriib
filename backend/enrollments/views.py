@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from courses.models import Course, Content, Quiz, Content
 from enrollments.constants import QuizStatus
 from .models import Enrollment, EnrollmentProgress, LectureProgress, QuizSubmission, QuestionSubmission, Question
-from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, EnrollmentProgressSerializer, QuizSubmissionSerializer
+from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, \
+    EnrollmentProgressSerializer, QuizSubmissionSerializer, QuizSubmissionListSerializer
 from courses.serializers import ContentSerializer
 from core.mixins import ListQueryMixin, StandardResultsSetPagination, PublicViewsMixin
 from datetime import timedelta
@@ -165,11 +166,23 @@ class QuizSubmissionViewSet(ModelViewSet):
     queryset = QuizSubmission.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = QuizSubmissionSerializer
+    pagination_class = None 
 
     def get_queryset(self):
-        return QuizSubmission.objects.filter(
+        progress_id = self.request.query_params.get("progress_id")#type: ignore
+        qs = QuizSubmission.objects.filter(
             progress__course_progress__enrollment__user=self.request.user
         )
+        if self.action == 'list':
+            qs = qs.filter(
+            progress_id=progress_id
+        )
+        return qs
+    
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return QuizSubmissionListSerializer
+        return super().get_serializer_class()
     
     @action(detail=False, methods=["post"])
     def start(self, request):
@@ -214,11 +227,14 @@ class QuizSubmissionViewSet(ModelViewSet):
             id=question_id,
         )
 
-        QuestionSubmission.objects.update_or_create(
+        q_submission, _ = QuestionSubmission.objects.update_or_create(
             submission=submission,
             question_id=question_id,
             defaults={question.get_answer_field(): answer}
         )
+        
+        q_submission.set_validity()
+        
 
         return Response({"status": "saved"})
     
@@ -262,6 +278,13 @@ class QuizSubmissionViewSet(ModelViewSet):
         submission = cast(QuizSubmission, self.get_object())
 
         submission.status = QuizStatus.SUBMITTED
+        
+        quiz:"Quiz" = submission.progress.lecture.quiz
+        if quiz and quiz.require_review:
+            submission.status = QuizStatus.IN_REVIEW
+        else:
+            submission.status = QuizStatus.COMPLETED
+            
         submission.submitted_at = timezone.now()
 
         submission.save()

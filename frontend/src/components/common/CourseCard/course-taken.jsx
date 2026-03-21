@@ -13,7 +13,7 @@ function CourseCard({ item }) {
       >
         <CardContent className="p-0 h-full flex flex-col relative">
           {/* Image */}
-          <Link href={`/lecture/${enrollment.id}`}>
+          <Link href={`/learn/${enrollment.id}/lecture`}>
             <div className="relative h-36 sm:h-43 bg-linear-to-br from-gray-100 to-gray-200 rounded-t-xl overflow-hidden">
               <img
                 src={

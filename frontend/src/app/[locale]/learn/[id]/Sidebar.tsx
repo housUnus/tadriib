@@ -3,16 +3,16 @@
 import type React from "react"
 
 import { useState, useMemo, useEffect } from "react"
-import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search } from "lucide-react"
+import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search, Paperclip } from "lucide-react"
 import { cn, formatMinutes } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Content, Section, useEnrollmentStore } from "@/app/stores/enrollment"
+import { useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 
 interface CourseSidebarProps {
-  activeContentId: string
-  onContentSelect: (content: Content) => void
   onToggleComplete: (contentId: string) => void
   isOpen: boolean
   onClose: () => void
@@ -23,20 +23,27 @@ const contentIcons = {
   quiz: HelpCircle,
   article: FileText,
   assignment: FileCode,
+  attachment: Paperclip,
 }
 
 export function CourseSidebar({
-  activeContentId,
-  onContentSelect,
   onToggleComplete,
   isOpen,
   onClose,
 }: CourseSidebarProps) {
-  const course = useEnrollmentStore((state) => state.course)
+  const {course, id, progress} = useEnrollmentStore((state) => state)
+  const router = useRouter()
+
+  const { contentId } = useParams()
+  const activeContentId = (contentId as string) || (progress?.active_lecture as string)
 
   const [expandedSections, setExpandedSections] = useState<string[]>(course.sections.map((s) => s.id)) // Start with all sections expanded
   const [searchQuery, setSearchQuery] = useState("")
   const isMobile = useIsMobile()
+
+  const onContentSelect = (content: Content) => {
+    router.push(`/learn/${id}/lecture/${content.id}`)
+  }
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) =>
@@ -223,7 +230,7 @@ function ContentItemButton({
   onToggleComplete,
   searchQuery = "",
 }: ContentItemButtonProps) {
-  const Icon = contentIcons[content.type]
+  const Icon: any = contentIcons[content.type]
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation()

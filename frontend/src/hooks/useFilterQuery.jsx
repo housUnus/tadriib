@@ -66,7 +66,6 @@ export function useFilterQuery({ key, fetcher, defaultValues = {}, schemas = {} 
   const { fetch, ...query } = useQuery({
     queryKey: [key, params],
     queryFn: () => fetcher(params),
-    keepPreviousData: true,
   });
 
   return {

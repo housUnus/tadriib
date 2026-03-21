@@ -1,7 +1,7 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import { ChevronRight, Clock } from "lucide-react"
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react"
 import { ReviewSubmitDialog } from "./review-submit-dialog"
 import { ExitDialog } from "./exit-dialog"
 import { QuizTimer } from "./quiz-timer"
@@ -9,29 +9,96 @@ import { CalculatorDialog } from "./calculator-dialog"
 import { Content } from "@/app/stores/enrollment"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { useEffect } from "react"
-import { QuizStats } from "@/lib/data/quiz-data"
+import { QuizState, QuizStats } from "@/lib/data/quiz-data"
+import { Button } from "@/components/ui/button"
 
 interface QuizHeaderProps {
   content: Content
+  state: QuizState
   stats: QuizStats
+  isReadOnly: boolean
   onExit?: () => void
   onSubmit?: () => void
+  onBack?: () => void
+
 }
 
-export function QuizHeader({ content, stats, onExit, onSubmit }: QuizHeaderProps) {
+export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit, onBack }: QuizHeaderProps) {
   console.log("🚀 ~ QuizHeader ~ stats:", stats)
   const progress = (stats.answered / stats.total) * 100
-  const active_quiz_submission = content.progress.active_quiz_submission
   const client = useClientFetch()
 
   useEffect(() => {
-    if(stats?.computed_remaining !== undefined && stats?.computed_remaining <= 0) {
+    if (isReadOnly) return
+    if (stats?.computed_remaining !== undefined && stats?.computed_remaining <= 0) {
       onSubmit?.()
     }
   }, [])
 
-  if (!active_quiz_submission) 
-    return null
+  const current_submission = state?.current_submission
+  console.log("🚀 ~ QuizHeader ~ current_submission:", current_submission)
+
+  if(!current_submission) return null
+
+  if (isReadOnly)
+    return (
+      (
+        <header className="border-b bg-card">
+          <div className="grid grid-cols-2 md:grid-cols-3 items-center px-4 py-2">
+
+            {/* Back */}
+            <div>
+              <Button variant="ghost" onClick={onBack}>
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Back
+              </Button>
+            </div>
+
+            {/* Center Stats */}
+            <div className="flex justify-center">
+              <div className="flex items-center gap-3 rounded-lg border px-3 py-1.5 text-sm">
+
+                <div className="flex items-center gap-1">
+                  <span className="text-muted-foreground">
+                    {stats.answered}/{stats.total}
+                  </span>
+                  <span className="hidden sm:inline text-muted-foreground">
+                    answered
+                  </span>
+                </div>
+
+                {current_submission.score_percent !== undefined && (
+                  <div className="flex items-center gap-1 border-l pl-3">
+                    <span className="font-medium">
+                      {current_submission.score_percent}%
+                    </span>
+                    <span className="hidden sm:inline text-muted-foreground">
+                      score
+                    </span>
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+            {/* Right Dates */}
+            <div className="hidden md:flex justify-end text-xs text-muted-foreground">
+              <div className="flex flex-col items-end leading-tight">
+                <span>
+                  Started: {new Date(current_submission.started_at).toLocaleDateString()}
+                </span>
+                {current_submission.submitted_at && (
+                  <span>
+                    Completed: {new Date(current_submission.submitted_at).toLocaleDateString()}
+                  </span>
+                )}
+              </div>
+            </div>
+
+          </div>
+        </header>
+      )
+    )
 
   return (
     <header className="border-b bg-card">
@@ -55,11 +122,11 @@ export function QuizHeader({ content, stats, onExit, onSubmit }: QuizHeaderProps
               allowPause={content.content?.can_pause}
 
               onPause={async () => {
-                await client.post(`/quiz-submissions/${active_quiz_submission}/pause/`, {})
+                await client.post(`/quiz-submissions/${current_submission.id}/pause/`, {})
               }}
 
               onResume={async () => {
-                await client.post(`/quiz-submissions/${active_quiz_submission}/resume/`, {})
+                await client.post(`/quiz-submissions/${current_submission.id}/resume/`, {})
               }}
             />
           </div>

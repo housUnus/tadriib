@@ -2,7 +2,7 @@
 
 import { CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { VideoPlayer } from "../VideoPlayer"
+import { VideoPlayer } from "./utils/VideoPlayer"
 import { Content, useEnrollmentStore } from "@/app/stores/enrollment"
 import { useRef } from "react"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"

@@ -13,6 +13,7 @@ interface QuizSidebarLeftProps {
   getStatus: (id: number) => QuestionStatus
   onSelectQuestion: (id: number) => void
   answers: Record<number, string>
+  answers_is_correct: Record<number, boolean>
   marked: Set<number>
   flagged: Set<number>
   visited: Set<number>
@@ -25,6 +26,7 @@ export function QuizSidebarLeft({
   getStatus,
   onSelectQuestion,
   answers,
+  answers_is_correct,
   marked,
   flagged,
   visited,

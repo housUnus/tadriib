@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { CourseSidebar } from "./Sidebar"
-import { MainContent } from "./MainContent"
+import { CourseSidebar } from "../learn/[id]/Sidebar"
+import { MainContent } from "../learn/[id]/lecture/[contentId]/MainContent"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { Enrolment } from "@/lib/data/course-data"
-import {  Content, Section, useEnrollmentStore } from "@/app/stores/enrollment"
+import { Content, Section, useEnrollmentStore } from "@/app/stores/enrollment"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { useUpdateEffect } from "@/hooks/use-update-effect"
 
@@ -13,12 +13,16 @@ export default function LectureContent({ enrollment }: { enrollment: Enrolment }
     const client = useClientFetch()
     const [activeContentId, setActiveContentId] = useState<string>(enrollment.progress?.active_lecture || enrollment.course.sections[0].contents[0].id)
     const [sidebarOpen, setSidebarOpen] = useState(true)
-    const {setState, markLectureCompleted, course, setActiveLecture, progress} = useEnrollmentStore((state) => state)
+    const { setState, markLectureCompleted, course, setActiveLecture, progress } = useEnrollmentStore((state) => state)
     console.log("🚀 ~ LectureContent ~ progress:", progress)
 
     useEffect(() => {
         setState(enrollment)
     }, [])
+
+    useEffect(() => {
+        window.scrollTo({ top: 0 })
+    }, [progress?.active_lecture])
 
     useUpdateEffect(() => {
         setActiveLecture(client, activeContentId)
@@ -64,6 +68,7 @@ export default function LectureContent({ enrollment }: { enrollment: Enrolment }
         <div className="flex h-screen overflow-hidden relative">
             <main className="flex-1 overflow-hidden">
                 <MainContent
+                    key={activeContentId}
                     activeContent={activeContent}
                     onMarkComplete={handleMarkComplete}
                     onNavigate={handleNavigate}

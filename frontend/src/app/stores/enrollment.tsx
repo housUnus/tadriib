@@ -11,13 +11,14 @@ export type CourseProgress = {
 
 
 export type LectureProgress = {
+    id: string
     completed_at: string | null
     course_progress: number | null
     is_completed: boolean
     last_accessed_at: string | null
     last_position_seconds: number
     lecture: string
-    active_quiz_submission?: number | null
+    active_quiz_submission: string | null
 }
 
 export type Content = {

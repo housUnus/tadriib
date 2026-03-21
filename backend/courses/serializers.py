@@ -41,7 +41,7 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
     preview = serializers.SerializerMethodField()
     progress = serializers.SerializerMethodField()
     
-    def _get_content(self, obj:"Content"):
+    def _get_content(self, obj):
         if obj.type == ContentType.VIDEO and hasattr(obj, "video"):
             return VideoSerializer(obj.video, context=self.context).data
         elif obj.type == ContentType.QUIZ and hasattr(obj, "quiz"):

@@ -1,8 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { Customizer } from "../../(main)/layout/shared/customizer/Customizer";
 import { CustomizerContext } from "@/app/context/CustomizerContext";
-import { Activity } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Layout({

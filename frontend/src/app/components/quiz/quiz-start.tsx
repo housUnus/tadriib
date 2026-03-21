@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Clock, HelpCircle, AlertTriangle } from "lucide-react"
 import { Content } from "@/app/stores/enrollment"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { useQuery } from "@tanstack/react-query"
 
 interface QuizStartProps {
   content: Content
@@ -15,8 +17,17 @@ export default function QuizStart({
   content,
   onStart,
 }: QuizStartProps) {
+  console.log("🚀 ~ QuizStart ~ content:", content)
 
-  const router = useRouter()
+  const client = useClientFetch()
+
+  const { data: submissions } = useQuery({
+    queryKey: ["quiz-submissions", content.progress.id],
+    queryFn: () => client.get(`/quiz-submissions/?progress_id=${content.progress.id}`).then(res => res.data),
+    staleTime: 0,
+    refetchOnMount: "always", 
+  })
+  console.log("🚀 ~ QuizStart ~ submissions:", submissions)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

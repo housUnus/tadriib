@@ -2,8 +2,10 @@ from django.db import models
 from core.models import BaseModel
 from courses.constants import QuestionBlockType, AnswerType
 from django.utils.translation import gettext_lazy as _
+from tinymce.models import HTMLField
 
 class Quiz(BaseModel):
+    segments = models.Manager["Segment"]
     content = models.OneToOneField(
         "courses.Content",
         on_delete=models.CASCADE,
@@ -12,8 +14,12 @@ class Quiz(BaseModel):
     description = models.TextField(blank=True)
     time_limit_minutes = models.PositiveIntegerField(null=True, blank=True)
     show_correct_answers = models.BooleanField(default=False)
+    show_final_score = models.BooleanField(default=False)
+    max_attempts = models.PositiveIntegerField(null=True, blank=True)
+    
     can_pause = models.BooleanField(default=False)
     can_retake = models.BooleanField(default=False)
+    require_review = models.BooleanField(default=False)
 
     def __str__(self):
         return self.content.title
@@ -23,6 +29,8 @@ class Quiz(BaseModel):
         verbose_name_plural = _("Quizzes")
         
 class Segment(models.Model):
+    questions: models.Manager["Question"]
+    
     quiz = models.ForeignKey(
         Quiz,
         on_delete=models.CASCADE,
@@ -37,6 +45,8 @@ class Segment(models.Model):
 
 
 class Question(models.Model):
+    suggestions: models.Manager["Suggestion"]
+    
     segment = models.ForeignKey(
         Segment,
         on_delete=models.CASCADE,
@@ -52,6 +62,9 @@ class Question(models.Model):
     points = models.PositiveIntegerField(default=1)
     order = models.PositiveIntegerField()
     
+    answer_explanation = HTMLField(null=True, blank=True)
+    answer_hint = models.CharField(max_length=255, null=True, blank=True)
+    
     def get_answer_field(self):
         if self.answer_type == AnswerType.TRUE_FALSE:
             return "boolean_answer"
@@ -60,7 +73,27 @@ class Question(models.Model):
         else:
             return "text_answer"
         
-    
+    def get_correct_answer(self):
+        if self.answer_type == AnswerType.MULTIPLE_CHOICE:
+            return list(
+                self.suggestions.filter(is_correct=True)
+                .values_list("label", flat=True)
+            )
+
+        elif self.answer_type == AnswerType.TRUE_FALSE:
+            return self.true_false.is_correct #type: ignore
+
+        elif self.answer_type == AnswerType.FILL_BLANK:
+            return self.fill_blank.correct_text #type: ignore
+
+        elif self.answer_type == AnswerType.ESSAY:
+            return None  # subjective
+
+        elif self.answer_type == AnswerType.FILE_UPLOAD:
+            return None  # manual grading
+
+        return None
+        
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils import timezone
 from unfold.admin import ModelAdmin, TabularInline
 
-from .models import Enrollment
+from .models import Enrollment, QuizSubmission, QuestionSubmission
 
 
 @admin.register(Enrollment)
@@ -39,21 +39,13 @@ class EnrollmentAdmin(ModelAdmin):
 # QUIZ SUBMISSIONS
 # ======================================================
 
-# class QuestionSubmissionInline(TabularInline):
-#     model = QuestionSubmission
-#     extra = 0
-#     readonly_fields = (
-#         "question",
-#         "text_answer",
-#         "boolean_answer",
-#         "uploaded_file",
-#         "is_correct",
-#         "score",
-#     )
+class QuestionSubmissionInline(TabularInline):
+    model = QuestionSubmission
+    extra = 0
 
 
-# @admin.register(QuizSubmission)
-# class QuizSubmissionAdmin(ModelAdmin):
-#     list_display = ("user", "quiz", "status", "score", "submitted_at")
-#     list_filter = ("status",)
-#     inlines = [QuestionSubmissionInline]
+@admin.register(QuizSubmission)
+class QuizSubmissionAdmin(ModelAdmin):
+    list_display = ("user", "status", "score", "submitted_at")
+    list_filter = ("status",)
+    inlines = [QuestionSubmissionInline]

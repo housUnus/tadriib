@@ -27,6 +27,9 @@ class QuizSerializer(serializers.ModelSerializer):
                   "can_pause",
                   "can_retake",
                   "show_correct_answers",
+                  "show_final_score",
+                  "max_attempts",
+                  "require_review",
                   ]
         
 class AttachmentSerializer(serializers.ModelSerializer):

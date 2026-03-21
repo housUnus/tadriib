@@ -14,11 +14,10 @@ export function isAnswered(value: any) {
 
 
 
-export function useQuiz(quiz: Quiz, content: any, client: any) {
-
-  const submissionId = content?.progress?.active_quiz_submission || null
+export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string | null, client: any) {
 
   const router = useRouter()
+  
 
   const questions = useMemo(() => {
     return quiz.segments
@@ -33,11 +32,14 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
     answers: {},
     marked: new Set<number>(),
     flagged: new Set<number>(),
+    correct_answers: {},
+    answers_is_correct: {},
     visited: new Set<number>([questions[0]?.id]),
-    status: "not_started",
+    current_submission: null
   })
 
   const [state, setState] = useState<QuizState>(createInitialState)
+
 
   const loadSubmission = useCallback(async () => {
     if (!submissionId) return
@@ -49,11 +51,10 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
       marked: new Set(),
       flagged: new Set(data.flagged ?? []),
       visited: new Set(data.visited ?? []),
+      correct_answers: data.correct_answers ?? {},
+      answers_is_correct: data.answers_is_correct ?? {},
       computed_remaining: data.computed_remaining ?? 0,
-      status: data.status,
-      started_at: data.started_at,
-      paused_at: data.paused_at,
-      expires_at: data.expires_at,
+      current_submission: data,
     })
   }, [submissionId])
 
@@ -82,8 +83,10 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
 
     if (answer instanceof File) {
       formData.append("answer", answer)
-    } else {
+    } if (Array.isArray(answer)) {
       formData.append("answer", JSON.stringify(answer))
+    } else {
+      formData.append("answer", String(answer))
     }
 
     await client.put(`/quiz-submissions/${submissionId}/answer/`, formData)
@@ -172,7 +175,7 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
       notAnswered: questions.length - Object.keys(state.answers).length,
       marked: state.marked.size,
       flagged: state.flagged.size,
-      is_paused: state.status === "is_paused",
+      is_paused: state.current_submission?.status === "is_paused",
       computed_remaining: state.computed_remaining,
     }),
     [state, questions]
@@ -185,7 +188,7 @@ export function useQuiz(quiz: Quiz, content: any, client: any) {
   const submitQuiz = async () => {
     await client.post(`/quiz-submissions/${submissionId}/submit/`)
     router.refresh()
-    content.invalidate()
+    onSubmit()
   }
 
   return {

@@ -9,6 +9,7 @@ from django.db.models import QuerySet
 from enrollments.constants import QuizStatus
 from typing import TYPE_CHECKING
 from courses.constants import ContentType
+from courses.models import Question
 
 if TYPE_CHECKING:
     from courses.models import Content
@@ -83,6 +84,7 @@ class LectureProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model = LectureProgress
         fields = (
+            'id',
             'lecture', 
             'is_completed',
             'last_position_seconds',
@@ -91,11 +93,45 @@ class LectureProgressSerializer(serializers.ModelSerializer):
             'active_quiz_submission',
             )
         
-        
+
+class QuizSubmissionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizSubmission
+        fields = [
+            "id",
+            "status",
+            "current_question",
+            "total_questions",
+            "total_visited",
+            "total_answered",
+            "total_flagged",
+            "total_duration",
+            "score",
+            "score_percent",
+            "computed_remaining",
+            "started_at",
+            "expires_at",
+            "paused_at",
+            "submitted_at",
+        ]
+        read_only_fields = (
+            "total_questions",
+            "total_visited",
+            "total_answered",
+            "total_flagged",
+            "total_duration",
+            "score",
+            "score_percent",
+            "computed_remaining",
+        )
+
+   
 class QuizSubmissionSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
     flagged = serializers.SerializerMethodField()
     visited = serializers.SerializerMethodField()
+    correct_answers = serializers.SerializerMethodField()
+    answers_is_correct = serializers.SerializerMethodField()
     class Meta:
         model = QuizSubmission
         fields = [
@@ -105,12 +141,15 @@ class QuizSubmissionSerializer(serializers.ModelSerializer):
             "answers",
             "flagged",
             "visited",
+            "answers_is_correct",
+            "correct_answers",
             "status",
             "started_at",
             "expires_at",
             "paused_at",
             "submitted_at",
             "score",
+            "score_percent",
             "computed_remaining",
         ]
     
@@ -128,11 +167,37 @@ class QuizSubmissionSerializer(serializers.ModelSerializer):
         result = {}
 
         for a in answers:
-            result[str(a.question_id)] = a.get_answer_value()
+            result[a.question_id] = a.get_answer_value()
+
+        return result
+    
+    def get_answers_is_correct(self, obj):
+        quiz = obj.progress.lecture.quiz
+        if not quiz.show_correct_answers:
+            return None
+        answers: QuerySet[QuestionSubmission] = obj.answers.all()
+
+        result = {}
+
+        for a in answers:
+            result[a.question_id] = a.is_correct
+
+        return result
+    
+    def get_correct_answers(self, obj):
+        quiz = obj.progress.lecture.quiz
+        if not quiz.show_correct_answers:
+            return None
+        
+        result = {}
+        
+        questions:QuerySet[Question] = Question.objects.filter(segment__quiz=quiz)
+        for q in questions:
+            result[q.pk] = q.get_correct_answer()
 
         return result
         
-class QuestionAnswerSerializer(serializers.Serializer):
+class QuestionAnswerSerializer(serializers.ModelSerializer):
     question_id = serializers.IntegerField()
     text_answer = serializers.CharField(required=False, allow_blank=True)
     boolean_answer = serializers.BooleanField(required=False)
