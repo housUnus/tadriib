@@ -17,7 +17,6 @@ export function isAnswered(value: any) {
 export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string | null, client: any) {
 
   const router = useRouter()
-  
 
   const questions = useMemo(() => {
     return quiz.segments
@@ -187,8 +186,9 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
 
   const submitQuiz = async () => {
     await client.post(`/quiz-submissions/${submissionId}/submit/`)
-    router.refresh()
+    console.log("🚀 ~ submitQuiz ~ submissionId:", submissionId)
     onSubmit()
+    router.replace(`?submission=`)
   }
 
   return {

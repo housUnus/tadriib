@@ -3,3 +3,4 @@ from .attachment.models import Attachment
 from .quiz.models import *
 from .video.models import Video
 from .article.models import Article
+from .conference.models import Conference

@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from courses.models import Course, Content, Quiz, Content
+from courses.models import Course, Content, Quiz, Content, Conference
 from enrollments.constants import QuizStatus
 from .models import Enrollment, EnrollmentProgress, LectureProgress, QuizSubmission, QuestionSubmission, Question
 from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, \
@@ -123,6 +123,39 @@ class EnrollmentProgressViewSet(GenericViewSet):
         progress.recalculate()
 
         return Response({"status": "ok"})
+    
+    @action(detail=True, methods=["post"])
+    def join_conference(self, request, pk=None):
+        lecture_id = request.data.get("lecture_id")
+
+        lecture:"Content" = get_object_or_404(
+            Content,
+            public_id=lecture_id,
+            section__course__public_id=pk
+        )
+
+        # 🔹 Ensure this lecture has a conference
+        if not hasattr(lecture, "conference"):
+            return Response({"error": "No conference for this lecture"}, status=400)
+
+        conference:"Conference" = lecture.conference #type: ignore
+
+        # 🔐 Optional: prevent joining if not live
+        if conference.status != "live":
+            return Response({"error": "Conference is not live"}, status=400)
+
+        # 🔹 Determine role
+        user = request.user
+        is_host = lecture.section.course.instructor == user
+
+        # 🔹 Generate token
+        token = conference.get_meeting_token(user, is_host=is_host)
+
+        return Response({
+            "room_url": conference.room_url,
+            "token": token,
+            "conference_id": conference.id,
+        })
     
     @action(detail=True, methods=["post"])
     def complete(self, request, pk=None):

@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Content, useEnrollmentStore } from "@/app/stores/enrollment"
 import { ArticleContent } from "./contents/Article"
 import { useSearchParams } from "next/navigation"
+import { ConferenceContent } from "./contents/Conference"
 
 interface MainPlayerProps {
   activeContent: Content
@@ -75,6 +76,8 @@ export function MainContent({
         return <AssignmentContent {...commonProps} />
       case "article":
         return <ArticleContent {...commonProps} />
+      case "conference":
+        return <ConferenceContent {...commonProps} />
       default:
         return null
     }

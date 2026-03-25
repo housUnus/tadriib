@@ -4,10 +4,10 @@ import { Upload, FileCode, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import type { ContentItem } from "@/lib/data/course-data"
+import { Content } from "@/app/stores/enrollment"
 
 interface AssignmentContentProps {
-  content: ContentItem
+  content: Content
   onMarkComplete: () => void
   onPrevious: () => void
   onNext: () => void
@@ -87,10 +87,10 @@ export function AssignmentContent({
         <Button
           onClick={onMarkComplete}
           variant="outline"
-          className={content.completed ? "bg-success hover:bg-success/90 text-success-foreground border-success" : ""}
+          className={content.progress.is_completed ? "bg-success hover:bg-success/90 text-success-foreground border-success" : ""}
         >
           <CheckCircle className="mr-2 h-4 w-4" />
-          {content.completed ? "Completed" : "Mark as Complete"}
+          {content.progress.is_completed ? "Completed" : "Mark as Complete"}
         </Button>
 
         <div className="flex gap-2">

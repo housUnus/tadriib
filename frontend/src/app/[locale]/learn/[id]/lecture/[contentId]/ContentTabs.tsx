@@ -14,7 +14,7 @@ const tabs = [
   { id: "notes", label: "Notes", icon: StickyNote },
   { id: "announcements", label: "Announcements", icon: Bell },
   { id: "reviews", label: "Reviews", icon: Star },
-  { id: "learning-tools", label: "Learning tools", icon: Lightbulb },
+  // { id: "learning-tools", label: "Learning tools", icon: Lightbulb },
 ]
 
 export function ContentTabs({ activeTab, onTabChange }: ContentTabsProps) {

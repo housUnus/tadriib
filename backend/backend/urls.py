@@ -20,6 +20,7 @@ urlpatterns = [
     path('api/v1/', include('categories.urls')),
     path('api/v1/', include('enrollments.urls')),
     path('api/v1/', include('wishlist.urls')),
+    path('api/v1/', include('subscriptions.urls')),
 ] 
 
 if settings.DEBUG:

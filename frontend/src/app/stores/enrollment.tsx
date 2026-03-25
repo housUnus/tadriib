@@ -1,12 +1,22 @@
 import { create } from "zustand"
 
-export type ContentType = "video" | "quiz" | "article" | "assignment" | "attachment"
+export type ContentType = "video" | "quiz" | "article" | "assignment" | "attachment" | "conference"
 
 export type CourseProgress = {
     active_lecture: string | null
     completed_lectures: number
     progress_percent: number
     total_lectures: number
+}
+
+export type Conference = {
+    id: string
+    room_name: string
+    room_url: string
+    status: string
+    starts_at: string
+    ended_at: string
+    recording_url: string
 }
 
 

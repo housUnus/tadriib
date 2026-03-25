@@ -13,6 +13,7 @@ from .contents.serializers import (
     QuizSerializer,
     AttachmentSerializer,
     ArticleSerializer,
+    ConferenceSerializer,
 )
 from .constants import ContentType
 from core.serializers import PublicSerializerMixin
@@ -50,6 +51,8 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
             return ArticleSerializer(obj.article, context=self.context).data
         elif obj.type == ContentType.ATTACHMENT and hasattr(obj, "attachment"):
             return AttachmentSerializer(obj.attachment, context=self.context).data
+        elif obj.type == ContentType.CONFERENCE and hasattr(obj, "conference"):
+            return ConferenceSerializer(obj.conference, context=self.context).data
         return None
         
     

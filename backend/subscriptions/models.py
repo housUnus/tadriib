@@ -9,32 +9,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from courses.models import Course
 from enrollments.models import EnrollmentProgress
-from .constants import OrderStatus, PlanStatus, SubscriptionStatus
+from .constants import OrderStatus, PlanStatus, SubscriptionStatus, SubscriptionFrequency
 from core.models import BaseModel
 from enrollments.models import Enrollment
+from subscriptions.payments.models import Payment
 import pydash as __
-
-# Convenience references for units for plan recurrence billing
-# ----------------------------------------------------------------------------
-ONCE = '0'
-SECOND = '1'
-MINUTE = '2'
-HOUR = '3'
-DAY = '4'
-WEEK = '5'
-MONTH = '6'
-YEAR = '7'
-RECURRENCE_UNIT_CHOICES = (
-    (ONCE, 'once'),
-    (SECOND, 'second'),
-    (MINUTE, 'minute'),
-    (HOUR, 'hour'),
-    (DAY, 'day'),
-    (WEEK, 'week'),
-    (MONTH, 'month'),
-    (YEAR, 'year'),
-)
-
 
 class SubscriptionPlan(models.Model):
     name = models.CharField(
@@ -77,8 +56,8 @@ class SubscriptionPlan(models.Model):
         validators=[MinValueValidator(1)],
     )
     recurrence_unit = models.CharField(
-        choices=RECURRENCE_UNIT_CHOICES,
-        default=MONTH,
+        choices=SubscriptionFrequency.choices,
+        default=SubscriptionFrequency.MONTH,
         max_length=1,
     )
     cost = models.DecimalField(
@@ -98,35 +77,24 @@ class SubscriptionPlan(models.Model):
     @property
     def display_recurrent_unit_text(self):
         """Converts recurrence_unit integer to text."""
-        conversion = {
-            ONCE: 'one-time',
-            SECOND: 'per second',
-            MINUTE: 'per minute',
-            HOUR: 'per hour',
-            DAY: 'per day',
-            WEEK: 'per week',
-            MONTH: 'per month',
-            YEAR: 'per year',
-        }
-
-        return conversion[self.recurrence_unit]
+        return self.recurrence_unit
 
     @property
     def display_billing_frequency_text(self):
         """Generates human-readable billing frequency."""
         conversion = {
-            ONCE: 'one-time',
-            SECOND: {'singular': 'per second', 'plural': 'seconds'},
-            MINUTE: {'singular': 'per minute', 'plural': 'minutes'},
-            HOUR: {'singular': 'per hour', 'plural': 'hours'},
-            DAY: {'singular': 'per day', 'plural': 'days'},
-            WEEK: {'singular': 'per week', 'plural': 'weeks'},
-            MONTH: {'singular': 'per month', 'plural': 'months'},
-            YEAR: {'singular': 'per year', 'plural': 'years'},
+            SubscriptionFrequency.ONCE.label: 'one-time',
+            SubscriptionFrequency.SECOND.label: {'singular': 'per second', 'plural': 'seconds'},
+            SubscriptionFrequency.MINUTE.label: {'singular': 'per minute', 'plural': 'minutes'},
+            SubscriptionFrequency.HOUR.label: {'singular': 'per hour', 'plural': 'hours'},
+            SubscriptionFrequency.DAY.label: {'singular': 'per day', 'plural': 'days'},
+            SubscriptionFrequency.WEEK.label: {'singular': 'per week', 'plural': 'weeks'},
+            SubscriptionFrequency.MONTH.label: {'singular': 'per month', 'plural': 'months'},
+            SubscriptionFrequency.YEAR.label: {'singular': 'per year', 'plural': 'years'},
         }
 
-        if self.recurrence_unit == ONCE:
-            return conversion[ONCE]
+        if self.recurrence_unit == SubscriptionFrequency.ONCE:
+            return conversion[SubscriptionFrequency.ONCE]
 
         if self.recurrence_period == 1:
             return conversion[self.recurrence_unit]['singular']
@@ -142,23 +110,23 @@ class SubscriptionPlan(models.Model):
             Returns:
                 datetime: The next time billing will be due.
         """
-        if self.recurrence_unit == SECOND:
+        if self.recurrence_unit == SubscriptionFrequency.SECOND:
             delta = timedelta(seconds=self.recurrence_period)
-        elif self.recurrence_unit == MINUTE:
+        elif self.recurrence_unit == SubscriptionFrequency.MINUTE:
             delta = timedelta(minutes=self.recurrence_period)
-        elif self.recurrence_unit == HOUR:
+        elif self.recurrence_unit == SubscriptionFrequency.HOUR:
             delta = timedelta(hours=self.recurrence_period)
-        elif self.recurrence_unit == DAY:
+        elif self.recurrence_unit == SubscriptionFrequency.DAY:
             delta = timedelta(days=self.recurrence_period)
-        elif self.recurrence_unit == WEEK:
+        elif self.recurrence_unit == SubscriptionFrequency.WEEK:
             delta = timedelta(weeks=self.recurrence_period)
-        elif self.recurrence_unit == MONTH:
+        elif self.recurrence_unit == SubscriptionFrequency.MONTH:
             # Adds the average number of days per month as per:
             # This handle any issues with months < 31 days and leap years
             delta = timedelta(
                 days=30.4368 * self.recurrence_period
             )
-        elif self.recurrence_unit == YEAR:
+        elif self.recurrence_unit == SubscriptionFrequency.YEAR:
             # Adds the average number of days per year as per:
             # This handle any issues with leap years
             delta = timedelta(
@@ -251,9 +219,17 @@ class Order(BaseModel):
         null=True,
     )
     
+    payment = models.ForeignKey(
+        "subscriptions.Payment",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    
     @property
     def is_paid(self):
         return self.status == OrderStatus.PAID
+    
 
 class OrderItem(models.Model):
     enrollment:"Enrollment"
@@ -287,3 +263,12 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.create_enrollment()
+        
+
+class Cart(models.Model):
+    items: models.Manager["CartItem"]
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    course = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE)

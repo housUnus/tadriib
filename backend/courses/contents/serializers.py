@@ -4,7 +4,8 @@ from .models import (
     Quiz,
     Attachment,
     Article,
-    Assignment
+    Assignment,
+    Conference,
 )
 from courses.contents.quiz.serializers import SegmentSerializer
 
@@ -46,3 +47,8 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = ["id", "instructions"]
+        
+class ConferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conference
+        fields = '__all__'

@@ -168,6 +168,22 @@ class QuizSubmission(models.Model):
     def total_duration(self):
         lecture:"Content" = self.progress.lecture
         return lecture.duration_minutes
+    
+    def save(self, *args, **kwargs):
+        if self.pk and self.status in [QuizStatus.COMPLETED, QuizStatus.IN_REVIEW]:
+            quiz = self.progress.lecture.quiz
+            questions = Question.objects.filter(segment__quiz=quiz)
+
+            for q in questions:
+                q_submission, _ = QuestionSubmission.objects.get_or_create(
+                    submission=self,
+                    question=q
+                )
+
+                cast(QuestionSubmission, q_submission).set_validity()
+            
+            
+        super().save(*args, **kwargs)
 
 
     class Meta:

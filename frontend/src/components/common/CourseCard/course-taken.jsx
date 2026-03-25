@@ -30,7 +30,7 @@ function CourseCard({ item }) {
             {/* Category & Availability */}
 
             {/* Title & Description */}
-            <Link href={`/lecture/${enrollment.id}`}>
+            <Link href={`/learn/${enrollment.id}/lecture`}>
               <h3 className="text-base line-clamp-2 group-hover:text-primary h-14">
                 {enrollment.course.title}
               </h3>

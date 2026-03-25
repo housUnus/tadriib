@@ -28,7 +28,6 @@ class SubscriptionPlanViewSet(viewsets.ReadOnlyModelViewSet):
 # -------------------------------------------------
 # Order ViewSet
 # -------------------------------------------------
-
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]

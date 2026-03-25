@@ -24,6 +24,7 @@ class ContentType(models.TextChoices):
     ATTACHMENT = "attachment", "Attachment"
     ASSIGNMENT = "assignment", "Assignment"
     ARTICLE = "article", "Article"
+    CONFERENCE = "conference", "Conference"
     
 class CourseLevel(models.TextChoices):
     BEGINNER = "beginner", "Beginner"
@@ -40,3 +41,9 @@ class CourseLanguageTypes(models.TextChoices):
 class AccessTypes(models.TextChoices):
     LIFETIME = "lifetime", "Lifetime"
     LIMITED = "limited", "Limited"
+    
+
+class ConferenceStatus(models.TextChoices):
+    SCHEDULED = "scheduled", "Scheduled"
+    LIVE = "live", "Live"
+    ENDED = "ended", "Ended"

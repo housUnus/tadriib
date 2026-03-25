@@ -41,3 +41,6 @@ TINYMCE_DEFAULT_CONFIG = {
     "alignright alignjustify | bullist numlist outdent indent | "
     "removeformat | help",
 }
+
+DAILY_API_KEY = os.getenv("DAILY_API_KEY")
+PADDLE_KEY=os.getenv("PADDLE_KEY")

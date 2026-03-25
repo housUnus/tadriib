@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useMemo, useEffect } from "react"
-import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search, Paperclip } from "lucide-react"
+import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search, Paperclip, VideoIcon } from "lucide-react"
 import { cn, formatMinutes } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,6 +24,7 @@ const contentIcons = {
   article: FileText,
   assignment: FileCode,
   attachment: Paperclip,
+  conference: VideoIcon
 }
 
 export function CourseSidebar({

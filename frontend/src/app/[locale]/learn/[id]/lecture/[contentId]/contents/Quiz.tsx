@@ -23,20 +23,8 @@ export function QuizContent({ content }: QuizContentProps) {
   const submissionId = searchParams.get("submission")
 
   useEffect(() => {
-    setSelectedSubmission(content.progress.active_quiz_submission)
-  }, [content.progress.active_quiz_submission])
-
-  useEffect(() => {
-    if(!content.progress.active_quiz_submission)
-      setSelectedSubmission(submissionId)
-  }, [submissionId])
-
-  useEffect(() => {
-    if (selectedSubmission)
-      router.replace(`?submission=${selectedSubmission}`)
-    else
-      router.replace("")
-  }, [selectedSubmission, router])
+    setSelectedSubmission(content.progress.active_quiz_submission || submissionId)
+  }, [content.progress.active_quiz_submission, submissionId])
 
   if (!selectedSubmission) {
     return (

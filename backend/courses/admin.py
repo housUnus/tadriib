@@ -62,6 +62,12 @@ class AssignmentInline(TabularInline):
     extra = 0
     fields = ("instructions",)
 
+class ConferenceInline(TabularInline):
+    model = Conference
+    extra = 0
+    fields = ("status", "starts_at")
+    readonly_fields = ("room_name", "room_url")
+
 
 # ======================================================
 # CONTENT INLINE
@@ -203,6 +209,9 @@ class ContentAdmin(ModelAdmin):
 
         if obj.type == "quiz":
             return [QuizInline]
+        
+        if obj.type == "conference":
+            return [ConferenceInline]
 
         return []
 
