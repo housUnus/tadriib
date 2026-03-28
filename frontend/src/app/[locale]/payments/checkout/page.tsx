@@ -37,7 +37,6 @@ export default function CheckoutPage() {
       provider: "stripe",
       metadata: { course_id: "crs-001" },
     })
-    await new Promise(resolve => setTimeout(resolve, 2000))
     // In real app: redirect to payment provider or handle payment
     router.push("/payments/success")
   }

@@ -8,7 +8,6 @@ import CustomerChart from "@/app/components/dashboards/Dashboard1/CustomerChart"
 import SalesOverview from "@/app/components/dashboards/Dashboard1/SalesOverview";
 import RevenueByProduct from "@/app/components/dashboards/Dashboard1/RevenueByProduct";
 import TotalSettelment from "@/app/components/dashboards/Dashboard1/TotalSettelment";
-import CalendarApp from "@/app/components/app/calendar";
 export const metadata: Metadata = {
   title: "Dashboard 3",
 };
@@ -43,9 +42,6 @@ const page = () => {
         </div>
         <div className="lg:col-span-4 col-span-12">
           <TotalSettelment />
-        </div>
-        <div className="col-span-12">
-          <CalendarApp />
         </div>
       </div>
     </>
