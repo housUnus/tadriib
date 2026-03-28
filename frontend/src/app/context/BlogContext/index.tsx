@@ -2,7 +2,11 @@
 import React, { createContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
 import { BlogType, BlogPostType } from '../../[locale]/(main)/types/apps/blog';
 import useSWR from 'swr'
-import { getFetcher } from '@/app/api/globalFetcher';
+
+const getFetcher = async (url: string) => {
+    const res = await fetch(url);
+    return res.json();
+}
 
 // Define BlogContextProps interface
 export interface BlogContextProps {
