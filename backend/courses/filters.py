@@ -37,7 +37,7 @@ class CourseFilter(django_filters.FilterSet):
     
     def filter_categories(self, queryset, name, value):
         categories = value.split(",")
-        q_filter = Q(primary_category__slug__in=categories) | Q(primary_category__parent__slug__in=categories)
+        q_filter = Q(category__slug__in=categories) | Q(category__parent__slug__in=categories)
         return queryset.filter(q_filter)
     
     def filter_duration(self, queryset, name, value):

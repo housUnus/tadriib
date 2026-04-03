@@ -20,7 +20,7 @@ class QuestionInline(TabularInline):
 class QuizInline(TabularInline):
     model = Quiz
     extra = 0
-    fields = ("time_limit_minutes", )
+    fields = ("max_attempts", "can_pause", "can_retake", "show_correct_answers")
     show_change_link = True
 
 
@@ -135,9 +135,8 @@ class CourseAdmin(ModelAdmin):
         # "average_rating",
     )
 
-    list_filter = ("status", "level", "language", "categories")
+    list_filter = ("status", "level", "language", "category", "sub_category")
     search_fields = ("title", "description", "instructor__email")
-    filter_horizontal = ("categories",)
 
     inlines = [SectionInline, LearningOutcomeInline, RequirementInline]
     readonly_fields = ("published_at","slug")
@@ -147,7 +146,7 @@ class CourseAdmin(ModelAdmin):
             "fields": ("title", "slug", "short_description", "description", "instructor", "poster")
         }),
         ("Classification", {
-            "fields": ("status", "level", "language", "categories", "primary_category")
+            "fields": ("status", "level", "language", "category", "sub_category")
         }),
         ("Publishing", {
             "fields": ("published_at",)
@@ -219,14 +218,9 @@ class ContentAdmin(ModelAdmin):
 # ======================================================
 # QUIZ EDITOR
 # ======================================================
-class QuestionBlockInline(StackedInline):
-    model = QuestionBlock
-    extra = 0
-    class Media:
-        js = ("admin/js/question_block_inline.js",)
 
-class SuggestionInline(TabularInline):
-    model = Suggestion
+class OptionInline(TabularInline):
+    model = Option
     extra = 0
 
 class TrueFalseInline(StackedInline):
@@ -248,23 +242,12 @@ class FileUploadInline(StackedInline):
     model = FileUploadAnswer
     extra = 0
     max_num = 1
-    
-class SegmentInline(StackedInline):
-    model = Segment
-    extra = 0
-    show_change_link = True
-    
-@admin.register(Segment)
-class SegmentAdmin(ModelAdmin):
-    list_display = ("title", "quiz", "order")
-    ordering = ("quiz", "order")
-    inlines = [QuestionInline]
 
 @admin.register(Quiz)
 class QuizAdmin(ModelAdmin):
-    list_display = ("time_limit_minutes", "can_pause", "can_retake", "show_correct_answers")
+    list_display = ("can_pause", "can_retake", "show_correct_answers")
     ordering = ("id",)
-    inlines = [SegmentInline]
+    inlines = [QuestionInline]
 
 class QuestionAdminForm(forms.ModelForm):
     answer_explanation = forms.CharField(
@@ -280,20 +263,6 @@ class QuestionAdminForm(forms.ModelForm):
 class QuestionAdmin(ModelAdmin):
     form = QuestionAdminForm
     save_as = True
-    list_display = ("segment", "answer_type", "points", "order")
-    ordering = ("segment", "order")
-    inlines = [QuestionBlockInline, SuggestionInline, TrueFalseInline, FillBlankInline, EssayInline, FileUploadInline]
-
-    def get_inlines(self, request, obj=None):
-        """Show only the relevant inline depending on question type"""
-        inlines = [QuestionBlockInline, SuggestionInline]
-        if obj:
-            if obj.answer_type == "true_false":
-                inlines.append(TrueFalseInline)
-            elif obj.answer_type == "fill_blank":
-                inlines.append(FillBlankInline)
-            elif obj.answer_type == "essay":
-                inlines.append(EssayInline)
-            elif obj.answer_type == "file_upload":
-                inlines.append(FileUploadInline)
-        return inlines
+    list_display = ("text", "answer_type", "points", "order")
+    ordering = ("order",)
+    inlines = [OptionInline, TrueFalseInline, FillBlankInline, EssayInline, FileUploadInline]

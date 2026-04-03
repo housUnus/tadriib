@@ -7,23 +7,24 @@ from .models import (
     Assignment,
     Conference,
 )
-from courses.contents.quiz.serializers import SegmentSerializer
+from courses.contents.quiz.serializers import QuestionSerializer
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
-        fields = ["id", "file"]
+        fields = ["id", "file", "url"]
         
 class QuizSerializer(serializers.ModelSerializer):
     duration = serializers.ReadOnlyField(source="time_limit_minutes")
-    segments = SegmentSerializer(many=True, read_only=True)
+    questions = QuestionSerializer(many=True, read_only=True)
     total_questions = serializers.IntegerField(source="segments__questions__count", read_only=True)
     class Meta:
         model = Quiz
         fields = ["id", 
                   "description", 
                   "time_limit_minutes", 
-                  "duration", "segments", 
+                  "duration", 
+                  "questions", 
                   "total_questions",
                   "can_pause",
                   "can_retake",

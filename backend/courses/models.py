@@ -32,9 +32,9 @@ class Course(BaseModel):
 
     short_description = models.CharField(max_length=500, blank=True, null=True)
     description = HTMLField(null=True, blank=True)
-    categories = models.ManyToManyField("categories.Category", related_name="courses", blank=True)
-    primary_category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True)
-
+    category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, related_name="courses")
+    sub_category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, related_name="sub_courses")
+    
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="courses")
 
     status = models.CharField(max_length=20, choices=CourseStatus.choices, default=CourseStatus.DRAFT)
@@ -138,7 +138,7 @@ class Section(BaseModel):
     
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
     title = models.CharField(max_length=255)
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["order"]
@@ -174,12 +174,27 @@ class Section(BaseModel):
             total_duration=models.Sum('duration_minutes')
         )['total_duration']
         return total if total else 0
+    
+    
+    def save(self, *args, **kwargs):
+        if self.order is None:
+            last = Section.objects.filter(course=self.course).aggregate(
+                max=models.Max("order")
+            )["max"]
+            self.order = (last or 0) + 1
+        super().save(*args, **kwargs)
 
 class Content(BaseModel):
+    video: "Video"
+    quiz: "Quiz"
+    article: "Article"
+    attachment: "Attachment"
+    conference: "Conference"
+    
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="contents")
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=ContentType.choices)
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(null=True, blank=True)
     is_preview = models.BooleanField(default=False)
     duration_minutes = models.PositiveIntegerField(null=True, blank=True)
     
@@ -194,3 +209,17 @@ class Content(BaseModel):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.order is None:
+            last = Content.objects.filter(section=self.section).aggregate(
+                max=models.Max("order")
+            )["max"]
+            self.order = (last or 0) + 1
+        super().save(*args, **kwargs)
+
+
+class Document(BaseModel):
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name="documents")
+    file = models.FileField(upload_to="courses/documents/")
+    name = models.CharField(max_length=255, blank=True)
