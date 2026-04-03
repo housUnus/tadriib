@@ -7,7 +7,7 @@ import {
     Play, Eye, Clock, CheckCircle2, PauseCircle, AlertCircle,
     ChevronRight, FileText, Timer, CircleDot, Flag, Circle, CheckCircle
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { Submission } from "@/lib/data/quiz-data"
 
 

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/lib/actions/auth";
 import { ActionButton } from "@/components/common/forms/generic/action-button";
-import { useUserStore } from "@/app/stores/user";
+import { useUserStore } from "@/stores/user";
 
 const Profile = () => {
 

@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,

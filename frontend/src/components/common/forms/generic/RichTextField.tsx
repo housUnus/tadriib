@@ -9,7 +9,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -46,8 +46,6 @@ export default function RichTextField<T extends FieldValues>({
   const [isPreview, setIsPreview] = useState(false);
 
   // Store editor in state so it persists across renders
-
-
 
   return (
     <Controller

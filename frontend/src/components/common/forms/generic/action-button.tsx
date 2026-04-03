@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { type VariantProps } from "class-variance-authority"
 
 type Props = {

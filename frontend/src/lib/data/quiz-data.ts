@@ -26,10 +26,10 @@ export interface QuestionBlock {
   file?: string
 }
 
-export interface QuizSuggestion {
+export interface QuizOption {
   text: string
   label: string
-  id: number
+  id: string
   is_correct: boolean
 }
 
@@ -41,7 +41,7 @@ export interface Question {
   answer_type: string
   allow_multiple_answers: boolean
   blocks?: QuestionBlock[]
-  suggestions?: QuizSuggestion[]
+  options?: QuizOption[]
   file_upload?: any
   correct_answer?: string | string[]
   answer_explanation?: string
@@ -63,7 +63,7 @@ export interface Quiz {
   can_retake?: boolean
   can_pause?: boolean
   show_correct_answers?: boolean
-  segments: QuizSegment[]
+  questions: Question[]
   max_attempts?: number
 }
 

@@ -19,7 +19,7 @@ import {
   PopoverContent,
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 import TitleCard from '../../shared/TitleBorderCard'
 
 const FormLableAlignment = () => {

@@ -1,7 +1,7 @@
 "use client"
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useUserStore } from "@/app/stores/user";
+import { useUserStore } from "@/stores/user";
 import { getMe } from "@/lib/actions/users";
 import { UserInput } from "@/lib/schemas/users";
 

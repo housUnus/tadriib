@@ -1,19 +1,13 @@
 from rest_framework import serializers
 from .models import (
-    Question, QuestionBlock, Suggestion, Segment,
+    Question, Option,
     TrueFalseAnswer, FillBlankAnswer, EssayAnswer, FileUploadAnswer
 )
 
 
-class QuestionBlockSerializer(serializers.ModelSerializer):
+class OptionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = QuestionBlock
-        fields = ['id', 'type', 'order', 'text', 'image', 'file']
-
-
-class SuggestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Suggestion
+        model = Option
         fields = ['id', 'text', 'label', 'is_correct']
 
 
@@ -41,8 +35,7 @@ class FileUploadAnswerSerializer(serializers.ModelSerializer):
         fields = ['id', 'allowed_extensions', 'max_file_size_mb']
 
 class QuestionSerializer(serializers.ModelSerializer):
-    blocks = QuestionBlockSerializer(many=True, read_only=True)
-    suggestions = SuggestionSerializer(many=True, read_only=True)
+    options = OptionSerializer(many=True, read_only=True)
     true_false = TrueFalseAnswerSerializer(read_only=True)
     fill_blank = FillBlankAnswerSerializer(read_only=True)
     essay = EssayAnswerSerializer(read_only=True)
@@ -50,9 +43,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     correct_answer = serializers.SerializerMethodField()
 
     def get_correct_answer(self, obj:"Question"):
-        segment = obj.segment
-        assert segment
-        quiz = segment.quiz
+        quiz = obj.quiz
+        assert quiz
         
         if not quiz.show_correct_answers:
             return None
@@ -63,12 +55,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = [
             'id', 'answer_type', 'points', 'order', 'allow_multiple_answers', 
-            'blocks', 'suggestions', 'true_false', 'fill_blank', 'essay', 'file_upload',
+            'text', 'options', 'true_false', 'fill_blank', 'essay', 'file_upload',
             'answer_explanation', 'answer_hint', 'correct_answer',
         ]
-
-class SegmentSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True, read_only=True)
-    class Meta:
-        model = Segment
-        fields = ['id', 'title', 'order', 'questions']

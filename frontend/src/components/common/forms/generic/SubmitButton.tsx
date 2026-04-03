@@ -4,7 +4,7 @@ import { ReactNode, ButtonHTMLAttributes } from "react";
 import { Control, FieldValues, useFormState, useFormContext } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 interface SubmitButtonProps<T extends FieldValues>
   extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Clock, HelpCircle, AlertTriangle } from "lucide-react"
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { useQuery } from "@tanstack/react-query"
 

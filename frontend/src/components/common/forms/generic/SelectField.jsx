@@ -2,8 +2,9 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";
 import SimpleSelect from "./Select/simple-select";
+import { cn } from "@/lib/utils/utils";
 
-export default function Select2Field({ name, type, label, ...rest }) {
+export default function Select2Field({ name, className="", label, ...rest }) {
     const {
       control,
       formState: { errors },

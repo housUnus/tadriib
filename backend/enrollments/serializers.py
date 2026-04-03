@@ -191,7 +191,7 @@ class QuizSubmissionSerializer(serializers.ModelSerializer):
         
         result = {}
         
-        questions:QuerySet[Question] = Question.objects.filter(segment__quiz=quiz)
+        questions:QuerySet[Question] = Question.objects.filter(quiz=quiz)
         for q in questions:
             result[q.pk] = q.get_correct_answer()
 

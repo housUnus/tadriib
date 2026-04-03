@@ -157,7 +157,7 @@ class QuizSubmission(models.Model):
     def total_questions(self):
         lecture:"Content" = self.progress.lecture
         quiz:"Quiz" = lecture.quiz #type: ignore
-        return Question.objects.filter(segment__quiz=quiz).count()
+        return Question.objects.filter(quiz=quiz).count()
     
     @property
     def total_correct(self):
@@ -172,7 +172,7 @@ class QuizSubmission(models.Model):
     def save(self, *args, **kwargs):
         if self.pk and self.status in [QuizStatus.COMPLETED, QuizStatus.IN_REVIEW]:
             quiz = self.progress.lecture.quiz
-            questions = Question.objects.filter(segment__quiz=quiz)
+            questions = Question.objects.filter(quiz=quiz)
 
             for q in questions:
                 q_submission, _ = QuestionSubmission.objects.get_or_create(
@@ -228,8 +228,8 @@ class QuestionSubmission(models.Model):
     def set_validity(self):
         question:"Question" = self.question
         if question.answer_type == AnswerType.MULTIPLE_CHOICE:
-            correct_suggestions = list(question.suggestions.filter(is_correct=True).values_list("label", flat=True))
-            self.is_correct = correct_suggestions == self.text_answer
+            correct_options = list(question.options.filter(is_correct=True).values_list("label", flat=True))
+            self.is_correct = correct_options == self.text_answer
         elif question.answer_type == AnswerType.TRUE_FALSE:
             true_false_answer:"TrueFalseAnswer" = question.true_false#type: ignore
             self.is_correct = self.boolean_answer == true_false_answer.is_correct

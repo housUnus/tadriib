@@ -2,11 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { RotateCcw, ArrowRight, Flag, Lightbulb, Check, X } from "lucide-react"
-import type { Question, QuizSuggestion } from "@/lib/data/quiz-data"
-import { QuestionBlocks } from "./question-block"
-import { useEffect, useState } from "react"
+import type { Question, QuizOption } from "@/lib/data/quiz-data"
+import { useState } from "react"
 import { useDebounce } from "use-debounce"
 import { useUpdateEffect } from "@/hooks/use-update-effect"
 import { Input } from "@/components/ui/input";
@@ -14,7 +13,12 @@ import { Label } from "@/components/ui/label";
 import { Icon } from "@iconify/react";
 import CardBox from "@/app/components/shared/CardBox";
 import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
+
+const getAlphabet = (locale: string) => {
+  if (locale === "ar") return ["أ", "ب", "ج", "د", "هـ"]
+  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+}
+
 
 type AnswerValue =
   | number
@@ -89,11 +93,11 @@ export function QuestionDisplay({
               </p>
             )}
 
-            {question.suggestions?.map((option: QuizSuggestion) => {
-
+            {question.options?.map((option: QuizOption, index: number) => {
+              const label = getAlphabet('en')[index]
               const isSelected = isMultiple
-                ? Array.isArray(selectedAnswer) && selectedAnswer.includes(option.label)
-                : selectedAnswer === option.label
+                ? Array.isArray(selectedAnswer) && selectedAnswer.includes(option.id)
+                : selectedAnswer === option.id
 
               const handleClick = () => {
 
@@ -103,14 +107,14 @@ export function QuestionDisplay({
                     ? selectedAnswer
                     : []
 
-                  const updated = current.includes(option.label)
-                    ? current.filter((label) => label !== option.label)
-                    : [...current, option.label]
+                  const updated = current.includes(option.id)
+                    ? current.filter((label) => label !== option.id)
+                    : [...current, option.id]
 
                   onSelectAnswer(updated)
 
                 } else {
-                  onSelectAnswer(option.label)
+                  onSelectAnswer(option.id)
                 }
               }
 
@@ -136,7 +140,7 @@ export function QuestionDisplay({
                         : "border-border bg-muted text-muted-foreground",
                     )}
                   >
-                    {option.label}
+                    {label}
                   </span>
 
                   <span style={{ fontSize: `${fontSize}px` }}>
@@ -255,9 +259,10 @@ export function QuestionDisplay({
 
     <Card className={`border shadow-md ${isReadOnly ? "bg-muted/50" : ""} ${isReadOnly && isCorrect !== undefined  &&(isCorrect ? "border-green-500" : "border-red-500")}`}>
       <CardContent className="p-2 mt-0">
-        <QuestionBlocks
-          blocks={question.blocks}
-          fontSize={fontSize}
+        
+        <div
+          className="leading-relaxed [&_p]:mb-2"
+          dangerouslySetInnerHTML={{ __html: question.text }}
         />
       </CardContent>
     </Card>

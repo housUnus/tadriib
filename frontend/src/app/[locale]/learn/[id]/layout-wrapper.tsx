@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useEnrollmentStore } from "@/app/stores/enrollment"
+import { useEnrollmentStore } from "@/stores/enrollment"
 import { LearnHeader } from "./Header"
 import { CourseSidebar } from "./Sidebar"
 

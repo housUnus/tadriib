@@ -3,7 +3,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";
 import SimpleSelect from "./Select/simple-select";
 import countryList from "react-select-country-list";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 export default function CountrySelect({
   name,

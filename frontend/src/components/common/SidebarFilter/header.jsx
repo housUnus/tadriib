@@ -12,7 +12,6 @@ export default function FiltersHeader({form, totalResults}) {
         {/* Sort */}
         <div className="w-full sm:w-[300px]">
           <CustomField
-            control={form.control}
             name={`sortBy`}
             Component={({ target, value, onChange }) => (
               <Select value={value} onValueChange={onChange}>

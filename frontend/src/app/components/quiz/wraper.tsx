@@ -11,7 +11,7 @@ import { SidebarExpandButton } from "@/app/components/quiz/sidebar-expand-button
 import { useQuiz } from "@/hooks/use-quiz"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 import { Quiz, QuizStats } from "@/lib/data/quiz-data"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 
@@ -102,7 +102,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                 <ResizablePanel defaultSize={25} minSize={12} maxSize={25}>
                   <div className="h-full border-r bg-card">
                     <QuizSidebarLeft
-                      segments={quiz.segments}
+                      segments={[{ title: "Questions", questions: quiz.questions, id: 1, order: 0 }]}
                       currentQuestion={state.currentQuestion}
                       getStatus={getQuestionStatus}
                       onSelectQuestion={goToQuestion}
@@ -188,7 +188,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
               <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setLeftSidebarOpen(false)} />
               <div className="fixed left-0 top-0 bottom-0 z-50 w-80 max-w-[85vw] bg-card shadow-xl border-r animate-in slide-in-from-left duration-200">
                 <QuizSidebarLeft
-                  segments={quiz.segments}
+                  segments={[{ title: "Questions", questions: quiz.questions, id: 1, order: 0 }]}
                   currentQuestion={state.currentQuestion}
                   getStatus={getQuestionStatus}
                   onSelectQuestion={(id) => {

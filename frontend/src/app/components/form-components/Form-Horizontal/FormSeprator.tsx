@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 const FormSeprator = () => {
   const [date, setDate] = useState<Date | undefined>()

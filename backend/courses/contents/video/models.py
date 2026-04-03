@@ -10,6 +10,7 @@ class Video(BaseModel):
         related_name="video"
     )
     file = models.FileField(upload_to="courses/videos/")
+    url = models.URLField(null=True, blank=True)
     duration_seconds = models.PositiveIntegerField(null=True, blank=True)
     is_main_preview = models.BooleanField(default=False)
     

@@ -4,11 +4,11 @@ import type React from "react"
 
 import { useState, useMemo, useEffect } from "react"
 import { ChevronDown, ChevronRight, Play, FileText, HelpCircle, CheckCircle, FileCode, X, Search, Paperclip, VideoIcon } from "lucide-react"
-import { cn, formatMinutes } from "@/lib/utils"
+import { cn, formatMinutes } from "@/lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Content, Section, useEnrollmentStore } from "@/app/stores/enrollment"
+import { Content, Section, useEnrollmentStore } from "@/stores/enrollment"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 

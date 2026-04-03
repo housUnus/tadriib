@@ -2,7 +2,7 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { get } from "lodash";
 import { Accept, useDropzone } from "react-dropzone";
 import { Input } from "@/components/ui/input";

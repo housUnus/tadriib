@@ -2,7 +2,7 @@ import React from "react";
 import CardBox from "../../shared/CardBox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 const RangeSliders = () => {
   return (
     <div>

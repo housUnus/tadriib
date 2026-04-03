@@ -5,14 +5,13 @@ from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
 
 class Quiz(BaseModel):
-    segments = models.Manager["Segment"]
+    questions = models.Manager["Question"]
     content = models.OneToOneField(
         "courses.Content",
         on_delete=models.CASCADE,
         related_name="quiz"
     )
     description = models.TextField(blank=True)
-    time_limit_minutes = models.PositiveIntegerField(null=True, blank=True)
     show_correct_answers = models.BooleanField(default=False)
     show_final_score = models.BooleanField(default=False)
     max_attempts = models.PositiveIntegerField(null=True, blank=True)
@@ -28,39 +27,31 @@ class Quiz(BaseModel):
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
         
-class Segment(models.Model):
-    questions: models.Manager["Question"]
+    @property
+    def time_limit_minutes(self):
+        return self.content.duration
+        
+
+class Question(models.Model):
+    options: models.Manager["Option"]
     
     quiz = models.ForeignKey(
         Quiz,
         on_delete=models.CASCADE,
-        related_name="segments"
-    )
-    title = models.CharField(max_length=255)
-    order = models.PositiveIntegerField()
-    
-    class Meta:
-        verbose_name = _("Segment")
-        verbose_name_plural = _("Segments")
-
-
-class Question(models.Model):
-    suggestions: models.Manager["Suggestion"]
-    
-    segment = models.ForeignKey(
-        Segment,
-        on_delete=models.CASCADE,
         related_name="questions",
         null=True,
-        blank=True,
     )
+    
+    text = HTMLField(null=True, blank=True)
+    
     answer_type = models.CharField(
         max_length=30,
         choices=AnswerType.choices
     )
+    
     allow_multiple_answers = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=1)
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(null=True, blank=True)
     
     answer_explanation = HTMLField(null=True, blank=True)
     answer_hint = models.CharField(max_length=255, null=True, blank=True)
@@ -76,7 +67,7 @@ class Question(models.Model):
     def get_correct_answer(self):
         if self.answer_type == AnswerType.MULTIPLE_CHOICE:
             return list(
-                self.suggestions.filter(is_correct=True)
+                self.options.filter(is_correct=True)
                 .values_list("label", flat=True)
             )
 
@@ -97,49 +88,31 @@ class Question(models.Model):
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
+        
 
-
-class QuestionBlock(BaseModel):
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name="blocks"
-    )
-    type = models.CharField(max_length=20, choices=QuestionBlockType.choices)
-    order = models.PositiveIntegerField()
-
-    # For TEXT blocks
-    text = models.TextField(blank=True)
-
-    # For IMAGE blocks
-    image = models.ImageField(
-        upload_to="quiz/questions/images/",
-        null=True,
-        blank=True
-    )
-
-    # For FILE blocks
-    file = models.FileField(
-        upload_to="quiz/questions/files/",
-        null=True,
-        blank=True
-    )
+    def save(self, *args, **kwargs):
+        if self.order is None:
+            last = Question.objects.filter(section=self.quiz).aggregate(
+                max=models.Max("order")
+            )["max"]
+            self.order = (last or 0) + 1
+        super().save(*args, **kwargs)
 
 
 #------------------ ANSWERS -------------------
-class Suggestion(BaseModel):
+class Option(BaseModel):
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
-        related_name="suggestions"
+        related_name="options"
     )
     text = models.CharField(max_length=255)
     label = models.CharField(max_length=10, blank=True)
     is_correct = models.BooleanField(default=False)
     
     class Meta:
-        verbose_name = _("Suggestion")
-        verbose_name_plural = _("Suggestions")
+        verbose_name = _("Option")
+        verbose_name_plural = _("Options")
 
 class TrueFalseAnswer(models.Model):
     question = models.OneToOneField(

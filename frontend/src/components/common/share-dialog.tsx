@@ -21,7 +21,7 @@ import {
   Linkedin,
   Mail,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 interface ShareDialogProps {
   title: string

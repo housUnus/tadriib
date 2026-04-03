@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PanelRightClose, PanelRightOpen, Trophy } from "lucide-react"
-import { useEnrollmentStore } from "@/app/stores/enrollment"
+import { useEnrollmentStore } from "@/stores/enrollment"
 import { PolarAngleAxis, RadialBar, RadialBarChart } from "recharts"
 
 function CircularProgress({ progress }: { progress: number }) {

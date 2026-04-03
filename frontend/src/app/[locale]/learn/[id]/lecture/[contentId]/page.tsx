@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
-import { useEnrollmentStore } from "@/app/stores/enrollment"
+import { useEnrollmentStore } from "@/stores/enrollment"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { MainContent } from "./MainContent"
 

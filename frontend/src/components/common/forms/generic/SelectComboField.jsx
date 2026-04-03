@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -23,7 +23,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";
 import SimpleSelect from "./Select/simple-select";
 
-export default function SelectField({ control, name, type, label, ...rest }) {
+export default function SelectField({ name, type, label, ...rest }) {
   const {
     control,
     formState: { errors },

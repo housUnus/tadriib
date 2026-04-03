@@ -1,7 +1,7 @@
 "use client"
 
 import { Search, MessageSquare, StickyNote, Bell, Star, Lightbulb } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 interface ContentTabsProps {
   activeTab: string

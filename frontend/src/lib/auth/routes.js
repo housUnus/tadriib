@@ -15,6 +15,7 @@ export const PRIVATE_ROUTE_PREFIXES = [
   "/lecture",
   "/account",
   "/settings",
+  "/create-course"
 ];
 
 export const AUTH_ROUTES = [

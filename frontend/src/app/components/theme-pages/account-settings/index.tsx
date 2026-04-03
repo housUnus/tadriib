@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Icon } from "@iconify/react";
 import AccountTab from "@/app/components/theme-pages/account-settings/AccountTab";
 import NotificationTab from "@/app/components/theme-pages/account-settings/NotificationTab";
 import BillsTabs from "@/app/components/theme-pages/account-settings/BillsTab";

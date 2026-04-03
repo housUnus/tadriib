@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { SubmissionsList } from "@/app/components/quiz/submissions/submissions-list"
 import { QuizWrapper } from "@/app/components/quiz/wraper"

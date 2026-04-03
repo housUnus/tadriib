@@ -4,7 +4,7 @@ import { Upload, FileCode, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 
 interface AssignmentContentProps {
   content: Content

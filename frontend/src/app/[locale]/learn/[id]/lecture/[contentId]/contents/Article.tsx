@@ -4,7 +4,7 @@ import { FileText, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { ContentItem } from "@/lib/data/course-data"
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 
 interface ArticleContentProps {
   content: Content

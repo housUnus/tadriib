@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Video, CheckCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Conference, Content, useEnrollmentStore } from "@/app/stores/enrollment"
+import { Conference, Content, useEnrollmentStore } from "@/stores/enrollment"
 
 import { DailyProvider, DailyVideo } from "@daily-co/daily-react"
 import DailyIframe from "@daily-co/daily-js"

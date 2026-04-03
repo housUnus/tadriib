@@ -1,4 +1,4 @@
-import { Content } from "@/app/stores/enrollment"
+import { Content } from "@/stores/enrollment"
 import { SubmissionCard } from "./submission-card"
 import { Button } from "@/components/ui/button"
 import { Plus, FileText, Sparkles, TrendingUp, HelpCircle, Clock, AlertTriangle } from "lucide-react"

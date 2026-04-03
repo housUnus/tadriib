@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { Input } from "@/components/ui/input";
 
 export interface PlaceholdersInputHandle {

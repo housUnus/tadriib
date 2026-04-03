@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import {useLocale} from 'next-intl';
 
 interface SidebarExpandButtonProps {

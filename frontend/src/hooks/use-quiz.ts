@@ -19,11 +19,8 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
   const router = useRouter()
 
   const questions = useMemo(() => {
-    return quiz.segments
+    return quiz.questions
       .sort((a, b) => a.order - b.order)
-      .flatMap((segment) =>
-        segment.questions.sort((a, b) => a.order - b.order)
-      )
   }, [quiz])
 
   const createInitialState = (): QuizState => ({

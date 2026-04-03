@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import type { Question, QuestionStatus } from "@/lib/data/quiz-data"
 
 interface QuestionGridProps {

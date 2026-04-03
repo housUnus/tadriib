@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useEnrollmentStore } from "@/app/stores/enrollment"
+import { useEnrollmentStore } from "@/stores/enrollment"
 
 export default function LecturePage() {
   const router = useRouter()

@@ -26,7 +26,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 const FormCustom = () => {
   const [switch1, setSwitch1] = useState(false);

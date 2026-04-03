@@ -1,6 +1,6 @@
 'use client'
 import React, { createContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
-import { BlogType, BlogPostType } from '../../[locale]/(main)/types/apps/blog';
+import { BlogType, BlogPostType } from '../../../types/apps/blog';
 import useSWR from 'swr'
 
 const getFetcher = async (url: string) => {

@@ -2,8 +2,20 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
+
+/**
+ * @param {{
+ *   name: string,
+ *   label?: string,
+ *   required?: boolean,
+ *   helperText?: string,
+ *   defaultValue?: any,
+ *   className?: string,
+ *   Component?: React.ComponentType<any>
+ * }} props
+ */
 export default function CustomField({
   name,
   label,
@@ -11,7 +23,7 @@ export default function CustomField({
   helperText,
   defaultValue = "",
   className,
-  Component: Component = Input,
+  Component = Input,
   ...rest
 }) {
   const {
