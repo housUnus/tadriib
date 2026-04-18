@@ -66,8 +66,7 @@ services:
     entrypoint: >
       sh -c "trap exit TERM;
       while :; do
-        certbot renew --webroot -w /var/www/certbot \
-        --deploy-hook 'docker exec nginx nginx -s reload';
+        certbot renew --webroot -w /var/www/certbot --deploy-hook 'docker exec nginx nginx -s reload';
         sleep 12h;
       done"
   certbot-init:
