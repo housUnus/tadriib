@@ -43,10 +43,12 @@ class QuestionSerializer(serializers.ModelSerializer):
     correct_answer = serializers.SerializerMethodField()
 
     def get_correct_answer(self, obj:"Question"):
+        view_type = self.context.get("view_type")
+
         quiz = obj.quiz
         assert quiz
         
-        if not quiz.show_correct_answers:
+        if not quiz.show_correct_answers and not view_type == 'course-create':
             return None
 
         return obj.get_correct_answer()

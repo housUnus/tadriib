@@ -11,6 +11,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils/utils";
 import { Textarea } from "@/components/ui/textarea";
+import { DebouncedInput } from "./DebounceInput";
 
 type InputFieldProps<T extends FieldValues> = {
   name: Path<T>;
@@ -21,6 +22,7 @@ type InputFieldProps<T extends FieldValues> = {
   className?: string;
   rules?: RegisterOptions<T>;
   disabled?: boolean;
+  debounceTime?: number;
 } & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name">;
 
 export default function TextAreaField<T extends FieldValues>({
@@ -31,6 +33,7 @@ export default function TextAreaField<T extends FieldValues>({
   className,
   rules,
   disabled,
+  debounceTime = 100,
   ...rest
 }: InputFieldProps<T>) {
   const {
@@ -53,8 +56,11 @@ export default function TextAreaField<T extends FieldValues>({
             </FieldLabel>
           )}
 
-          <Textarea
-            {...field}
+          <DebouncedInput
+            component={Textarea}
+            delay={debounceTime}
+            value={field.value ?? ""}
+            onChange={(val:any) => field.onChange(val)}
             id={field.name}
             aria-invalid={fieldState.invalid}
             className={cn(

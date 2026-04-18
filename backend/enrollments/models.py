@@ -35,7 +35,7 @@ class Enrollment(BaseModel):
     def save(self, *args, **kwargs):
         instance = super().save(*args, **kwargs)
         if not hasattr(self, "progress"):
-            EnrollmentProgress.objects.create(enrollment=self)
+            EnrollmentProgress.objects.get_or_create(enrollment=self)
         return instance
 
     class Meta:

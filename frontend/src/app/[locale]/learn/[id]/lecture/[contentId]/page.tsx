@@ -14,7 +14,7 @@ export default function ContentPage() {
 
   const { course, markLectureCompleted } = useEnrollmentStore()
 
-  const allContents = course.sections.flatMap(s => s.contents)
+  const allContents = course.sections.flatMap(s => s.items)
   const currentIndex = allContents.findIndex(c => c.id === activeContentId)
   const activeContent = allContents[currentIndex]
 

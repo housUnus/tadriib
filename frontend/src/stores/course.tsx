@@ -11,9 +11,11 @@ import type {
   CourseRequirements,
   CoursePricing,
   CourseMessages,
+  CourseLearningOutcomes,
 } from "@/types/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { api } from "@/lib/utils/course-api"
+import { pick, pickBy } from "lodash"
 
 // API response types
 export interface ApiResponse<T> {
@@ -22,8 +24,10 @@ export interface ApiResponse<T> {
   error?: string
 }
 
+export type Status = "draft" | "review" | "published" | "rejected"
+
 export interface CourseStatus {
-  status: "draft" | "review" | "published" | "rejected"
+  status: Status
   lastSaved: Date | null
   isSaving: boolean
   error: string | null
@@ -36,14 +40,17 @@ export interface CourseMetadata {
   description: string
   type: CourseType
   category: string
+  sub_category?: string
   level: string
   language: string
+  price?: number
   thumbnail: string | null
-  promoVideo?: string
-  goals: CourseGoals
-  requirements: CourseRequirements
+  poster?: string
+  learning_outcomes: CourseLearningOutcomes[]
+  requirements: CourseRequirements[]
   pricing: CoursePricing
   messages: CourseMessages
+  status: Status
 }
 
 export interface CourseStore {
@@ -55,6 +62,8 @@ export interface CourseStore {
   // Actions - Course
   initCourse: (client: any, courseId?: string) => Promise<void>
   updateCourseMetadata: (client: any, data: Partial<CourseMetadata>) => Promise<void>
+  updateRequirements: (client: any, requirements: CourseRequirements[]) => Promise<void>
+  updateLearningOutcomes: (client: any, learning_outcomes: CourseLearningOutcomes[]) => Promise<void>
   saveCourse: (client: any, ) => Promise<void>
   submitForReview: (client: any, ) => Promise<void>
 
@@ -65,7 +74,7 @@ export interface CourseStore {
   reorderSections: (client: any, oldIndex: number, newIndex: number) => Promise<void>
 
   // Actions - Items
-  addItem: (client: any, sectionId: string, type: "lecture" | "quiz" | "webinar") => Promise<void>
+  addItem: (client: any, sectionId: string, type: "video" | "quiz" | "conference" | "article") => Promise<void>
   updateItem: (client: any, sectionId: string, itemId: string, data: Partial<CurriculumItem>) => Promise<void>
   deleteItem: (client: any, sectionId: string, itemId: string) => Promise<void>
   reorderItems: (client: any, sectionId: string, oldIndex: number, newIndex: number) => Promise<void>
@@ -75,6 +84,8 @@ export interface CourseStore {
   updateQuestion: (client: any, sectionId: string, itemId: string, questionId: string, data: Partial<QuizQuestion>) => Promise<void>
   deleteQuestion: (client: any, sectionId: string, itemId: string, questionId: string) => Promise<void>
 
+
+  updateItemAttachments: (client: any, sectionId: string, itemId: string, data: Partial<Attachment>) => Promise<void>
   // Actions - Attachments
   addAttachment: (client: any, sectionId: string, itemId: string, attachment: Attachment) => Promise<void>
   removeAttachment: (client: any, sectionId: string, itemId: string, attachmentId: string) => Promise<void>
@@ -99,9 +110,30 @@ export const useCourseStore = create<CourseStore>()(
       // Debounced auto-save for metadata changes
       const debouncedSaveMetadata = debounce(async (client) => {
         const { course } = get()
+        let fieldsToUpdate = [
+          "title", 
+          "subtitle",
+          "description",
+          "type",
+          "category",
+          "sub_category",
+          "level",
+          "language",
+          "poster",
+          "price"
+        ]
+
+        if(course.poster && typeof course.poster === "string") {
+          fieldsToUpdate = fieldsToUpdate.filter(f => f !== "poster")
+        }
+        const payload = pickBy(
+          pick(course, fieldsToUpdate),
+          (value) => value !== null && value !== ""
+        );
+
         if (!course.id) return
         set((state) => ({ status: { ...state.status, isSaving: true } }))
-        const result = await api.updateCourse(client, course.id, course)
+        const result = await api.updateCourse(client, course.id, payload)
         set((state) => ({
           status: {
             ...state.status,
@@ -124,16 +156,8 @@ export const useCourseStore = create<CourseStore>()(
           level: "beginner",
           language: "English",
           thumbnail: null,
-          goals: {
-            learningObjectives: [""],
-            prerequisites: [""],
-            targetAudience: [""],
-          },
-          requirements: {
-            requirements: [],
-            tools: [],
-            skillLevel: "beginner",
-          },
+          requirements: [],
+          learning_outcomes: [],
           pricing: {
             isFree: true,
             price: 0,
@@ -155,6 +179,7 @@ export const useCourseStore = create<CourseStore>()(
 
         // Course actions
         initCourse: async (client, courseId) => {
+          console.log("🚀 ~ courseId:", courseId)
           if (courseId) {
             // Load existing course
             const result = await api.getCourse(client, courseId)
@@ -162,6 +187,10 @@ export const useCourseStore = create<CourseStore>()(
               set({
                 course: result.data.course,
                 sections: result.data.sections,
+                status: {
+                  ...get().status,
+                  status: result.data.course?.status,
+                }
               })
             }
           } else {
@@ -174,6 +203,20 @@ export const useCourseStore = create<CourseStore>()(
               }))
             }
           }
+        },
+
+        updateRequirements: async (client, requirements) => {
+          set((state) => ({
+            course: { ...state.course, requirements },
+          }))
+          api.updateRequirements(client, get().course.id!, requirements) // Fire and forget - no need to await
+        },
+
+        updateLearningOutcomes: async (client, learning_outcomes) => {
+          set((state) => ({
+            course: { ...state.course, learning_outcomes },
+          })) 
+          api.updateLearningOutcomes(client, get().course.id!, learning_outcomes) // Fire and forget - no need to await
         },
 
         updateCourseMetadata: async (client, data) => {
@@ -340,6 +383,7 @@ export const useCourseStore = create<CourseStore>()(
             id: tempId,
             type,
             title: "",
+            is_expanded: true,
             isComplete: false,
             ...(type === "quiz" ? { content:{questions: []} } : {}),
           }
@@ -385,6 +429,7 @@ export const useCourseStore = create<CourseStore>()(
         },
 
         updateItem: async (client, sectionId, itemId, data) => {
+          console.log("🚀 ~ sectionId:", sectionId)
           const { course } = get()
 
           // Optimistic update
@@ -486,11 +531,11 @@ export const useCourseStore = create<CourseStore>()(
         // Question actions
         addQuestion: async (client, sectionId, itemId) => {
           const newQuestion: QuizQuestion = {
-            id: crypto.randomUUID(),
-            index: 0,
-            type: "multiple_choice",
-            question: "",
-            options: ["", "", "", ""],
+            _id: `temp-${crypto.randomUUID()}`,
+            order: 0,
+            answer_type: "multiple_choice",
+            text: "",
+            options: [{text: "Option 1"}, {text: "Option 2"}],
             correct_answer: '',
             allow_multiple_answers: false,
           }
@@ -504,7 +549,7 @@ export const useCourseStore = create<CourseStore>()(
                       i.id === itemId
                         ? { ...i, content: {
                           ...i.content,
-                          questions: [{...newQuestion, index: (i.content?.questions || []).length}, ...(i.content?.questions || [])] }
+                          questions: [{...newQuestion, order: (i.content?.questions || []).length}, ...(i.content?.questions || [])] }
                         }
                         : i
                     ),
@@ -535,7 +580,7 @@ export const useCourseStore = create<CourseStore>()(
                             content:{
                               ...i.content,
                               questions: (i.content?.questions || []).map((q) =>
-                                q.id === questionId ? { ...q, ...data } : q
+                                q._id === questionId ? { ...q, ...data } : q
                               ),
                             }
                           }
@@ -564,7 +609,7 @@ export const useCourseStore = create<CourseStore>()(
                     items: s.items.map((i) =>
                       i.id === itemId
                         ? { ...i, 
-                          content: {...i.content, questions: (i.content?.questions || []).filter((q) => q.id !== questionId) }}
+                          content: {...i.content, questions: (i.content?.questions || []).filter((q) => q._id !== questionId) }}
                         : i
                     ),
                   }
@@ -583,7 +628,7 @@ export const useCourseStore = create<CourseStore>()(
 
         // Attachment actions
         addAttachment: async (client, sectionId, itemId, attachment) => {
-          const { course, updateItem, sections } = get()
+          const { course } = get()
 
           // Optimistic update
           set((state) => ({
@@ -603,7 +648,7 @@ export const useCourseStore = create<CourseStore>()(
 
           // Upload file if present
           if (attachment.file && course.id) {
-            const result = await api.uploadAttachment(client, course.id, itemId, attachment.file)
+            const result = await api.uploadAttachment(client, course.id, itemId, attachment)
             if (result.success && result.data) {
               // Update with server URL
               set((state) => ({
@@ -616,7 +661,7 @@ export const useCourseStore = create<CourseStore>()(
                             ? {
                                 ...i,
                                 attachments: (i.attachments || []).map((a) =>
-                                  a.id === attachment.id ? { ...a, url: result.data!.url } : a
+                                  a.tempId === attachment.tempId ? { ...a, ...result.data } : a
                                 ),
                               }
                             : i
@@ -646,7 +691,8 @@ export const useCourseStore = create<CourseStore>()(
                 : s
             ),
           }))
-
+          console.log("xxxxxxxxxxx 🚀 ~ attachmentId:", attachmentId)
+          
           if (course.id) {
             await api.deleteAttachment(client, course.id, itemId, attachmentId)
           }

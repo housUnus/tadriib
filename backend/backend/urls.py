@@ -21,17 +21,12 @@ urlpatterns = [
     path('api/v1/', include('enrollments.urls')),
     path('api/v1/', include('wishlist.urls')),
     path('api/v1/', include('subscriptions.urls')),
+    path('api/v1/', include('core.urls')),
 ] 
 
 if settings.DEBUG:
     urlpatterns += static(f'{settings.MEDIA_URL}', document_root=settings.MEDIA_ROOT)
     urlpatterns += static(f'{settings.STATIC_URL}', document_root=settings.STATIC_ROOT)
-
-
-
-
-
-
 
 
 

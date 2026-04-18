@@ -34,7 +34,7 @@ const BoxedAuthLogin = () => {
       return
     }
 
-    router.push(ACCOUNT_ROUTE);
+    window.location.href = ACCOUNT_ROUTE
 
   };
 

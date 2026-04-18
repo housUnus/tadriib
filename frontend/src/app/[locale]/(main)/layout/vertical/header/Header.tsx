@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 
 import Search from "./Search";
 import { Icon } from "@iconify/react";
@@ -23,6 +23,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import Messages from "./Messages";
 import { usePathname } from "next/navigation";
 import DesktopSearch from "@/app/components/front-pages/layout/DesktopSearch";
+import { isInstructorRoute } from "@/lib/utils/utils";
 
 interface HeaderPropsType {
   layoutType: string;
@@ -35,13 +36,15 @@ const Header = ({ layoutType }: HeaderPropsType) => {
 
   const { setIsCollapse, isCollapse, isLayout, setActiveMode, activeMode } =
     useContext(CustomizerContext);
+  const pathname = usePathname();
+
+  const canShowCollapseIcon = useMemo(() => { return !isInstructorRoute(pathname);}, [pathname]);
 
   const [mobileMenu, setMobileMenu] = useState("");
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const pathname = usePathname();
 
   useEffect(() => {
     if (openMobile) {
@@ -81,16 +84,14 @@ const Header = ({ layoutType }: HeaderPropsType) => {
   return (
     <>
       <header
-        className={`sticky top-0 text-ld z-2 ${
-          isSticky
+        className={`sticky top-0 text-ld z-2 ${isSticky
             ? "bg-lightgray dark:bg-dark shadow-md fixed w-full"
             : "bg-transparent"
-        }`}
+          }`}
       >
         <nav
-          className={`rounded-none bg-transparent dark:bg-transparent py-4 sm:px-7.5 px-4 ${
-            layoutType == "horizontal" ? "container mx-auto" : ""
-          }  ${isLayout == "full" ? "max-w-full!" : ""}`}
+          className={`rounded-none bg-transparent dark:bg-transparent py-4 sm:px-7.5 px-4 ${layoutType == "horizontal" ? "container mx-auto" : ""
+            }  ${isLayout == "full" ? "max-w-full!" : ""}`}
         >
           <div className="mx-auto flex flex-wrap items-center justify-between">
             <span
@@ -109,7 +110,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
                   </div>
                 ) : null}
 
-                {layoutType != "horizontal" ? (
+                {layoutType != "horizontal" && canShowCollapseIcon ? (
                   <span
                     onClick={() => {
                       if (isCollapse === "full-sidebar") {
@@ -127,7 +128,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
                   </span>
                 ) : null}
 
-                <AppLinks />
+                {/* <AppLinks /> */}
 
                 <DesktopSearch />
               </div>
@@ -137,7 +138,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
               <FullLogo />
             </div>
             <div className="xl:block! hidden! md:hidden! flex-1/3!">
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center justify-end">
                 {/* Theme Toggle */}
                 {activeMode === "light" ? (
                   <div
@@ -151,7 +152,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
                 ) : (
                   // Dark Mode Button
                   <div
-                    className="h-10 w-10 hover:text-primary hover:bg-lightprimary dark:hover:bg-darkminisidebar  dark:hover:text-primary focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-darklink  dark:text-white"
+                    className="h-10 w-10 hover:text-primary hover:bg-lightprimary dark:hover:bg-darkminisidebar  dark:hover:text-primary focus:ring-0 rounded-full flex justify-center items-center cursor-pointer text-darklink dark:text-white"
                     onClick={toggleMode}
                   >
                     <span className="flex items-center">
@@ -163,7 +164,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
                 <Language />
 
                 {/* Meassage Dropdown */}
-                <Messages />
+                {/* <Messages /> */}
 
                 {/* Notification Dropdown */}
                 <MyNotifications />
@@ -183,7 +184,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
         </nav>
 
         <div
-          className={`w-full  xl:hidden block mobile-header-menu ${mobileMenu}`}
+          className={`w-full xl:hidden block mobile-header-menu ${mobileMenu}`}
         >
           <MobileHeaderItems />
         </div>
@@ -207,7 +208,7 @@ const Header = ({ layoutType }: HeaderPropsType) => {
           <SheetContent
             side="left"
             className="max-w-[100vw] "
-            // className="w-[260px] sm:w-[260px] p-0 max-w-[100vw]"
+          // className="w-[260px] sm:w-[260px] p-0 max-w-[100vw]"
           >
             <VisuallyHidden>
               <SheetTitle>sidebar</SheetTitle>

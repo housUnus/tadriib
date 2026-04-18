@@ -26,7 +26,7 @@ export const userSchema = z.object({
    avatar: z.any().optional(),
    details: z.string().optional(),
    // roles: z.array(z.string()).optional(),
-   // active_role: z.string().nullable().optional(),
+   active_role: z.string().nullable().optional(),
    is_verified_teacher: z.boolean().optional(),
    expertise: z.any().optional(),
    experience_years: z.number().nullable().optional(),

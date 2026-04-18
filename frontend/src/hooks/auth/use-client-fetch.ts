@@ -170,6 +170,17 @@ export const useClientFetch = () => {
         payload,
         headers
       ),
+    patch: <TResponse, TPayload>(
+      url: string,
+      payload: TPayload,
+      headers?: HeadersInit
+    ) =>
+      request<TResponse, TPayload>(
+        url,
+        "PATCH",
+        payload,
+        headers
+      ),
 
     delete: <TResponse>(url: string, headers?: HeadersInit) =>
       request<TResponse>(url, "DELETE", undefined, headers),

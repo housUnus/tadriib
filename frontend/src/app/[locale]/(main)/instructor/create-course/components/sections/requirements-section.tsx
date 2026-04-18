@@ -23,11 +23,7 @@ export function RequirementsSection() {
   const [newTool, setNewTool] = useState("")
   const client = useClientFetch()
 
-  const requirements = course.requirements || {
-    requirements: [],
-    tools: [],
-    skillLevel: "beginner" as const,
-  }
+  const requirements = course.requirements
 
   const updateRequirements = (field: string, value: unknown) => {
     updateCourseMetadata(client,
@@ -47,16 +43,6 @@ export function RequirementsSection() {
     updateRequirements("requirements", requirements.requirements.filter((_, i) => i !== index))
   }
 
-  const addTool = () => {
-    if (newTool.trim()) {
-      updateRequirements("tools", [...requirements.tools, newTool.trim()])
-      setNewTool("")
-    }
-  }
-
-  const removeTool = (index: number) => {
-    updateRequirements("tools", requirements.tools.filter((_, i) => i !== index))
-  }
 
   return (
     <div className="space-y-6">
@@ -108,7 +94,7 @@ export function RequirementsSection() {
           <CardDescription>What should students know before starting?</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {requirements.requirements.map((req, index) => (
+          {requirements.map((req, index) => (
             <div key={index} className="flex items-center gap-2">
               <Input value={req} readOnly className="flex-1" />
               <Button variant="ghost" size="icon" onClick={() => removeRequirement(index)}>

@@ -83,7 +83,6 @@ export function CourseWizard() {
       category: "",
       sub_category: "",
       language: "ar",
-      phone_number: "",
     },
   });
 
@@ -91,10 +90,8 @@ export function CourseWizard() {
   const watchedCategory = watch("category")
   const title = watch("title")
   const type = watch("type")
-  const values = watch()
-  console.log("🚀 ~ CourseWizard ~ values:", values)
 
-  const currentCategory: CourseCategory | undefined = categories?.find((c: CourseCategory) => c.id === watchedCategory)
+  const currentCategory : CourseCategory | undefined = categories?.find((c: CourseCategory) => c.id === watchedCategory)
   const client = useClientFetch()
 
   const canProceed = () => {
@@ -114,7 +111,7 @@ export function CourseWizard() {
     setIsSubmitting(false)
 
     if (courseId) {
-      router.push(`/create-course/${courseId}`)
+      router.push(`/instructor/create-course/${courseId}`)
     }
   }
 
@@ -135,7 +132,7 @@ export function CourseWizard() {
   return (
     <div className="min-h-screen bg-linear-to-b from-background to-muted/30 flex flex-col">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b bg-background/80 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />

@@ -16,7 +16,7 @@ const MobileHeaderItems = () => {
     );
   };
   return (
-    <nav className="rounded-none bg-white dark:bg-dark flex-1 px-9 ">
+    <nav className="rounded-none flex-1 px-9 ">
       {/* Toggle Icon   */}
 
       <div className="xl:hidden block w-full">
@@ -57,7 +57,7 @@ const MobileHeaderItems = () => {
           <Messages />
 
           {/* App Link Dropwown   */}
-          <AppLinks />
+          {/* <AppLinks /> */}
 
           {/* Language Dropdown*/}
           <Language />

@@ -39,6 +39,9 @@ import {
 } from "./curriculum"
 import type { CurriculumItem, ContentType, Attachment } from "@/types/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { Field, FieldLabel } from "@/components/ui/field"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 
 interface CurriculumItemProps {
   item: CurriculumItem
@@ -46,6 +49,8 @@ interface CurriculumItemProps {
   sectionId: string
   onUpdate: (item: Partial<CurriculumItem>) => void
   onDelete: () => void
+  onAddAttachment: (client: any, sectionId: string, itemId: string, attachment: Attachment) => void
+  onDeleteAttachment: (client: any, sectionId: string, itemId: string, attachmentId: string) => void
 }
 
 export function CurriculumItemComponent({
@@ -54,10 +59,12 @@ export function CurriculumItemComponent({
   sectionId,
   onUpdate,
   onDelete,
+  onAddAttachment,
+  onDeleteAttachment
 }: CurriculumItemProps) {
+  console.log("🚀 ~ CurriculumItemComponent ~ sectionId:", sectionId)
   const [isEditing, setIsEditing] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(item.type === "webinar")
-  const [showContentPicker, setShowContentPicker] = useState(item.type === "lecture" && !item.contentType)
+  const [isExpanded, setIsExpanded] = useState(item.is_expanded || false)
   const [showAttachments, setShowAttachments] = useState((item.attachments?.length || 0) > 0)
   const [title, setTitle] = useState(item.title)
   const client = useClientFetch()
@@ -83,42 +90,36 @@ export function CurriculumItemComponent({
     setIsEditing(false)
   }
 
-  const handleContentSelect = (contentType: ContentType) => {
-    onUpdate({ contentType })
-    setShowContentPicker(false)
-    setIsExpanded(true)
-  }
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const previewUrl = URL.createObjectURL(file)
       onUpdate({
-        content:{
+        content: {
           file: file,
           preview: previewUrl,
           url: undefined,
         },
+        asFormData: true,
         isComplete: true,
       })
     }
   }
 
   const handleVideoUrlChange = (videoUrl: string) => {
-    onUpdate({ content: {
-      url: videoUrl,
-      preview: undefined,
-      file: null,
-    },
-    isComplete: !!videoUrl })
+    onUpdate({
+      content: {
+        url: videoUrl,
+        preview: undefined,
+        file: null,
+      },
+      isComplete: !!videoUrl
+    })
   }
 
   const handleArticleChange = (articleContent: string) => {
     onUpdate({ content: { text: articleContent }, isComplete: !!articleContent })
-  }
-
-  const handleAttachmentsChange = (attachments: Attachment[]) => {
-    onUpdate({ attachments })
   }
 
   const handleAddQuestion = () => {
@@ -134,13 +135,13 @@ export function CurriculumItemComponent({
     deleteQuestion(client, sectionId, item.id, questionId)
   }
 
-  const Icon = item.type === "quiz" ? HelpCircle : item.type === "webinar" ? Video : item.contentType === "article" ? FileText : Play
-  const typeLabel = item.type === "quiz" ? "Quiz" : item.type === "webinar" ? "Webinar" : "Lecture"
-  const hasContent = item.type === "quiz" 
-    ? (item.content?.questions?.length || 0) > 0 
-    : item.type === "webinar"
-    ? !!item.content?.webinarSchedule?.date || !!item.content?.webinarDescription
-    : !!item.content?.url || !!item.content?.file || !!item.content?.text
+  const Icon = item.type === "quiz" ? HelpCircle : item.type === "conference" ? Video : item.type === "article" ? FileText : Play
+  const typeLabel = item.type === "quiz" ? "Quiz" : item.type === "conference" ? "Conference" : item.type === "article" ? "Article" : "Video"
+  const hasContent = item.type === "quiz"
+    ? (item.content?.questions?.length || 0) > 0
+    : item.type === "conference"
+      ? !!item.content?.webinarSchedule?.date || !!item.content?.webinarDescription
+      : !!item.content?.url || !!item.content?.file || !!item.content?.text
 
   return (
     <div
@@ -152,7 +153,7 @@ export function CurriculumItemComponent({
         className={cn(
           "flex items-center gap-3 p-4 bg-background border rounded-lg transition-all",
           "hover:border-primary/30 hover:shadow-sm",
-          (showContentPicker || isExpanded) && "border-primary/50 rounded-b-none"
+          (isExpanded) && "border-primary/50 rounded-b-none"
         )}
       >
         {/* Drag Handle */}
@@ -165,7 +166,7 @@ export function CurriculumItemComponent({
         </div>
 
         {/* Expand Toggle */}
-        {(hasContent || showAttachments || item.type === "webinar") && (
+        {(hasContent || showAttachments || item.type) && (
           <Button
             variant="ghost"
             size="icon"
@@ -221,9 +222,9 @@ export function CurriculumItemComponent({
         )}
 
         {/* Content Type Indicator */}
-        {item.contentType && !isEditing && (
+        {item.type && !isEditing && (
           <Badge variant="outline" className="text-xs font-normal capitalize">
-            {item.contentType}
+            {item.type}
           </Badge>
         )}
 
@@ -245,17 +246,6 @@ export function CurriculumItemComponent({
         {/* Actions */}
         {!isEditing && (
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            {item.type === "lecture" && !item.contentType && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-8 gap-1.5 text-primary border-primary/50"
-                onClick={() => setShowContentPicker(!showContentPicker)}
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Content
-              </Button>
-            )}
             {item.type === "quiz" && (
               <Button
                 size="sm"
@@ -267,7 +257,7 @@ export function CurriculumItemComponent({
                 Questions
               </Button>
             )}
-            {item.type === "webinar" && (
+            {item.type === "conference" && (
               <Button
                 size="sm"
                 variant="outline"
@@ -298,38 +288,44 @@ export function CurriculumItemComponent({
         )}
       </div>
 
-      {/* Content Type Picker (only for lectures) */}
-      {showContentPicker && item.type === "lecture" && (
-        <ContentTypePicker
-          onSelect={handleContentSelect}
-          onClose={() => setShowContentPicker(false)}
-        />
-      )}
-
       {/* Expanded Content Editor */}
-      {isExpanded && !showContentPicker && (
+      {isExpanded && (
         <div className="p-4 bg-muted/20 border border-t-0 rounded-b-lg space-y-6">
-          {item.type === "lecture" && (
+          <Field orientation="horizontal">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="is_preview"
+                name="is_preview"
+                checked={item.is_preview}
+                onCheckedChange={(checked) => onUpdate({ is_preview: !!checked })}
+              />
+              <FieldLabel htmlFor="is_preview" className="cursor-pointer mb-0">
+                Can be previewed
+              </FieldLabel>
+            </div>
+          </Field>
+
+          {(item.type === "article" || item.type === "video") && (
             <LectureEditor
-              contentType={item.contentType}
-              url={item.content?.url}
-              preview={item.content?.preview}
-              text={item.content?.text}
+              item={item}
               onVideoUrlChange={handleVideoUrlChange}
               onVideoFileUpload={handleVideoUpload}
               onArticleChange={handleArticleChange}
+              onUpdate={onUpdate}
             />
           )}
 
           {item.type === "quiz" && (
             <QuizEditor
-              questions={item.content?.questions || []}
+              sectionId={sectionId}
+              itemId={item.id}
+              content={item.content || {}}
               onUpdateQuestion={handleUpdateQuestion}
               onDeleteQuestion={handleDeleteQuestion}
             />
           )}
 
-          {item.type === "webinar" && (
+          {item.type === "conference" && (
             <WebinarEditor
               schedule={item.content?.webinarSchedule}
               description={item.content?.webinarDescription}
@@ -359,7 +355,8 @@ export function CurriculumItemComponent({
             <CollapsibleContent className="pt-4">
               <AttachmentsManager
                 attachments={item.attachments || []}
-                onChange={handleAttachmentsChange}
+                onCreate={(attachment) => onAddAttachment(client, sectionId, item.id, attachment)}
+                onDelete={(id) => onDeleteAttachment(client, sectionId, item.id, id)}
               />
             </CollapsibleContent>
           </Collapsible>

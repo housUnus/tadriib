@@ -3,12 +3,31 @@
 import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { File, FileText, FileImage, FileVideo, Trash2, Paperclip, Download } from "lucide-react"
-import { cn } from "@/lib/utils/utils"
 import type { Attachment } from "@/types/course"
+import { toast } from "sonner"
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+
+const ALLOWED_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/plain",
+  "application/zip",
+  "audio/mpeg",
+  "video/mp4",
+  "image/png",
+  "image/jpeg",
+]
 
 interface AttachmentsManagerProps {
   attachments: Attachment[]
-  onChange: (attachments: Attachment[]) => void
+  onCreate: (attachment: Attachment) => void
+  onDelete: (id: string) => void
 }
 
 const formatFileSize = (bytes: number) => {
@@ -18,31 +37,49 @@ const formatFileSize = (bytes: number) => {
 }
 
 const getFileIcon = (type: string) => {
-  if (type.startsWith("image/")) return FileImage
-  if (type.startsWith("video/")) return FileVideo
+  if (type?.startsWith("image/")) return FileImage
+  if (type?.startsWith("video/")) return FileVideo
   if (type === "application/pdf") return FileText
   return File
 }
 
-export function AttachmentsManager({ attachments, onChange }: AttachmentsManagerProps) {
+export function AttachmentsManager({ attachments, onCreate, onDelete }: AttachmentsManagerProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    const newAttachments: Attachment[] = files.map(file => ({
-      id: crypto.randomUUID(),
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      url: URL.createObjectURL(file),
-      file,
-    }))
-    onChange([...attachments, ...newAttachments])
+    const validFiles: Attachment[] = []
+
+    for (const file of files) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        toast.error(`Invalid file type: ${file.name}`)
+        continue
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File ${file.name} is too large. Max size: ${formatFileSize(MAX_FILE_SIZE)}`)
+        continue
+      }
+
+      validFiles.push({
+        tempId: crypto.randomUUID(),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        file,
+      })
+    }
+
+    if(validFiles.length === 0) return
+    onCreate(validFiles?.[0])
     if (inputRef.current) inputRef.current.value = ""
   }
 
-  const removeAttachment = (id: string) => {
-    onChange(attachments.filter(a => a.id !== id))
+  const removeAttachment = (id: string | undefined) => {
+    console.log("🚀 ~ removeAttachment ~ id:", id)
+    if (id) {
+      onDelete(id)
+    }
   }
 
   return (
@@ -50,7 +87,6 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
       <input
         ref={inputRef}
         type="file"
-        multiple
         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.mp3,.mp4,.png,.jpg,.jpeg"
         onChange={handleFileSelect}
         className="hidden"
@@ -85,7 +121,7 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
                     size="icon"
                     variant="ghost"
                     className="h-8 w-8 text-destructive hover:text-destructive"
-                    onClick={() => removeAttachment(attachment.id)}
+                    onClick={() => removeAttachment(attachment?.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

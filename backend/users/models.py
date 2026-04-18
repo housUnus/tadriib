@@ -10,6 +10,7 @@ from tinymce.models import HTMLField
 # Custom User
 # ----------------------------
 class User(AbstractUser):
+    profile: "Profile"
     username = None
     email = models.EmailField(_("Email address"), unique=True)
     phone_number = models.CharField(_("Phone number"), max_length=20, blank=True)
@@ -23,7 +24,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
+    
+    def is_instructor(self):
+        return hasattr(self, "profile") and self.profile.roles.filter(type=RolesTypes.TEACHER).exists()
+    
+    def is_student(self):
+        return hasattr(self, "profile") and self.profile.roles.filter(type=RolesTypes.STUDENT).exists()
+    
 # ----------------------------
 # Role
 # ----------------------------
@@ -75,6 +82,10 @@ class Profile(models.Model):
     @property
     def get_full_name(self):
         return f"{(self.user.first_name or '').capitalize()} {(self.user.last_name or '').capitalize()}".strip()
+  
+    @property
+    def can_switch_role(self):
+        return self.roles.count() > 1
   
     class Meta:
         verbose_name = _("Profile")

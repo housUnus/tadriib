@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -9,17 +9,18 @@ import { ArrowLeft, Save, Loader2, Send } from "lucide-react"
 import { CourseSidebar } from "../components/course-sidebar"
 import { CurriculumBuilder } from "../components/curriculum-builder"
 import { GoalsSection } from "../components/sections/goals-section"
-import { RequirementsSection } from "../components/sections/requirements-section"
 import { PricingSection } from "../components/sections/pricing-section"
-import { MessagesSection } from "../components/sections/messages-section"
 import { useCourseStore } from "@/stores/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import ContentLoader from "@/components/common/Loader"
+import { useQueryState } from 'nuqs'
+import { SectionDetails } from "../components/sections/details-section"
 
 export default function CourseEditorPage() {
   const params = useParams()
   const courseId = params.courseId as string
-  
-  const [activeSection, setActiveSection] = useState("curriculum")
+  const [activeSection, setActiveSection] = useQueryState('section', { defaultValue: 'details' })
+
   const client = useClientFetch()
 
   const {
@@ -33,22 +34,26 @@ export default function CourseEditorPage() {
 
   useEffect(() => {
     if (courseId) {
-      initCourse(courseId)
+      initCourse(client, courseId)
     }
   }, [courseId, initCourse])
 
+  if(!course?.id) {
+    return <ContentLoader />
+  }
+
   const renderSection = () => {
     switch (activeSection) {
+      case "details":
+        return <SectionDetails />
       case "goals":
         return <GoalsSection />
-      case "requirements":
-        return <RequirementsSection />
       case "curriculum":
         return <CurriculumBuilder />
       case "pricing":
         return <PricingSection />
-      case "messages":
-        return <MessagesSection />
+      // case "messages":
+      //   return <MessagesSection />
       default:
         return <CurriculumBuilder />
     }

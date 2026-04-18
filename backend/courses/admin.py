@@ -139,11 +139,11 @@ class CourseAdmin(ModelAdmin):
     search_fields = ("title", "description", "instructor__email")
 
     inlines = [SectionInline, LearningOutcomeInline, RequirementInline]
-    readonly_fields = ("published_at","slug")
+    readonly_fields = ("published_at","slug", "public_id")
 
     fieldsets = (
         ("Basic Info", {
-            "fields": ("title", "slug", "short_description", "description", "instructor", "poster")
+            "fields": ("title", "slug", "public_id", "short_description", "description", "instructor", "poster")
         }),
         ("Classification", {
             "fields": ("status", "level", "language", "category", "sub_category")

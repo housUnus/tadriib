@@ -2,7 +2,7 @@
 
 import React, { useContext, useEffect } from "react";
 
-import SidebarContent from "./Sidebaritems";
+import SidebarContent, { STUDENT_SECTIONS, TEACHER_SECTIONS } from "./Sidebaritems";
 import NavItems from "./NavItems";
 import NavCollapse from "./NavCollapse";
 
@@ -14,11 +14,16 @@ import { Separator } from "@/components/ui/separator";
 import SimpleBar from "simplebar-react";
 import FullLogo from "../../shared/logo/FullLogo";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useUserStore } from "@/stores/user";
 
 const SidebarLayout = () => {
-  const { selectedIconId, setSelectedIconId } =
-    useContext(CustomizerContext) || {};
- 
+  const { selectedIconId, setSelectedIconId } = useContext(CustomizerContext) || {};
+  const user = useUserStore(s => s.user)
+
+  const isTeacher = user?.active_role === "Teacher";
+
+  const SECTIONS_INUSE = isTeacher? TEACHER_SECTIONS: STUDENT_SECTIONS
+
   const pathname = usePathname();
 
   function findActiveUrl(narray: any, targetUrl: any) {
@@ -58,7 +63,7 @@ const SidebarLayout = () => {
 
           <SimpleBar className="h-[calc(100vh-32px)] ">
             <div className="   ps-4 rtl:pe-4 rtl:ps-0 pe-4">
-              {SidebarContent?.map((section) =>
+              {SidebarContent?.filter((section) => SECTIONS_INUSE.includes(section?.name || "")).map((section) =>
                 section.items?.map((item) => (
                   <div className="mb-4" key={item.heading}>
                     <h5 className="text-link dark:text-white font-semibold text-sm mb-2">

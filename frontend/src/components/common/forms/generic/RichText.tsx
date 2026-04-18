@@ -1,65 +1,64 @@
 "use client";
-
-import {
-    Controller,
-    Control,
-    FieldValues,
-    Path,
-    RegisterOptions,
-    useFormContext,
-} from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils/utils";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
 import OrderedList from "@tiptap/extension-ordered-list";
 import BulletList from "@tiptap/extension-bullet-list";
+import ImageResize from 'tiptap-extension-resize-image';
 import ListItem from "@tiptap/extension-list-item";
 import './Tiptap.css';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useClientFetch } from "@/hooks/auth/use-client-fetch";
 
-type RichTextFieldProps<T extends FieldValues> = {
-    value: any
+type RichTextEditorProps = {
+    value?: string;
+    onChange?: (value: string) => void;
+
     label?: string;
-    required?: boolean;
     helperText?: string;
-    className?: string;
-    rules?: RegisterOptions<T>;
     disabled?: boolean;
+    className?: string;
+    required?: boolean;
+
+    placeholder?: string;
 };
 
-export default function RichText<T extends FieldValues>({
-    name,
+export default function RichText({
+    value = "",
+    onChange,
     label,
-    required = false,
     helperText,
+    required,
+    disabled = false,
     className,
-    rules,
-    disabled,
-}: RichTextFieldProps<T>) {
+}: RichTextEditorProps) {
 
-    const { control } = useFormContext();
     const [isPreview, setIsPreview] = useState(false);
+    const client = useClientFetch();
+
+    // Store editor in state so it persists across renders
 
     const editor = useEditor({
         extensions: [
             StarterKit,
             Link,
-            Image,
+            ImageResize.configure({
+                maxWidth: 400, // Maximum width in pixels
+            }),
             Underline,
             OrderedList,
             BulletList,
             ListItem,
         ],
         immediatelyRender: false,
-        content: field.value || "",
+        content: value || "",
         editable: !disabled && !isPreview,
-        onUpdate: ({ editor }) => {
-            field.onChange(editor.getHTML());
+        onBlur: ({ editor }) => {
+            onChange?.(editor.getHTML());
         },
     });
 
@@ -78,17 +77,29 @@ export default function RichText<T extends FieldValues>({
             editor?.chain().focus().setLink({ href: url }).run();
         }
     };
-    const handleImage = () => {
-        const url = prompt("Enter image URL");
-        if (url) {
-            editor?.chain().focus().setImage({ src: url }).run();
-        }
+    const handleImage = async () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+
+        input.onchange = async () => {
+            const file = input.files?.[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const { data, error } = await client.post("/upload-image/", formData);
+
+            editor?.chain().focus().setImage({ src: (data as any).url }).run();
+        };
+
+        input.click();
     };
     const handleCodeBlock = () => editor?.chain().focus().toggleCodeBlock().run();
     const handleUndo = () => editor?.chain().focus().undo().run();
     const handleRedo = () => editor?.chain().focus().redo().run();
     const togglePreview = () => setIsPreview(!isPreview);
-
     return (
         <Field className="gap-0">
             {label && (
@@ -101,6 +112,10 @@ export default function RichText<T extends FieldValues>({
             )}
 
             <div
+                className={cn(
+                    "mt-1 border rounded-md",
+                    className,
+                )}
             >
                 {/* Toolbar */}
                 <div className="editor-container">
@@ -131,7 +146,9 @@ export default function RichText<T extends FieldValues>({
                     }
                 </div>
             </div>
+            {helperText && (
+                <p className="text-xs text-gray-500 mt-1">{helperText}</p>
+            )}
         </Field>
     );
-
 }

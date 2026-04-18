@@ -28,7 +28,7 @@ export interface Question {
 export interface Section {
   id: string
   title: string
-  contents: ContentItem[]
+  items: ContentItem[]
 }
 
 export interface Course {
@@ -53,7 +53,7 @@ export const mockCourse: Course = {
     {
       id: "section-1",
       title: "Introduction",
-      contents: [
+      items: [
         {
           id: "content-1",
           title: "Welcome to the Course",
@@ -82,7 +82,7 @@ export const mockCourse: Course = {
     {
       id: "section-2",
       title: "React Fundamentals",
-      contents: [
+      items: [
         {
           id: "content-4",
           title: "Understanding Components",
@@ -121,7 +121,7 @@ export const mockCourse: Course = {
     {
       id: "section-3",
       title: "Next.js Essentials",
-      contents: [
+      items: [
         {
           id: "content-8",
           title: "Introduction to Next.js",
@@ -165,7 +165,7 @@ export function calculateProgress(course: Course): number {
   let total = 0
 
   course.sections.forEach((section) => {
-    section.contents.forEach((content) => {
+    section.items.forEach((content:any) => {
       total++
       if (content.completed) completed++
     })

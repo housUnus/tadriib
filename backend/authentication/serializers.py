@@ -36,7 +36,7 @@ class JwtUserSerializer(UserDetailsSerializer):
         if not hasattr(user, "profile"):
             return None
         return (
-            user.profile.active_role.type
+            user.profile.active_role.get_type_display()
             if user.profile.active_role
             else None
         )

@@ -258,7 +258,7 @@ class OrderItem(models.Model):
                 order_item=self,
                 expires_at=expires_at,
             )
-            EnrollmentProgress.objects.create(enrollment=enrollment)
+            EnrollmentProgress.objects.get_or_create(enrollment=enrollment)
             
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

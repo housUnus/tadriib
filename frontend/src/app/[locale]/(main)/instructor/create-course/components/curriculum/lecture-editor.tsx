@@ -2,50 +2,46 @@
 
 import { Textarea } from "@/components/ui/textarea"
 import { VideoEditor } from "./video-editor"
-import type { ContentType } from "@/types/course"
+import type { ContentType, CurriculumItem } from "@/types/course"
 import { DebouncedInput } from "@/components/common/forms/generic/DebounceInput"
+import { RichTextEditor } from "../rich-text-editor"
 
 interface LectureEditorProps {
-  contentType?: ContentType
-  url?: string
-  preview?: string
-  text?: string
+  item: CurriculumItem
   onVideoUrlChange: (url: string) => void
   onVideoFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   onArticleChange: (content: string) => void
+  onUpdate: (data: Partial<CurriculumItem>) => void
 }
 
 export function LectureEditor({
-  contentType,
-  url,
-  preview,
-  text,
+  item,
   onVideoUrlChange,
   onVideoFileUpload,
   onArticleChange,
+  onUpdate,
 }: LectureEditorProps) {
 
-  if (contentType === "video") {
+  if (item?.type === "video") {
     return (
       <VideoEditor
-        url={url}
-        preview={preview}
+        content={item.content}
         onUrlChange={onVideoUrlChange}
         onFileUpload={onVideoFileUpload}
+        onUpdate={onUpdate}
+        is_main_preview={item.is_main_preview}
       />
     )
   }
 
-  if (contentType === "article") {
+  if (item?.type === "article") {
     return (
-      <div className="space-y-2">
+      <div className="space-y-2 flex gap-1 flex-col">
         <label className="text-sm font-medium">Article Content</label>
-        <DebouncedInput
-          component={Textarea}
-          value={text || ""}
+        <RichTextEditor
+          value={item.content?.text || ""}
           onChange={onArticleChange}
           placeholder="Write your article content here..."
-          rows={8}
           className="resize-none"
         />
       </div>

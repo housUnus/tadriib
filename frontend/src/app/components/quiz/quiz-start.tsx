@@ -27,7 +27,6 @@ export default function QuizStart({
     staleTime: 0,
     refetchOnMount: "always", 
   })
-  console.log("🚀 ~ QuizStart ~ submissions:", submissions)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

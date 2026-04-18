@@ -38,14 +38,16 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
     getStats,
     submitQuiz
   } = useQuiz(quiz, content.invalidate, content.progress.active_quiz_submission || selectedSubmission, client)
+  const stats: QuizStats = getStats()
+  const isMobile = useIsMobile()
 
   const isReadOnly: boolean = state.current_submission?.status !== 'in_progress' && state.current_submission?.status !== 'is_paused'
-
-  const isMobile = useIsMobile()
+  console.log("🚀 ~ QuizWrapper ~ state.current_submission?.status:", state.current_submission?.status)
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(true)
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
   const [fontSize, setFontSize] = useState(16)
+  const [isPaused, setIsPaused] = useState(stats.is_paused)
 
   useEffect(() => {
     if (leftSidebarOpen) {
@@ -59,7 +61,6 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
     }
   }, [rightSidebarOpen])
 
-  const stats: QuizStats = getStats()
 
   useEffect(() => {
     if (isMobile) {
@@ -88,6 +89,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
         onExit={() => router.replace(`?submission=`)}
         onBack={onBack}
         onSubmit={submitQuiz}
+        onPause={(state) => setIsPaused(state)}
       />
 
       <div className="relative flex-1 overflow-hidden">
@@ -138,6 +140,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                     onClearAnswer={() => clearAnswer(currentQuestion.id)}
                     onToggleFlag={() => toggleFlag(currentQuestion.id)}
                     onSaveAndNext={saveAndNext}
+                    isPaused={isPaused}
                   />
                 </div>
               </ScrollArea>
@@ -167,7 +170,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
           <div className="flex-1 overflow-y-auto overflow-x-hidden">
             <div className="p-4 min-w-0 w-full">
               <QuestionDisplay
-                isReadOnly={isReadOnly}
+                isReadOnly={isReadOnly || state.current_submission?.status === 'is_paused'}
                 question={currentQuestion}
                 selectedAnswer={state.answers[currentQuestion.id]}
                 isFlagged={state.flagged.has(currentQuestion.id)}
@@ -178,6 +181,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                 onClearAnswer={() => clearAnswer(currentQuestion.id)}
                 onToggleFlag={() => toggleFlag(currentQuestion.id)}
                 onSaveAndNext={saveAndNext}
+                isPaused={isPaused}
               />
             </div>
           </div>

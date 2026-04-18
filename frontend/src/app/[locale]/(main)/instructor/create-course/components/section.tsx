@@ -32,6 +32,7 @@ import {
   GripVertical,
   HelpCircle,
   Pencil,
+  Play,
   Plus,
   Trash2,
   Video,
@@ -40,7 +41,7 @@ import {
 import { cn } from "@/lib/utils/utils"
 import { CurriculumItemComponent } from "./curriculum-item"
 import { useCourseStore } from "@/stores/course"
-import type { CurriculumItem, Section } from "@/types/course"
+import type { ContentType, CurriculumItem, Section } from "@/types/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 
 interface SectionProps {
@@ -55,7 +56,7 @@ export function SectionComponent({ section, index, onUpdate, onDelete }: Section
   const [title, setTitle] = useState(section.title)
   const client = useClientFetch()
 
-  const { addItem, updateItem, deleteItem, reorderItems } = useCourseStore()
+  const { addItem, updateItem, deleteItem, reorderItems, addAttachment, removeAttachment } = useCourseStore()
 
   const {
     attributes,
@@ -87,8 +88,8 @@ export function SectionComponent({ section, index, onUpdate, onDelete }: Section
     onUpdate({ isExpanded: !section.isExpanded })
   }
 
-const handleAddItem = (type: "lecture" | "quiz" | "webinar") => {
-  addItem(client, section.id, type)
+  const handleAddItem = (type: ContentType) => {
+    addItem(client, section.id, type)
   }
 
   const handleUpdateItem = (itemId: string, data: Partial<CurriculumItem>) => {
@@ -225,6 +226,8 @@ const handleAddItem = (type: "lecture" | "quiz" | "webinar") => {
                   sectionId={section.id}
                   onUpdate={(updated: Partial<CurriculumItem>) => handleUpdateItem(item.id, updated)}
                   onDelete={() => handleDeleteItem(item.id)}
+                  onAddAttachment={addAttachment}
+                  onDeleteAttachment={removeAttachment}
                 />
               ))}
             </SortableContext>
@@ -249,20 +252,24 @@ const handleAddItem = (type: "lecture" | "quiz" | "webinar") => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={() => handleAddItem("lecture")}>
+              <DropdownMenuItem onClick={() => handleAddItem("article")}>
                 <FileText className="h-4 w-4 mr-2" />
-                Lecture
+                Article
               </DropdownMenuItem>
-<DropdownMenuItem onClick={() => handleAddItem("quiz")}>
-  <HelpCircle className="h-4 w-4 mr-2" />
-  Quiz
-  </DropdownMenuItem>
-  <DropdownMenuItem onClick={() => handleAddItem("webinar")}>
-  <Video className="h-4 w-4 mr-2" />
-  Webinar
-  </DropdownMenuItem>
-  </DropdownMenuContent>
-  </DropdownMenu>
+              <DropdownMenuItem onClick={() => handleAddItem("video")}>
+                <Play className="h-4 w-4 mr-2" />
+                Video
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleAddItem("quiz")}>
+                <HelpCircle className="h-4 w-4 mr-2" />
+                Quiz
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleAddItem("conference")}>
+                <Video className="h-4 w-4 mr-2" />
+                Webinar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
     </div>

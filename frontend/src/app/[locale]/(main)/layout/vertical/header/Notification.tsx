@@ -21,7 +21,7 @@ const MyNotifications = () => {
 
   return (
     <div className="relative group/menu">
-      <DropdownMenu dir={activeDir === "rtl" ? "rtl" : "ltr"}>
+      <DropdownMenu dir={activeDir === "rtl" ? "rtl" : "ltr"} modal={false}>
         <DropdownMenuTrigger asChild>
           <div className="relative">
             <span className="h-10 w-10 hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">

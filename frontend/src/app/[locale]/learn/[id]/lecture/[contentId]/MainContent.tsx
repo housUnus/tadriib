@@ -50,6 +50,7 @@ export function MainContent({
   }, [submissionId])
 
   const loaded_content: any = data?.data
+  console.log("🚀 ~ MainContent ~ loaded_content:", loaded_content)
   const renderContent = () => {
     const commonProps = {
       content: ({
@@ -64,6 +65,9 @@ export function MainContent({
       hasPrevious,
       hasNext,
     }
+    console.log("🚀 ~ renderContent ~ commonProps:", commonProps)
+
+    if(!activeContent) return null
 
     switch (activeContent.type) {
       case "video":

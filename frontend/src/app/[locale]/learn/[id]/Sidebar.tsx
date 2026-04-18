@@ -58,7 +58,7 @@ export function CourseSidebar({
     const query = searchQuery.toLowerCase()
     return (course?.sections as Section[])
       .map((section: Section) => {
-        const matchingContents = section.contents.filter(
+        const matchingContents = section.items.filter(
           (content) =>
             content.title.toLowerCase().includes(query) || content.description?.toLowerCase().includes(query),
         )
@@ -66,7 +66,7 @@ export function CourseSidebar({
         if (section.title.toLowerCase().includes(query) || matchingContents.length > 0) {
           return {
             ...section,
-            contents: matchingContents.length > 0 ? matchingContents : section.contents,
+            contents: matchingContents.length > 0 ? matchingContents : section.items,
           }
         }
         return null
@@ -120,7 +120,7 @@ export function CourseSidebar({
         {searchQuery.trim() && (
           <div className="px-4 py-2 bg-muted/30 border-b border-border">
             <p className="text-xs text-muted-foreground">
-              {filteredSections.reduce((acc, s) => acc + s.contents.length, 0)} results found
+              {filteredSections.reduce((acc, s) => acc + s.items.length, 0)} results found
             </p>
           </div>
         )}
@@ -169,8 +169,8 @@ function SectionItem({
   onToggleComplete,
   searchQuery = "",
 }: SectionItemProps) {
-  const completedCount = section.contents.filter((c) => c.progress?.is_completed).length
-  const totalDuration = section.contents
+  const completedCount = section.items.filter((c) => c.progress?.is_completed).length
+  const totalDuration = section.items
     .filter((c) => c.duration_minutes)
     .reduce((acc, c) => {
       const mins = c.duration_minutes || 0
@@ -188,7 +188,7 @@ function SectionItem({
             <HighlightText text={section.title} query={searchQuery} />
           </span>
           <div className="text-xs text-muted-foreground mt-0.5">
-            {completedCount} / {section.contents.length} | {totalDuration}min
+            {completedCount} / {section.items.length} | {totalDuration}min
           </div>
         </div>
         {isExpanded ? (
@@ -200,7 +200,7 @@ function SectionItem({
 
       {isExpanded && (
         <div className="bg-muted/30">
-          {section.contents.map((content) => (
+          {section.items.map((content) => (
             <ContentItemButton
               key={content.id}
               content={content}

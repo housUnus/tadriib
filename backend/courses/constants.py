@@ -1,10 +1,5 @@
 from django.db import models
 
-class QuestionBlockType(models.TextChoices):
-    TEXT = "text"
-    IMAGE = "image"
-    FILE = "file"
-    
 class AnswerType(models.TextChoices):
     TRUE_FALSE = "true_false", "True/False"
     FILL_BLANK = "fill_blank", "Fill in the Blank"
@@ -17,6 +12,7 @@ class CourseStatus(models.TextChoices):
     REVIEW = "review", "In Review"
     PUBLISHED = "published", "Published"
     ARCHIVED = "archived", "Archived"
+    REJECTED = "rejected", "Rejected"
     
 class ContentType(models.TextChoices):
     VIDEO = "video", "Video"
@@ -47,3 +43,8 @@ class ConferenceStatus(models.TextChoices):
     SCHEDULED = "scheduled", "Scheduled"
     LIVE = "live", "Live"
     ENDED = "ended", "Ended"
+    
+class CourseType(models.TextChoices):
+    COURSE = "course", "Course"
+    QUIZ = "quiz", "Quiz"
+    WEBINAR = "webinar", "Webinar"

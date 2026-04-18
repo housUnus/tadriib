@@ -11,9 +11,8 @@ import { UserInput } from "@/lib/schemas/users";
 const AccountTab = async () => {
 
   const session = await auth();
-  const user_id = session?.user?.id
   const client = await useServerFetch();
-  const { data: rawUser, error } = await client.get(`/users/${user_id}/`);
+  const { data: rawUser, error } = await client.get(`/users/me/`);
   const user = rawUser as UserInput;
 
   return (

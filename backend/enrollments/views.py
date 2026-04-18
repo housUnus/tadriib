@@ -9,7 +9,7 @@ from enrollments.constants import QuizStatus
 from .models import Enrollment, EnrollmentProgress, LectureProgress, QuizSubmission, QuestionSubmission, Question
 from .serializers import EnrollmentSerializer, EnrollmentDetailSerializer, \
     EnrollmentProgressSerializer, QuizSubmissionSerializer, QuizSubmissionListSerializer
-from courses.serializers import ContentSerializer
+from courses.serializers.read import ContentSerializer
 from core.mixins import ListQueryMixin, StandardResultsSetPagination, PublicViewsMixin
 from datetime import timedelta
 from django.utils.timezone import now
@@ -236,7 +236,7 @@ class QuizSubmissionViewSet(ModelViewSet):
         quiz:"Quiz" = get(lecture, 'quiz')
         
         if quiz.time_limit_minutes:
-            submission.expires_at = now() + timedelta(minutes=quiz.time_limit_minutes)
+            submission.expires_at = now() + timedelta(minutes=float(quiz.time_limit_minutes))
             submission.remaining_seconds = quiz.time_limit_minutes * 60
         else:
             submission.expires_at = None
@@ -359,7 +359,7 @@ class QuizSubmissionViewSet(ModelViewSet):
         submission.status = QuizStatus.IN_PROGRESS
         
         if submission.remaining_seconds:
-            submission.expires_at = now() + timedelta(seconds=submission.remaining_seconds)
+            submission.expires_at = now() + timedelta(seconds=float(submission.remaining_seconds))
         else:
             submission.expires_at = None
 

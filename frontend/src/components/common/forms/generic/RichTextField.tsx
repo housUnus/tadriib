@@ -17,10 +17,12 @@ import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
 import OrderedList from "@tiptap/extension-ordered-list";
 import BulletList from "@tiptap/extension-bullet-list";
+import ImageResize from 'tiptap-extension-resize-image';
 import ListItem from "@tiptap/extension-list-item";
 import './Tiptap.css';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useEffect, useState } from "react";
+import { useClientFetch } from "@/hooks/auth/use-client-fetch";
 
 type RichTextFieldProps<T extends FieldValues> = {
   name: Path<T>;
@@ -30,6 +32,7 @@ type RichTextFieldProps<T extends FieldValues> = {
   className?: string;
   rules?: RegisterOptions<T>;
   disabled?: boolean;
+  placeholder?: string;
 };
 
 export default function RichTextField<T extends FieldValues>({
@@ -40,10 +43,12 @@ export default function RichTextField<T extends FieldValues>({
   className,
   rules,
   disabled,
+  placeholder = "Type your text here...",
 }: RichTextFieldProps<T>) {
 
   const { control } = useFormContext();
   const [isPreview, setIsPreview] = useState(false);
+  const client = useClientFetch();
 
   // Store editor in state so it persists across renders
 
@@ -57,7 +62,10 @@ export default function RichTextField<T extends FieldValues>({
           extensions: [
             StarterKit,
             Link,
-            Image,
+            ImageResize.configure({
+              minWidth: 100, // Minimum width in pixels
+              maxWidth: 800, // Maximum width in pixels
+            }),
             Underline,
             OrderedList,
             BulletList,
@@ -66,7 +74,7 @@ export default function RichTextField<T extends FieldValues>({
           immediatelyRender: false,
           content: field.value || "",
           editable: !disabled && !isPreview,
-          onUpdate: ({ editor }) => {
+          onBlur: ({ editor }) => {
             field.onChange(editor.getHTML());
           },
         });
@@ -86,11 +94,24 @@ export default function RichTextField<T extends FieldValues>({
             editor?.chain().focus().setLink({ href: url }).run();
           }
         };
-        const handleImage = () => {
-          const url = prompt("Enter image URL");
-          if (url) {
-            editor?.chain().focus().setImage({ src: url }).run();
-          }
+        const handleImage = async () => {
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+
+          input.onchange = async () => {
+            const file = input.files?.[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const { data, error } = await client.post("/upload-image/", formData);
+
+            editor?.chain().focus().setImage({ src: (data as any).url }).run();
+          };
+
+          input.click();
         };
         const handleCodeBlock = () => editor?.chain().focus().toggleCodeBlock().run();
         const handleUndo = () => editor?.chain().focus().undo().run();
@@ -135,7 +156,7 @@ export default function RichTextField<T extends FieldValues>({
                   <button type="button" onClick={togglePreview}><Icon className='text-lg font-semibold text-dark dark:text-bodytext hover:text-primary dark:hover:text-primary' icon={isPreview ? "tabler:eye-off" : "tabler:eye"} /></button>
                 </div>
                 {!isPreview &&
-                  <EditorContent editor={editor} />
+                  <EditorContent editor={editor} placeholder={placeholder}/>
                 }
                 {isPreview &&
                   <div className="output p-4 min-h-80">

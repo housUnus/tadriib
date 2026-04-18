@@ -43,15 +43,15 @@ export default async function LocaleLayout({
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body className={`${manrope.className}`}>
-        <NextTopLoader color="#5d87ff" showSpinner={false} />
-        <NextIntlClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem={false}
-            disableTransitionOnChange
-          >
+      <body className={`${manrope.className}`} suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider>
+            <NextTopLoader color="#5d87ff" showSpinner={false} />
             <CustomizerContextProvider>
               <Providers>
                 <SessionProvider session={session}>
@@ -60,8 +60,8 @@ export default async function LocaleLayout({
                 </SessionProvider>
               </Providers>
             </CustomizerContextProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

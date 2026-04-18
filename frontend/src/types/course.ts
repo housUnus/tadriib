@@ -1,6 +1,4 @@
-import { id } from "zod/v4/locales"
-
-export type ContentType = "video" | "article" | "webinar"
+export type ContentType = "video" | "article" | "conference" | "quiz"
 
 export type QuestionType = "multiple_choice" | "true_false" | "fill_blank"
 
@@ -15,35 +13,29 @@ export interface CourseCategory {
   children: CourseCategory[]
 }
 
-export type string =
-  | "development"
-  | "business"
-  | "finance"
-  | "it-software"
-  | "design"
-  | "marketing"
-  | "lifestyle"
-  | "photography"
-  | "health"
-  | "music"
-  | "teaching"
-  | "other"
-
 export interface Attachment {
-  id: string
+  id?: string
+  tempId: string
   name: string
   type: string
   size: number
-  url: string
+  url?: string
   file?: File
 }
 
+export interface Options {
+  text: string
+  id?: string
+  is_correct?: boolean
+}
+
 export interface QuizQuestion {
-  id: string
-  index: number
-  type: QuestionType
-  question: string // HTML content from rich text editor
-  options?: string[]
+  _id: string
+  id?: string
+  order: number
+  answer_type: QuestionType
+  text: string // HTML content from rich text editor
+  options?: Options[] // For multiple choice
   correct_answer?: number[] | number | string | string[] | boolean
   allow_multiple_answers?: boolean
   answer_hint?: string
@@ -69,20 +61,32 @@ export interface Data {
   // For quiz
   questions?: QuizQuestion[]
   duration?: number
+  description?: string
+  show_correct_answers?: boolean
+  show_final_score?: boolean
+  max_attempts?: number | null
+  can_pause?: boolean
+  can_retake?: boolean
+  require_review?: boolean
+  time_limit_minutes?: number | null
   // For webinar
   webinarSchedule?: WebinarSchedule
   webinarDescription?: string
+  
 }
 
 export interface CurriculumItem {
   id: string
-  type: "lecture" | "quiz" | "webinar"
+  type: ContentType
   title: string
-  contentType?: ContentType
   isComplete: boolean
+  is_expanded?: boolean
   // Attachments for any item
   attachments?: Attachment[]
   content?: Data
+  asFormData?: boolean
+  is_preview?: boolean
+  is_main_preview?: boolean
 }
 
 export interface Section {
@@ -92,18 +96,21 @@ export interface Section {
   isExpanded: boolean
 }
 
+export interface CourseLearningOutcomes {
+  id?: string
+  text: string
+}
+
+export interface CourseRequirements {
+  id?: string
+  text: string
+} 
+
 // Course Goals
 export interface CourseGoals {
   learningObjectives: string[] // What will students learn
   prerequisites: string[] // Requirements/prerequisites
   targetAudience: string[] // Who is this course for
-}
-
-// Course Requirements
-export interface CourseRequirements {
-  requirements: string[]
-  tools: string[]
-  skillLevel: "beginner" | "intermediate" | "advanced" | "all"
 }
 
 // Course Pricing
@@ -130,12 +137,13 @@ export interface CourseData {
   description: string
   type: CourseType
   category: string
+  sub_category?: string
   level: "beginner" | "intermediate" | "advanced" | "all"
   language: string
   thumbnail: string | null
-  promoVideo?: string
+  poster?: string
   // Extended data
-  goals: CourseGoals
+  learning_outcomes: CourseLearningOutcomes[]
   requirements: CourseRequirements
   pricing: CoursePricing
   messages: CourseMessages

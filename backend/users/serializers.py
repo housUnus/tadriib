@@ -1,10 +1,8 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from dj_rest_auth.serializers import UserDetailsSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
-from drf_writable_nested.serializers import WritableNestedModelSerializer
-from .models import Profile, Role
+from .models import Profile, Role, RolesTypes
 
 User = get_user_model()
 
@@ -77,6 +75,8 @@ class UserSerializer(serializers.ModelSerializer):
     expertise = serializers.CharField(source='profile.expertise', required=False)
     experience_years = serializers.IntegerField(source='profile.experience_years', required=False)
     slug = serializers.SlugField(source='profile.slug', read_only=True)
+    can_switch_role = serializers.BooleanField(source='profile.can_switch_role', read_only=True)
+    active_role = serializers.CharField(source='profile.active_role.get_type_display', read_only=True)
     class Meta:
         model = User
         fields = (
@@ -91,6 +91,8 @@ class UserSerializer(serializers.ModelSerializer):
             "expertise",
             "experience_years",
             "slug",
+            "can_switch_role",
+            "active_role",
         )
         read_only_fields = ("id", "email")
         
@@ -98,17 +100,21 @@ class UserSerializer(serializers.ModelSerializer):
         if value == "":
             return None
         return value
-
         
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile', {})
+        default_role = Role.objects.get(type=RolesTypes.STUDENT)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        profile = Profile.objects.get_or_create(user=instance)[0]
+        profile, created = Profile.objects.get_or_create(user=instance)
+        if created:
+            profile.roles.add(default_role)
+            profile.active_role = default_role
         for attr, value in profile_data.items():
             setattr(profile, attr, value)
+            
         profile.save()
 
         return instance

@@ -20,10 +20,11 @@ interface QuizHeaderProps {
   onExit?: () => void
   onSubmit?: () => void
   onBack?: () => void
+  onPause?: (state: boolean) => void
 
 }
 
-export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit, onBack }: QuizHeaderProps) {
+export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit, onBack, onPause }: QuizHeaderProps) {
   console.log("🚀 ~ QuizHeader ~ stats:", stats)
   const progress = (stats.answered / stats.total) * 100
   const client = useClientFetch()
@@ -123,10 +124,12 @@ export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit
 
               onPause={async () => {
                 await client.post(`/quiz-submissions/${current_submission.id}/pause/`, {})
+                onPause?.(true)
               }}
 
               onResume={async () => {
                 await client.post(`/quiz-submissions/${current_submission.id}/resume/`, {})
+                onPause?.(false)
               }}
             />
           </div>

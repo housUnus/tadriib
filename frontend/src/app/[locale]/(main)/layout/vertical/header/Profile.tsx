@@ -14,14 +14,16 @@ import {
 import { logoutAction } from "@/lib/actions/auth";
 import { ActionButton } from "@/components/common/forms/generic/action-button";
 import { useUserStore } from "@/stores/user";
+import { switchRole } from "@/lib/actions/users";
 
 const Profile = () => {
 
   const user = useUserStore(s => s.user)
+  console.log("🚀 ~ Profile ~ user:", user)
 
   return (
     <div className="relative group/menu">
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <span className="h-10 w-10 hover:text-primary hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">
             <Image
@@ -35,7 +37,7 @@ const Profile = () => {
           </span>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-screen sm:w-[360px] py-4 px-0 rounded-sm ">
+        <DropdownMenuContent align="center" className="w-[90vw] max-w-[250px] pt-4 px-0 rounded-sm ">
           {/* Header */}
           <Link href="/account/settings">
             <div className="px-6">
@@ -51,11 +53,7 @@ const Profile = () => {
                 <div>
                   <h6 className="card-title hover:text-primary">{user?.first_name} {user?.last_name}</h6>
                   <p className="card-subtitle mb-0 flex items-center">
-                    <Icon
-                      icon="solar:mailbox-line-duotone"
-                      className="text-base me-1"
-                    />
-                    {user?.email}
+                   {user?.active_role}
                   </p>
                 </div>
               </div>
@@ -64,47 +62,44 @@ const Profile = () => {
 
           {/* Dropdown items */}
           <SimpleBar>
-            {profileData.profileDD.map((items, index) => (
-              <DropdownMenuItem
-                key={index}
-                asChild
-                className="px-6 py-1 flex justify-between items-center bg-hover group/link w-full cursor-pointer"
-              >
-                <Link href={items.url} className="flex items-center w-full">
-                  <div className="flex items-center w-full">
-                    <div
-                      className={`h-8 w-8 shrink-0 rounded-md flex justify-center items-center ${items.bgcolor}`}
-                    >
-                      <Icon
-                        icon={items.icon}
-                        height={14}
-                        className={items.color}
-                      />
-                    </div>
-                    <div className="ps-4 flex justify-between w-full">
-                      <div className="w-3/4 ">
-                        <h5 className="mb-0 text-sm  group-hover/link:text-primary">
-                          {items.title}
-                        </h5>
-                        <div className="text-xs  text-darklink">
-                          {items.subtitle}
+            {profileData.profileDD.map((items, index) => {
+              return (
+                <DropdownMenuItem
+                  key={index}
+                  asChild
+                  className="px-6 py-2 flex justify-between items-center bg-hover group/link w-full cursor-pointer"
+                >
+                  <Link href={items.url} className="flex items-center w-full">
+                    <div className="flex items-center w-full">
+                      <Icon icon={items.icon} height={14} width={14} className={'text-muted-foreground'} />
+                      <div className="ps-4 flex justify-between w-full">
+                        <div className="w-3/4">
+                          <h5 className="mb-0 text-sm group-hover/link:text-primary text-muted-foreground">
+                            {items.title}
+                          </h5>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-            ))}
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })}
           </SimpleBar>
 
-          {/* Logout Button */}
-
-          <div className="pt-4 px-6">
-            <ActionButton action={logoutAction} className="w-full rounded-full">
-              Logout
-            </ActionButton>
+          <div className="border border-t border-b-0">
+            <div className="flex items-center bg-hover group/link px-6">
+              <Icon icon="solar:users-group-rounded-bold" height={14} width={14} className={'text-muted-foreground'} />
+              <ActionButton action={switchRole} onActionDone={()=> window.location.reload()} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+                Switch Role
+              </ActionButton>
+            </div>
+            <div className="flex items-center bg-hover group/link px-6">
+              <Icon icon="solar:logout-2-line-duotone" height={14} width={14} className={'text-muted-foreground'} />
+              <ActionButton action={logoutAction} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+                Logout
+              </ActionButton>
+            </div>
           </div>
-
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

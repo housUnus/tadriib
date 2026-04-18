@@ -21,11 +21,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  { id: "details", label: "Course Details", icon: ClipboardList },
   { id: "goals", label: "Course Goals", icon: Target },
-  { id: "requirements", label: "Requirements", icon: ClipboardList },
   { id: "curriculum", label: "Curriculum", icon: LayoutList },
   { id: "pricing", label: "Pricing", icon: DollarSign },
-  { id: "messages", label: "Course Messages", icon: MessageSquare },
+  // { id: "messages", label: "Course Messages", icon: MessageSquare },
 ]
 
 interface CourseSidebarProps {
@@ -36,18 +36,22 @@ interface CourseSidebarProps {
 export function CourseSidebar({ activeSection, onSectionChange }: CourseSidebarProps) {
   const { course, sections, status, submitForReview } = useCourseStore()
 
+  if (!course) return null
+
   // Calculate completion status for each section
   const getCompletionStatus = (sectionId: string): boolean => {
     switch (sectionId) {
-      case "goals":
+      case "details":
         return (
-          (course.goals?.learningObjectives?.filter(Boolean).length || 0) >= 1 &&
-          (course.goals?.targetAudience?.filter(Boolean).length || 0) >= 1
+          (course.requirements?.filter(Boolean)?.length || 0) >= 1 &&
+          (course.learning_outcomes?.filter(Boolean)?.length || 0) >= 1
         )
-      case "requirements":
-        return !!course.requirements?.skillLevel
+      // case "requirements":
+      //   return !!course.requirements?.skillLevel
       case "curriculum":
         return sections.length > 0 && sections.some(s => s.items.length > 0)
+      case "details":
+        return !!course.title && !!course.description
       case "pricing":
         return course.pricing?.isFree || (course.pricing?.price || 0) > 0
       case "messages":

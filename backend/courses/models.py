@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
 from core.models import BaseModel
-from courses.constants import CourseStatus, ContentType, CourseLevel, CourseLanguageTypes, AccessTypes
+from courses.constants import CourseStatus, ContentType, CourseLevel, \
+    CourseLanguageTypes, AccessTypes, CourseType
 from .contents.models import *
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
@@ -53,8 +54,15 @@ class Course(BaseModel):
     access_type = models.CharField(max_length=20, choices=AccessTypes.choices, default=AccessTypes.LIFETIME)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0) #type: ignore
     
-    def is_public(self):
+    type = models.CharField(max_length=20, choices=CourseType.choices, default=CourseType.COURSE)
+    
+    @property
+    def is_live(self):
         return self.status == CourseStatus.PUBLISHED
+    
+    @property
+    def is_free(self):
+        return self.price == 0
     
     class Meta:
         verbose_name = _("Course")
@@ -139,7 +147,8 @@ class Section(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="sections")
     title = models.CharField(max_length=255)
     order = models.PositiveIntegerField(null=True, blank=True)
-
+    is_expanded = models.BooleanField(default=False) # for frontend use only while editing
+    
     class Meta:
         ordering = ["order"]
         verbose_name = _("Course Section")
@@ -196,8 +205,9 @@ class Content(BaseModel):
     type = models.CharField(max_length=20, choices=ContentType.choices)
     order = models.PositiveIntegerField(null=True, blank=True)
     is_preview = models.BooleanField(default=False)
+    is_main_preview = models.BooleanField(default=False)
     duration_minutes = models.PositiveIntegerField(null=True, blank=True)
-    
+    is_expanded = models.BooleanField(default=False) # for frontend use only while editing
     @property
     def duration_seconds(self):
         return self.duration_minutes * 60 if self.duration_minutes else 0
@@ -222,4 +232,6 @@ class Content(BaseModel):
 class Document(BaseModel):
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name="documents")
     file = models.FileField(upload_to="courses/documents/")
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    size = models.PositiveIntegerField(null=True, blank=True)
+    type = models.CharField(max_length=10, blank=True, null=True)

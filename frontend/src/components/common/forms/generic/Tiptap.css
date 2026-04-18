@@ -19,6 +19,17 @@
     margin-left: 20px;
 }
 
+.editor-container img {
+    display: block;
+    height: auto;
+    margin: 1.5rem 0;
+    max-width: 100%;
+}
+
+.editor-container img.ProseMirror-selectednode {
+  outline: 2px solid var(--color-primary);
+}
+
 /* Toolbar */
 .toolbar {
   display: flex;
@@ -44,6 +55,7 @@
   color: var(--color-dark);
   font-weight: 500 !important;
 }
+
 .dark .tiptap.ProseMirror{
   color: var(--color-white);
   font-weight: 500 !important;

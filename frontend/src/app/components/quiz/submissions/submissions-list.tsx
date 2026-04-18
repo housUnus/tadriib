@@ -31,8 +31,8 @@ export function SubmissionsList({
     const quiz: Quiz = content.content
 
     const { data } = useQuery({
-        queryKey: ["quiz-submissions", content.progress.id],
-        queryFn: () => client.get(`/quiz-submissions/?progress_id=${content.progress.id}`).then(res => res.data),
+        queryKey: ["quiz-submissions", content.progress?.id],
+        queryFn: () => client.get(`/quiz-submissions/?progress_id=${content.progress?.id}`).then(res => res.data),
         staleTime: 0,
         refetchOnMount: "always",
     })

@@ -4,8 +4,19 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils/utils";
 
+type CheckboxFieldProps = {
+  name: string;
+  label: string;
+  required?: boolean;
+  helperText?: string;
+  defaultValue?: boolean;
+  className?: string;
+  rules?: any;
+  disabled?: boolean;
+} & Record<string, any>;
+
+
 export default function CheckboxField({
-  control,
   name,
   label,
   required = false,
@@ -15,7 +26,7 @@ export default function CheckboxField({
   rules,
   disabled,
   ...rest
-}) {
+}: CheckboxFieldProps) {
   const {
     control,
     formState: { errors },

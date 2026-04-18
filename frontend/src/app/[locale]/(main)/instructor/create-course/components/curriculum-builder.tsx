@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import {
   DndContext,
   closestCenter,
@@ -25,7 +24,6 @@ export function CurriculumBuilder() {
   const {
     sections,
     status,
-    initCourse,
     addSection,
     updateSection,
     deleteSection,
@@ -43,9 +41,9 @@ export function CurriculumBuilder() {
   )
 
   // Initialize course on mount
-  useEffect(() => {
-    initCourse(client)
-  }, [initCourse])
+  // useEffect(() => {
+  //   initCourse(client)
+  // }, [initCourse])
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -130,7 +128,7 @@ export function CurriculumBuilder() {
       )}
 
       {/* Add Section Button */}
-      <Button variant="outline" className="gap-2 border-dashed w-full" onClick={addSection}>
+      <Button variant="outline" className="gap-2 border-dashed w-full" onClick={() => addSection(client)}>
         <Plus className="h-4 w-4" />
         Add Section
       </Button>

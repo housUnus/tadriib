@@ -245,14 +245,10 @@ const Notification: NotificationType[] = [
 interface ProfileType {
   title: string;
   icon: any;
-  subtitle: string;
-  color: string;
   bgcolor: string;
+  color: string;
   url: string;
 }
-
-
-
 
 
 const profileDD: ProfileType[] = [
@@ -261,7 +257,6 @@ const profileDD: ProfileType[] = [
     bgcolor: "bg-lightprimary dark:bg-lightprimary",
     color: "text-primary",
     title: "My Account",
-    subtitle: "Account settings",
     url: "/account/settings",
   },
   {
@@ -269,7 +264,6 @@ const profileDD: ProfileType[] = [
     color: "text-success",
     bgcolor: "bg-lightsuccess dark:bg-lightsuccess",
     title: "My Courses",
-    subtitle: "My Courses",
     url: "/account/my-courses?tab=courses",
   },
   {
@@ -277,9 +271,8 @@ const profileDD: ProfileType[] = [
     color: "text-error",
     bgcolor: "bg-lighterror dark:bg-lighterror",
     title: "My Wishlist",
-    subtitle: "Favorite Courses",
     url: "/account/my-courses?tab=wishlist",
-  },
+  }
 ];
 
 

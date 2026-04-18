@@ -16,15 +16,15 @@ export function QuizContent({ content }: QuizContentProps) {
   const router = useRouter()
   const client = useClientFetch()
 
-  const [selectedSubmission, setSelectedSubmission] = useState<string | null>(content.progress.active_quiz_submission)
+  const [selectedSubmission, setSelectedSubmission] = useState<string | null>(content.progress?.active_quiz_submission)
 
   const searchParams = useSearchParams()
 
   const submissionId = searchParams.get("submission")
 
   useEffect(() => {
-    setSelectedSubmission(content.progress.active_quiz_submission || submissionId)
-  }, [content.progress.active_quiz_submission, submissionId])
+    setSelectedSubmission(content.progress?.active_quiz_submission || submissionId)
+  }, [content.progress?.active_quiz_submission, submissionId])
 
   if (!selectedSubmission) {
     return (

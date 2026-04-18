@@ -128,7 +128,7 @@ const FrontHeader = () => {
                   </div>
                 )}
 
-                <MyMessages />
+                {/* <MyMessages /> */}
                 <MyNotifications />
                 <Profile />
               </div>

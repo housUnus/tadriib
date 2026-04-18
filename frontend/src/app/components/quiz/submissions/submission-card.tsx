@@ -25,14 +25,16 @@ const STATUS = {
     is_paused: { label: "Paused", icon: PauseCircle, color: "amber" },
     completed: { label: "Completed", icon: CheckCircle2, color: "sky" },
     submitted: { label: "Submitted", icon: CheckCircle2, color: "sky" },
-    expired: { label: "Expired", icon: AlertCircle, color: "red" }
+    expired: { label: "Expired", icon: AlertCircle, color: "red" },
+    in_review: { label: "In Review", icon: AlertCircle, color: "orange" },
 } as const
 
 const colorClasses = {
     emerald: { bg: "bg-emerald-500/10", text: "text-emerald-500", border: "border-emerald-500/30", btn: "bg-emerald-500 hover:bg-emerald-600" },
     amber: { bg: "bg-amber-500/10", text: "text-amber-500", border: "border-amber-500/30", btn: "bg-amber-500 hover:bg-amber-600" },
     sky: { bg: "bg-sky-500/10", text: "text-sky-500", border: "border-sky-500/30", btn: "bg-sky-500 hover:bg-sky-600" },
-    red: { bg: "bg-red-500/10", text: "text-red-500", border: "border-red-500/30", btn: "bg-red-500 hover:bg-red-600" }
+    red: { bg: "bg-red-500/10", text: "text-red-500", border: "border-red-500/30", btn: "bg-red-500 hover:bg-red-600" },
+    orange: { bg: "bg-orange-500/10", text: "text-orange-500", border: "border-orange-500/30", btn: "bg-orange-500 hover:bg-orange-600" },
 }
 
 // Format duration in minutes using date-fns
@@ -44,8 +46,9 @@ const formatMinutes = (minutes: number): string => {
 }
 
 export function SubmissionCard({ submission, onContinue, onReview, index }: SubmissionCardProps) {
+console.log("🚀 ~ SubmissionCard ~ submission:", submission)
 
-    const { label, icon: StatusIcon, color } = STATUS[submission.status]
+    const { label, icon: StatusIcon, color } = STATUS[submission?.status]
     const colors = colorClasses[color]
     const isActive = submission.status === "in_progress" || submission.status === "is_paused"
 
@@ -84,7 +87,7 @@ export function SubmissionCard({ submission, onContinue, onReview, index }: Subm
                     </div>
 
                     {/* Score */}
-                    {!isActive && submission.score_percent !== null && (
+                    {!isActive && submission.score_percent !== null && submission.status !== "in_review" && (
                         <div className={cn("shrink-0 flex flex-col items-center rounded-xl px-3 py-1.5",
                             submission.score_percent >= 70 ? "bg-emerald-500/10" : "bg-red-500/10"
                         )}>

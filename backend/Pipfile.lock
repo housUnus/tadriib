@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c476cf466bff9535c88b0d7a2035c691812c7b8f08f5fae4fb4a35994efc8371"
+            "sha256": "3462198d3adab66da710519661fc247e73675862d84543fe359ff266882b098c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -597,6 +597,14 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2025.9.1"
+        },
+        "nested-multipart-parser": {
+            "hashes": [
+                "sha256:8c7a07952a4a3c2cb2b99ca16158961af215c6f8c9e04337bc13da016500c69c"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.6'",
+            "version": "==1.6.0"
         },
         "oauthlib": {
             "hashes": [

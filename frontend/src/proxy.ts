@@ -13,6 +13,7 @@ import {
 } from "@/lib/auth/routes";
 
 import { AppJWT } from "./lib/schemas/auth";
+import { isInstructorRoute } from "./lib/utils/utils";
 
 
 const intlMiddleware = createIntlMiddleware(routing)
@@ -39,6 +40,7 @@ async function authMiddleware(request: NextRequest) {
 
   const isAuthRoute = pathname.includes(AUTH_PREFIX);
   const isEmailVerifyRoute = pathname === VERIFY_EMAIL_ROUTE;
+  const isInstructor = session?.user?.active_role === "Teacher";
 
   //   Redirect if it's an authentication url used by nextAuth 
   if (isAuthenticated && !isEmailVerified && !isPublicRoute && !isEmailVerifyRoute) {
@@ -51,6 +53,10 @@ async function authMiddleware(request: NextRequest) {
 
   if (!isAuthenticated && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
+  }
+
+  if (!isInstructor && isInstructorRoute(pathname)) {
+    return NextResponse.redirect(new URL('/', nextUrl));
   }
 
 

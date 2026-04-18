@@ -23,7 +23,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 
     # Fields used when editing a user
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'first_name', 'last_name')}),
         (_('Personal info'), {'fields': ('phone_number', 'country')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),

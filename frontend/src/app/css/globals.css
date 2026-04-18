@@ -316,6 +316,18 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
+@font-face {
+  font-family: 'Arshid';
+  src: url('/fonts/arshid.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.sar{
+    font-family: 'Arshid', sans-serif;
+}
+
 @layer base {
   *,
   ::after,

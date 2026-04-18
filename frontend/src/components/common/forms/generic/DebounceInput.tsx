@@ -19,15 +19,30 @@ export function DebouncedInput({
   const [innerValue, setInnerValue] = useState(value)
   const lastValueRef = useRef(value)
 
+  const parseValue = (value: any) => {
+    if (props.type === "number") {
+      if (value === "" || value === null) return null
+      const num = Number(value)
+      return isNaN(num) ? "" : num
+    }
+    return value
+  }
+
+
   useEffect(() => {
-    setInnerValue(value)
+    if (value !== lastValueRef.current) {
+      setInnerValue(value)
+      lastValueRef.current = value
+    }
   }, [value])
 
   useEffect(() => {
     const handler = setTimeout(() => {
       if (lastValueRef.current !== innerValue) {
         lastValueRef.current = innerValue
-        onChange(innerValue)
+        onChange(parseValue(innerValue))
+        
+        console.log("🚀 ~ DebouncedInput ~ innerValue:", innerValue)
       }
     }, delay)
 

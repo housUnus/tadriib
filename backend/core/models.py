@@ -31,3 +31,12 @@ class BaseModel(SimpleBaseModel):
         
     def __str__(self):
         return str(self.public_id)
+
+
+
+class EditorImage(models.Model):
+    image = models.ImageField(upload_to="editor/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.image.url

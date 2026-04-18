@@ -5,25 +5,31 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload, Play } from "lucide-react"
 import { useDebounce } from "use-debounce"
+import { DebouncedInput } from "@/components/common/forms/generic/DebounceInput"
+import { Field, FieldLabel } from "@/components/ui/field"
+import { Checkbox } from "@/components/ui/checkbox"
+import { CurriculumItem, Data } from "@/types/course"
 
 interface VideoEditorProps {
-  url?: string
-  preview?: string
+  content?: Data
   onUrlChange: (url: string) => void
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onUpdate: (data: Partial<CurriculumItem>) => void
+  is_main_preview?: boolean
 }
 
-export function VideoEditor({ url: videoUrl, preview: videoPreview, onUrlChange, onFileUpload }: VideoEditorProps) {
+export function VideoEditor({ content, onUrlChange, onFileUpload, onUpdate, is_main_preview }: VideoEditorProps) {
+  const { url: videoUrl, preview: videoPreview } = content || {}
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploadMode, setUploadMode] = useState<"upload" | "url">("upload")
 
-  const [innerVideoUrl, setInnerVideoUrl] = useState(videoUrl || "")
-  const [videoUrlDebouncedValue] = useDebounce(innerVideoUrl, 500)
-
-
   useEffect(() => {
-    onUrlChange(videoUrlDebouncedValue)
-  }, [videoUrlDebouncedValue])
+    if (videoUrl) {
+      setUploadMode("url")
+    } else if (videoPreview) {
+      setUploadMode("upload")
+    }
+  }, [videoUrl, videoPreview])
 
   return (
     <div className="space-y-4">
@@ -55,7 +61,7 @@ export function VideoEditor({ url: videoUrl, preview: videoPreview, onUrlChange,
             onChange={onFileUpload}
             className="hidden"
           />
-          
+
           {videoPreview ? (
             <div className="space-y-2">
               <video
@@ -87,19 +93,19 @@ export function VideoEditor({ url: videoUrl, preview: videoPreview, onUrlChange,
       {uploadMode === "url" && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Video URL</label>
-          <Input
-            value={innerVideoUrl || ""}
-            onChange={(e) => setInnerVideoUrl(e.target.value)}
+          <DebouncedInput
+            value={videoUrl}
+            onChange={onUrlChange}
             placeholder="Paste YouTube, Vimeo, or direct video URL"
           />
           {videoUrl && (videoUrl.includes("youtube") || videoUrl.includes("vimeo")) && (
             <div className="aspect-video rounded-lg overflow-hidden bg-black">
               <iframe
-                src={videoUrl.includes("youtube") 
+                src={videoUrl.includes("youtube")
                   ? videoUrl.replace("watch?v=", "embed/")
                   : videoUrl.includes("vimeo")
-                  ? videoUrl.replace("vimeo.com", "player.vimeo.com/video")
-                  : videoUrl
+                    ? videoUrl.replace("vimeo.com", "player.vimeo.com/video")
+                    : videoUrl
                 }
                 className="w-full h-full"
                 allowFullScreen
@@ -108,6 +114,19 @@ export function VideoEditor({ url: videoUrl, preview: videoPreview, onUrlChange,
           )}
         </div>
       )}
+      <Field orientation="horizontal">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="is_main_preview"
+            name="is_main_preview"
+            checked={is_main_preview}
+            onCheckedChange={(checked) => onUpdate({ is_main_preview: !!checked})}
+          />
+          <FieldLabel htmlFor="is_main_preview" className="cursor-pointer mb-0">
+            Use as Course Preview 
+          </FieldLabel>
+        </div>
+      </Field>
     </div>
   )
 }

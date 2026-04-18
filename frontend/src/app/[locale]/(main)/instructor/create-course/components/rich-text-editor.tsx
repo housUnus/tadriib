@@ -4,6 +4,7 @@ import { useRef, useCallback, useEffect, useState } from "react"
 import { cn } from "@/lib/utils/utils"
 import { Textarea } from "@/components/ui/textarea"
 import { useDebounce } from "use-debounce"
+import RichText from "@/components/common/forms/generic/RichText"
 
 
 interface RichTextEditorProps {
@@ -16,21 +17,22 @@ interface RichTextEditorProps {
 export function RichTextEditor({ value, onChange, placeholder, className }: RichTextEditorProps) {
   const quillRef = useRef<any>(null)
 
+  const [innerValue, setInnerValue] = useState(value)
   
-  const [innerValue, setInnerValue] = useState("")
-
   const [debouncedValue] = useDebounce(innerValue, 500)
 
   useEffect(() => {
-    onChange(debouncedValue)
+    if(debouncedValue !== value) {
+      onChange(debouncedValue)
+    }
   }, [debouncedValue])
 
   return (
     <div className={cn("rich-text-editor", className)}>
-      <Textarea
-        ref={quillRef}
+      
+      <RichText
         value={innerValue}
-        onChange={(e) => setInnerValue(e.target.value)}
+        onChange={(value) => setInnerValue(value)}
         placeholder={placeholder}
       />
     </div>

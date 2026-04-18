@@ -1,7 +1,6 @@
 # courses/querysets.py
 from django.db import models
 from django.db.models import Avg, Count
-from courses.contents.video.models import Video
 from ratings.constants import RatingStatus
 
 class CourseQuerySet(models.QuerySet):
@@ -13,11 +12,12 @@ class CourseQuerySet(models.QuerySet):
         )
         
     def with_main_preview(self):
-        preview_video = Video.objects.filter(
+        from courses.models import Content
+        content_preview_video = Content.objects.filter(
             is_main_preview=True,
-            content__section__course=models.OuterRef("pk"),
+            section__course=models.OuterRef("pk"),
         ).values("pk")[:1]
 
         return self.annotate(
-            main_preview_video_id=models.Subquery(preview_video)
+            main_preview_content_id=models.Subquery(content_preview_video)
         )

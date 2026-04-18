@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import BaseModel
-from courses.constants import QuestionBlockType, AnswerType
+from courses.constants import AnswerType
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
 
@@ -19,6 +19,7 @@ class Quiz(BaseModel):
     can_pause = models.BooleanField(default=False)
     can_retake = models.BooleanField(default=False)
     require_review = models.BooleanField(default=False)
+    time_limit_minutes = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return self.content.title
@@ -26,14 +27,12 @@ class Quiz(BaseModel):
     class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
-        
-    @property
-    def time_limit_minutes(self):
-        return self.content.duration
-        
+
 
 class Question(models.Model):
     options: models.Manager["Option"]
+    true_false: "TrueFalseAnswer"
+    fill_blank: "FillBlankAnswer"
     
     quiz = models.ForeignKey(
         Quiz,
@@ -88,11 +87,12 @@ class Question(models.Model):
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
+        ordering = ["order"]
         
 
     def save(self, *args, **kwargs):
         if self.order is None:
-            last = Question.objects.filter(section=self.quiz).aggregate(
+            last = Question.objects.filter(quiz=self.quiz).aggregate(
                 max=models.Max("order")
             )["max"]
             self.order = (last or 0) + 1
@@ -120,7 +120,7 @@ class TrueFalseAnswer(models.Model):
         on_delete=models.CASCADE,
         related_name="true_false"
     )
-    is_correct = models.BooleanField()
+    is_correct = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = _("True/False Answer")

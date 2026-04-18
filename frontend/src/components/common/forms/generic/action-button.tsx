@@ -11,16 +11,22 @@ type Props = {
   children: React.ReactNode;
   className?: string;
   variant?: VariantProps<typeof buttonVariants>["variant"]
+  onActionDone?: () => void
 };
 
-export function ActionButton({ action, children, className, variant }: Props) {
+export function ActionButton({ action, children, className, variant, onActionDone }: Props) {
   const [pending, startTransition] = useTransition();
+
+  const handleClick = async () => {
+    startTransition(action)
+    onActionDone && onActionDone(); 
+  };
 
   return (
     <Button
       disabled={pending}
       className={cn("w-full", className)}
-      onClick={() => startTransition(action)}
+      onClick={handleClick}
       variant={variant}
     >
       {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

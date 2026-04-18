@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import User
+from .models import Profile, User, Role, RolesTypes
 from .serializers import UserSerializer, ChangePasswordSerializer, InstructorSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -20,6 +20,23 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="me")
     def me(self, request):
         serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=["post"], url_path="switch-role")
+    def switch_role(self, request):
+        user = request.user
+        profile:"Profile" = user.profile
+        active_role:"Role" = user.profile.active_role
+        if not profile.can_switch_role:
+            return Response({"detail": "You don't have multiple roles to switch."}, status=status.HTTP_400_BAD_REQUEST)
+        if active_role.type == RolesTypes.STUDENT:
+            new_role = profile.roles.filter(type=RolesTypes.TEACHER).first()
+        elif active_role.type == RolesTypes.TEACHER:
+            new_role = profile.roles.filter(type=RolesTypes.STUDENT).first()
+        profile.active_role = new_role
+        
+        profile.save()
+        serializer = self.get_serializer(user)
         return Response(serializer.data)
     
 class InstructorViewSet(viewsets.GenericViewSet, viewsets.mixins.RetrieveModelMixin):

@@ -114,6 +114,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 
       // Token is still valid
+      console.log("🚀 ~ token.expiry:", token.expiry)
       if (token.expiry.access - 60000 > Date.now()) {
         return token;
       }

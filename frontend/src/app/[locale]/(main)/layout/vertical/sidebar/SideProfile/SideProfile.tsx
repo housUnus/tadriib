@@ -62,7 +62,7 @@ const SideProfile = () => {
                   <Link href={items.url} className="flex items-center w-full">
                     <div className="flex items-center w-full">
                       <div
-                        className={`h-11 w-11 flex-shrink-0 rounded-md flex justify-center items-center ${items.bgcolor}`}
+                        className={`h-11 w-11 shrink-0 rounded-md flex justify-center items-center ${items.bgcolor}`}
                       >
                         <Icon
                           icon={items.icon}

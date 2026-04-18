@@ -2,42 +2,42 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Plus, X, GripVertical, Lightbulb } from "lucide-react"
 import { useCourseStore } from "@/stores/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { CourseLearningOutcomes, CourseRequirements } from "@/types/course"
+import { DebouncedInput } from "@/components/common/forms/generic/DebounceInput"
 
 interface ListEditorProps {
   title: string
   description: string
   placeholder: string
-  items: string[]
-  onChange: (items: string[]) => void
+  items: CourseLearningOutcomes[] | CourseRequirements[]
+  onChange: (items: CourseLearningOutcomes[] | CourseRequirements[]) => void
   minItems?: number
   maxItems?: number
 }
 
 function ListEditor({ title, description, placeholder, items, onChange, minItems = 1, maxItems = 10 }: ListEditorProps) {
-  const [newItem, setNewItem] = useState("")
+  const [newItem, setNewItem] = useState<CourseRequirements | CourseLearningOutcomes>({ text: "" })
 
   const addItem = () => {
-    if (newItem.trim() && items.length < maxItems) {
-      onChange([...items, newItem.trim()])
-      setNewItem("")
+    if (newItem.text.trim() && items?.length < maxItems) {
+      onChange([...items, { text: newItem.text.trim() }])
+      setNewItem({ text: "" })
     }
   }
 
   const removeItem = (index: number) => {
-    if (items.length > minItems) {
-      onChange(items.filter((_, i) => i !== index))
+    if (items?.length > minItems) {
+      onChange(items?.filter((_, i) => i !== index))
     }
   }
 
   const updateItem = (index: number, value: string) => {
     const updated = [...items]
-    updated[index] = value
+    updated[index] = { text: value }
     onChange(updated)
   }
 
@@ -48,12 +48,12 @@ function ListEditor({ title, description, placeholder, items, onChange, minItems
         <CardDescription className="text-sm">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <GripVertical className="h-4 w-4 text-muted-foreground shrink-0 cursor-grab" />
-            <Input
-              value={item}
-              onChange={(e) => updateItem(index, e.target.value)}
+            <DebouncedInput
+              value={item.text}
+              onChange={(value) => updateItem(index, value)}
               placeholder={placeholder}
               className="flex-1"
             />
@@ -61,7 +61,7 @@ function ListEditor({ title, description, placeholder, items, onChange, minItems
               variant="ghost"
               size="icon"
               onClick={() => removeItem(index)}
-              disabled={items.length <= minItems}
+              disabled={items?.length <= minItems}
               className="shrink-0"
             >
               <X className="h-4 w-4" />
@@ -69,14 +69,14 @@ function ListEditor({ title, description, placeholder, items, onChange, minItems
           </div>
         ))}
 
-        {items.length < maxItems && (
+        {items?.length < maxItems && (
           <div className="flex items-center gap-2">
             <div className="w-4" />
-            <Input
-              value={newItem}
-              onChange={(e) => setNewItem(e.target.value)}
+            <DebouncedInput
+              value={newItem.text}
+              onChange={(value) => setNewItem({ ...newItem, text: value })}
               placeholder={`Add ${placeholder.toLowerCase()}`}
-              onKeyDown={(e) => e.key === "Enter" && addItem()}
+              onKeyDown={(e: any) => e.key === "Enter" && addItem()}
               className="flex-1"
             />
             <Button variant="outline" size="icon" onClick={addItem} className="shrink-0">
@@ -86,7 +86,7 @@ function ListEditor({ title, description, placeholder, items, onChange, minItems
         )}
 
         <p className="text-xs text-muted-foreground">
-          {items.length}/{maxItems} items
+          {items?.length}/{maxItems} items
         </p>
       </CardContent>
     </Card>
@@ -94,21 +94,11 @@ function ListEditor({ title, description, placeholder, items, onChange, minItems
 }
 
 export function GoalsSection() {
-  const { course, updateCourseMetadata } = useCourseStore()
+  const { course, updateRequirements, updateLearningOutcomes } = useCourseStore()
   const client = useClientFetch()
 
-  const goals = course.goals || {
-    learningObjectives: [""],
-    prerequisites: [""],
-    targetAudience: [""],
-  }
-
-  const updateGoals = (field: keyof typeof goals, items: string[]) => {
-    updateCourseMetadata(client,
-      {
-        goals: { ...goals, [field]: items },
-      })
-  }
+  const learning_outcomes = course.learning_outcomes || [""]
+  const requirements = course.requirements || [""]
 
   return (
     <div className="space-y-6">
@@ -134,28 +124,18 @@ export function GoalsSection() {
         title="Learning Objectives"
         description="What will students be able to do after completing your course?"
         placeholder="Students will be able to..."
-        items={goals.learningObjectives}
-        onChange={(items) => updateGoals("learningObjectives", items)}
+        items={learning_outcomes}
+        onChange={(items) => updateLearningOutcomes(client, items)}
         minItems={1}
         maxItems={8}
-      />
-
-      <ListEditor
-        title="Target Audience"
-        description="Who is this course for?"
-        placeholder="This course is for..."
-        items={goals.targetAudience}
-        onChange={(items) => updateGoals("targetAudience", items)}
-        minItems={1}
-        maxItems={6}
       />
 
       <ListEditor
         title="Prerequisites"
         description="What should students know or have before starting?"
         placeholder="Basic knowledge of..."
-        items={goals.prerequisites}
-        onChange={(items) => updateGoals("prerequisites", items)}
+        items={requirements}
+        onChange={(items) => updateRequirements(client, items)}
         minItems={0}
         maxItems={6}
       />

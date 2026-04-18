@@ -1,16 +1,27 @@
 from rest_framework import serializers
-from courses.models import Question, Quiz, Content, Option
+from core.serializers import PublicSerializerMixin
+from courses.models import Course, Question, Quiz, Content, Option, TrueFalseAnswer, FillBlankAnswer, CourseRequirement, CourseLearningOutcome
 from courses.contents.serializers import VideoSerializer, ArticleSerializer, AttachmentSerializer, ConferenceSerializer
-from courses.constants import ContentType
+from courses.constants import ContentType, AnswerType
 from drf_writable_nested.serializers import WritableNestedModelSerializer
+
+class RequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseRequirement
+        fields = ["id", "text"]
+        
+class LearningOutcomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseLearningOutcome
+        fields = ["id", "text"]
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
-        fields = ["id", "text"]
+        fields = ["id", "text", "label", "is_correct"]
 
 class QuestionSerializer(WritableNestedModelSerializer):
-    correct_answer = serializers.SerializerMethodField(read_only=True)
+    correct_answer = serializers.JSONField(allow_null=True, required=False)
     options = OptionSerializer(many=True)
 
     class Meta:
@@ -22,18 +33,43 @@ class QuestionSerializer(WritableNestedModelSerializer):
             "allow_multiple_answers",
             "order",
             "correct_answer",
+            "options",
+            "answer_hint",
+            "answer_explanation",
         ]
         
     def save(self, **kwargs):
-        question = super().save(**kwargs)
-
+        correct_answer = self.validated_data.pop("correct_answer")#type: ignore
+        question:"Question" = super().save(**kwargs)
+        if correct_answer is not None:
+            if question.answer_type == AnswerType.TRUE_FALSE:
+                true_false = TrueFalseAnswer.objects.get_or_create(question=question)[0]
+                true_false.is_correct = correct_answer
+                true_false.save()
+            elif question.answer_type == AnswerType.FILL_BLANK:
+                fill_blank = FillBlankAnswer.objects.get_or_create(question=question)[0]
+                fill_blank.correct_text = correct_answer
+                fill_blank.save()
+        return question
+            
     
-class QuizSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
+class QuizSerializer(WritableNestedModelSerializer):
+    questions = QuestionSerializer(many=True, required=False, allow_null=True)
 
     class Meta:
         model = Quiz
-        fields = ["id", "questions"]
+        fields = [
+            "id",
+            "questions",
+            "description",
+            "time_limit_minutes",
+            "can_pause",
+            "can_retake",
+            "show_correct_answers",
+            "show_final_score",
+            "max_attempts",
+            "require_review"
+        ]
         
 
 CONTENT_SERIALIZER_MAP = {
@@ -44,9 +80,8 @@ CONTENT_SERIALIZER_MAP = {
     ContentType.CONFERENCE.value: ConferenceSerializer,
 }
 
-class ContentSerializer(serializers.ModelSerializer):
-    content = serializers.JSONField(required=False)
-    
+class ContentWriteSerializer(serializers.ModelSerializer):
+    content = serializers.DictField(required=False)    
     def update(self, instance: "Content", validated_data):
         content_data = validated_data.pop("content", None)
 
@@ -83,7 +118,48 @@ class ContentSerializer(serializers.ModelSerializer):
             # attach if newly created
             if not related_instance:
                 setattr(instance, related_attr, saved_obj)
+        return instance
     
     class Meta:
         model = Content
-        fields = ["id", "type", "content"]
+        fields = ["id", "type", "content", "title", "is_preview", "order", "duration_minutes", "is_main_preview"]
+        
+class CourseCreateUpdateSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
+    requirements = RequirementSerializer(many=True, required=False)
+    learning_outcomes = LearningOutcomeSerializer(many=True, required=False)
+    class Meta:
+        model = Course
+        fields = [
+            "title",
+            "description",
+            "category",
+            "sub_category",
+            "language",
+            "level",
+            "status",
+            "requirements",
+            "learning_outcomes",
+            "type",
+            "price",
+            "poster",
+        ]
+        
+class CourseCreateListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    is_live = serializers.BooleanField(read_only=True)
+    class Meta:
+        model = Course
+        fields = [
+            "id",
+            "title",
+            "type",
+            "slug",
+            "description",
+            "language",
+            "level",
+            "status",
+            "published_at",
+            "poster",
+            "category",
+            "is_live",
+            "updated_at",
+        ]

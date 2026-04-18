@@ -36,7 +36,7 @@ async function createCourseDraft(client: any, data: {
   subcategory: string
 }): Promise<{ success: boolean; courseId?: string; error?: string }> {
   // Simulate API call - replace with actual endpoint
-  const {data: result, error} = await client.post("/courses/", data)
+  const {data: result, error} = await client.post("/course-create/", data)
   console.log("[API] Creating course draft:", data)
   if (error) {
     return { success: false, error: error.message }

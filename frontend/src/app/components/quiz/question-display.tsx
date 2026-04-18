@@ -37,6 +37,7 @@ interface QuestionDisplayProps {
   fontSize: number
   isReadOnly?: boolean
   showAnswers?: boolean
+  isPaused?: boolean
   onSelectAnswer: (answer: AnswerValue) => void
   onClearAnswer: () => void
   onToggleFlag: () => void
@@ -64,7 +65,8 @@ export function QuestionDisplay({
   onToggleFlag,
   onSaveAndNext,
   isReadOnly = false,
-  showAnswers = true
+  showAnswers = true,
+  isPaused,
 }: QuestionDisplayProps) {
   console.log("🚀 ~ QuestionDisplay ~ correctAnswer:", correctAnswer)
 
@@ -253,6 +255,20 @@ export function QuestionDisplay({
         return null
     }
 
+  }
+
+  if(isPaused){
+    return (
+      <div className="flex flex-col gap-6">
+        <Card className="border shadow-md bg-muted/50">
+          <CardContent className="p-2 mt-0">
+            <div className="leading-relaxed [&_p]:mb-2">
+              The Quiz is paused, please resume it to continue your progress
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (<div className="flex flex-col gap-6">

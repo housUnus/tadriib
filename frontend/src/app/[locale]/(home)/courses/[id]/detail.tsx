@@ -202,6 +202,7 @@ const courseData = {
 }
 
 export default function Detail({ course }: { course: any }) {
+  console.log("🚀 ~ Detail ~ course:", course)
   const client = useClientFetch();
   const [expandedSections, setExpandedSections] = useState<string[]>([course.sections[0].id])
   const [showFullDescription, setShowFullDescription] = useState(false)
@@ -260,7 +261,7 @@ export default function Detail({ course }: { course: any }) {
           <div className="lg:col-span-6 lg:flex block justify-center">
             <div
               className="relative aspect-video bg-foreground rounded-lg overflow-hidden cursor-pointer group"
-              onClick={() => handlePreview({ type: "video", isPreview: true, content: course.main_preview })}
+              onClick={() => handlePreview({ type: "video", isPreview: true, preview: course.main_preview })}
             >
               <Image
                 src={course.poster || "/placeholder.svg"}
@@ -307,9 +308,9 @@ export default function Detail({ course }: { course: any }) {
             {/* Price Section */}
             <div className="mt-auto pt-4 border-t">
               <div className="flex items-baseline gap-2 mb-3">
-                <span className="text-3xl font-bold">${courseData.price}</span>
-                <span className="text-lg text-muted-foreground line-through">${courseData.originalPrice}</span>
-                <Badge variant="secondary" className="text-xs">{courseData.discountPercent}% off</Badge>
+                <span className="text-3xl font-bold">${course.price}</span>
+                {/* <span className="text-lg text-muted-foreground line-through">${courseData.originalPrice}</span> */}
+                {/* <Badge variant="secondary" className="text-xs">{courseData.discountPercent}% off</Badge> */}
               </div>
               <div className="flex gap-1 flex-col md:flex-row">
                 <div className="cta flex gap-1 flex-1">
@@ -430,13 +431,13 @@ export default function Detail({ course }: { course: any }) {
                       <span className="font-semibold">{section.title}</span>
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      {section.contents.length} lectures • {_.sumBy(section.contents, 'duration_minutes')} minutes
+                      {section.items.length} lectures • {_.sumBy(section.items, 'duration_minutes')} minutes
                     </span>
                   </button>
 
                   {expandedSections.includes(section.id) && (
                     <div className="bg-background">
-                      {section.contents.map((content: any) => (
+                      {section.items.map((content: any) => (
                         <div
                           key={content.id}
                           onClick={() => !!content.preview && handlePreview(content)}
@@ -538,7 +539,7 @@ export default function Detail({ course }: { course: any }) {
             title: previewContent.title,
             duration: previewContent.duration,
             type: previewContent.type,
-            videoUrl: previewContent.type === "video" ? (previewContent.preview?.file || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") : undefined,
+            videoUrl: previewContent.type === "video" ? (previewContent.preview?.file || previewContent.preview?.url) : undefined,
             articleContent: previewContent.type === "article" ? previewContent.preview?.text : undefined,
             quizContent: previewContent.type === "quiz" ? previewContent.preview?.description : undefined,
           }}

@@ -1,0 +1,1 @@
+- Handle course page and course taking the category path

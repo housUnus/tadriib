@@ -5,7 +5,8 @@ from courses.models import (
     Content,
     CourseLearningOutcome,
     CourseRequirement,
-    Video
+    Video,
+    Document
 )
 
 from courses.contents.serializers import (
@@ -26,6 +27,18 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from enrollments.models import Enrollment
 
+class DocumentSerializer(PublicSerializerMixin, serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+    class Meta:
+        model = Document
+        fields = '__all__'
+        read_only_fields = ['url']
+        
+    def get_url(self, obj):
+        request = self.context.get("request")
+        if obj.file and request:
+            return request.build_absolute_uri(obj.file.url)
+        return None
 
 class CourseLearningOutcomeSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     class Meta:
@@ -41,6 +54,8 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
     content = serializers.SerializerMethodField()
     preview = serializers.SerializerMethodField()
     progress = serializers.SerializerMethodField()
+    is_expanded = serializers.BooleanField(default=False, read_only=True)
+    attachments = DocumentSerializer(source='documents', many=True, read_only=True)
     
     def _get_content(self, obj):
         if obj.type == ContentType.VIDEO and hasattr(obj, "video"):
@@ -65,7 +80,7 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
     
     def get_content(self, obj:"Content"):
         view_type = self.context.get("view_type")
-        if view_type == "load_content":
+        if view_type == "load_content" or view_type == "course-create":
             return self._get_content(obj)
         return None
     
@@ -88,19 +103,22 @@ class ContentSerializer(PublicSerializerMixin, WritableNestedModelSerializer):
             "id",
             "title",
             "type",
+            "is_expanded",
             "order",
             "duration_minutes",
             "content",
             "preview",
             "progress",
+            "attachments",
+            "is_main_preview",
         ]
         read_only_fields = ["content", "preview", "progress"]
         
 class SectionSerializer(PublicSerializerMixin, serializers.ModelSerializer):
-    contents = ContentSerializer(many=True, read_only=True)
+    items = ContentSerializer(many=True, read_only=True, source="contents")
     class Meta:
         model = Section
-        fields = ["id", "title", "order", "contents"]
+        fields = ["id", "title", "order", "items"]
         
 class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
@@ -133,8 +151,6 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     # instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
     learning_outcomes = CourseLearningOutcomeSerializer(many=True, read_only=True)
     requirements = CourseRequirementSerializer(many=True, read_only=True)
-    category = CategorySerializer(read_only=True)
-    sub_category = CategorySerializer(read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
     instructor = UserWithStatesSerializer(read_only=True)
@@ -155,9 +171,11 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
         return obj.get_rating_distribution()
     
     def get_main_preview(self, obj):
-        if not getattr(obj, "main_preview_video_id", None):
+        if not getattr(obj, "main_preview_content_id", None):
             return None
-        video = Video.objects.select_related("content").get(pk=obj.main_preview_video_id)
+
+        video = Video.objects.select_related("content").get(content_id=obj.main_preview_content_id)
+        
         return VideoSerializer(video, context=self.context).data
     
     def get_is_wishlisted(self, obj:"Course"):
@@ -200,19 +218,9 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "rating_distribution",
             "main_preview",
             "is_wishlisted",
+            "type",
+            "price",
             ]
-
-
-class CourseCreateUpdateSerializer(PublicSerializerMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = [
-            "title",
-            "description",
-            "language",
-            "level",
-            "status",
-        ]
 
 # -----------------------------------------
 # Minimal Course Serializer

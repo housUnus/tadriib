@@ -3,16 +3,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "
 import {
     flexRender,
 } from "@tanstack/react-table"
+import React from "react"
 
 export default function TableContent({ dt, renderRow }: { dt: any, renderRow?: (row: any) => React.ReactNode, initialData?: any[] }) {
-    if(dt.isFetching || dt.isLoading) return null
+    if (dt.isFetching || dt.isLoading) return null
     if (renderRow) {
         return dt.rows.length ? (
-            <>
-                {dt.rows.map((r: any, i: number) => (
-                    <div key={i}>{renderRow(r)}</div>
-                ))}
-            </>
+            dt.rows.map((r: any, i: number) => (
+                <React.Fragment key={r.id ?? i}>
+                    {renderRow(r)}
+                </React.Fragment>
+            ))
         ) : (
             <div className="h-24 text-center flex items-center justify-center">
                 No results.

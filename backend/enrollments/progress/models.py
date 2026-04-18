@@ -102,7 +102,7 @@ class QuizSubmission(models.Model):
 
     started_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(null=True, blank=True)
-    remaining_seconds = models.IntegerField(null=True, blank=True)
+    remaining_seconds = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     paused_at = models.DateTimeField(null=True, blank=True)
     
     submitted_at = models.DateTimeField(null=True, blank=True)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -28,7 +28,7 @@ import { DebouncedInput } from "@/components/common/forms/generic/DebounceInput"
 
 interface QuestionEditorProps {
   question: QuizQuestion
-  index: number
+  order: number
   onUpdate: (question: Partial<QuizQuestion>) => void
   onDelete: () => void
 }
@@ -39,14 +39,18 @@ const questionTypes: { value: QuestionType; label: string }[] = [
   { value: "fill_blank", label: "Fill in the Blank" },
 ]
 
-export function QuestionEditor({ question, index, onUpdate, onDelete }: QuestionEditorProps) {
+export function QuestionEditor({ question, order, onUpdate, onDelete }: QuestionEditorProps) {
   const [showHint, setShowHint] = useState(!!question.answer_hint)
   const [showAnswerDetails, setShowAnswerDetails] = useState(!!question.answer_explanation)
 
+  useEffect(() => {
+   
+  },[])
+
   const handleTypeChange = (type: QuestionType) => {
     const updated: Partial<QuizQuestion> = {
-      type,
-      options: type === "multiple_choice" ? question.options || ["", "", "", ""] : undefined,
+      answer_type: type,
+      options: type === "multiple_choice" ? question.options || [{ text: "Option 1" }, { text: "Option 2" }] : undefined,
       allow_multiple_answers: type === "multiple_choice" ? false : undefined,
       correct_answer: type === "multiple_choice" ? [0] : (type === "true_false" ? true : (type === "fill_blank" ? "" : undefined)),
     }
@@ -54,19 +58,29 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
   }
 
   const toggleCorrectAnswer = (optionIndex: number) => {
+    let new_correct_answer: number[]
     if (question.allow_multiple_answers) {
       const current = question.correct_answer || []
       const updated = (current as number[]).includes(optionIndex)
         ? (current as number[]).filter(i => i !== optionIndex)
         : [...(current as number[]), optionIndex]
-      onUpdate({ correct_answer: updated.length > 0 ? updated : [0] })
+        new_correct_answer = updated.length > 0 ? updated : [0]
+      
     } else {
-      onUpdate({ correct_answer: [optionIndex] })
+        new_correct_answer = [optionIndex]
     }
+    onUpdate({
+      ...question,
+      correct_answer: new_correct_answer,
+      options: question.options?.map((opt, i) => ({
+        ...opt,
+        is_correct: new_correct_answer.includes(i),
+      }))
+    })
   }
 
   const addOption = () => {
-    onUpdate({ options: [...(question.options || []), ""] })
+    onUpdate({ options: [...(question.options || []), { text: "" }] })
   }
 
   const removeOption = (optionIndex: number) => {
@@ -82,7 +96,7 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
 
   const updateOption = (optionIndex: number, value: string) => {
     const newOptions = [...(question.options || [])]
-    newOptions[optionIndex] = value
+    newOptions[optionIndex] = { ...newOptions[optionIndex], text: value }
     onUpdate({ options: newOptions })
   }
 
@@ -92,8 +106,8 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-primary">Q{index + 1}</span>
-            <Select value={question.type} onValueChange={(v) => handleTypeChange(v as QuestionType)}>
+            <span className="text-sm font-semibold text-primary">Q{order + 1}</span>
+            <Select value={question.answer_type} onValueChange={(v) => handleTypeChange(v as QuestionType)}>
               <SelectTrigger className="w-[180px] h-8">
                 <SelectValue />
               </SelectTrigger>
@@ -108,8 +122,8 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
           <div className="space-y-1">
             <label className="text-xs text-muted-foreground">Question (supports formatting and images)</label>
             <RichTextEditor
-              value={question.question}
-              onChange={(value) => onUpdate({ question: value })}
+              value={question.text}
+              onChange={(value) => onUpdate({ text: value })}
               placeholder="Enter your question..."
             />
           </div>
@@ -125,7 +139,7 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
       </div>
 
       {/* Multiple Choice Options */}
-      {question.type === "multiple_choice" && (
+      {question.answer_type === "multiple_choice" && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium">Answer Options</label>
@@ -146,7 +160,7 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
               {question.allow_multiple_answers ? (
                 <input
                   type="checkbox"
-                  checked={((question.correct_answer as number[]) || []).includes(oIndex)}
+                  checked={option.is_correct || false}
                   onChange={() => toggleCorrectAnswer(oIndex)}
                   className="h-4 w-4 rounded"
                 />
@@ -154,19 +168,19 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
                 <input
                   type="radio"
                   name={`correct-${question.id}`}
-                  checked={((question.correct_answer as number[]) || []).includes(oIndex)}
+                  checked={option.is_correct || false}
                   onChange={() => toggleCorrectAnswer(oIndex)}
                   className="h-4 w-4"
                 />
               )}
               <DebouncedInput
                 component={Input}
-                value={option}
+                value={option.text}
                 onChange={(value) => updateOption(oIndex, value)}
                 placeholder={`Option ${oIndex + 1}`}
                 className={cn(
                   "flex-1",
-                  ((question.correct_answer as number[]) || []).includes(oIndex) && "border-emerald-500 bg-emerald-50/50"
+                  option.is_correct && "border-emerald-500 bg-emerald-50/50"
                 )}
               />
               {(question.options?.length || 0) > 2 && (
@@ -196,7 +210,7 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
       )}
 
       {/* True/False */}
-      {question.type === "true_false" && (
+      {question.answer_type === "true_false" && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Correct Answer</label>
           <div className="flex gap-3">
@@ -223,12 +237,13 @@ export function QuestionEditor({ question, index, onUpdate, onDelete }: Question
       )}
 
       {/* Fill in the Blank */}
-      {question.type === "fill_blank" && (
+      {question.answer_type === "fill_blank" && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Correct Answer</label>
-          <Input
+          <DebouncedInput
+            component={Input}
             value={(question.correct_answer as string) || ""}
-            onChange={(e) => onUpdate({ correct_answer: e.target.value })}
+            onChange={(value) => onUpdate({ correct_answer: value })}
             placeholder="Enter the correct answer..."
           />
           <p className="text-xs text-muted-foreground">

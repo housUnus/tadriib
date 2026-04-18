@@ -35,6 +35,7 @@ django-mptt = "*"
 django-tinymce = "*"
 pydash = "*"
 drf-nested-routers = "*"
+nested-multipart-parser = "*"
 
 [dev-packages]
 

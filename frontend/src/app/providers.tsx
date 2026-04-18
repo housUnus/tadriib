@@ -4,6 +4,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 import { useCurrentUser } from "@/hooks/use-user";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 function UserInitializer() {
     useCurrentUser();
@@ -25,7 +26,9 @@ export function Providers({ children }: { children: ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <UserInitializer />
-            {children}
+            <NuqsAdapter>
+                {children}
+            </NuqsAdapter>
         </QueryClientProvider>
     );
 }

@@ -48,7 +48,7 @@ export type Content = {
 export type Section = {
     id: string
     title: string
-    contents: Content[]
+    items: Content[]
 }
 
 export type Course = {
@@ -116,7 +116,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => {
                     ...state.course,
                     sections: state.course.sections.map((section) => ({
                         ...section,
-                        contents: section.contents.map((content) =>
+                        contents: section.items.map((content) =>
                             content.id === lectureId
                                 ? {
                                     ...content,
@@ -152,7 +152,7 @@ export const useEnrollmentStore = create<EnrollmentStore>((set, get) => {
 
                 const sections = state.course.sections.map((section) => ({
                     ...section,
-                    contents: section.contents.map((content) => {
+                    contents: section.items.map((content) => {
                         totalLectures++
 
                         const updated =
