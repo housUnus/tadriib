@@ -30,6 +30,7 @@ export const userSchema = z.object({
    is_verified_teacher: z.boolean().optional(),
    expertise: z.any().optional(),
    experience_years: z.number().nullable().optional(),
+   can_switch_role: z.boolean().optional(),
 });
 
 /* -------------------------

@@ -1,5 +1,7 @@
 import requests
 from django.conf import settings
+from subscriptions.models import Order
+from users.models import User
 
 SANDBOX_URL = "https://sandbox.paddle.com"
 PRODUCTION_URL = "https://api.paddle.com"
@@ -9,8 +11,9 @@ DEBUG = settings.DEBUG
 class PaddleProvider:
     BASE_URL = SANDBOX_URL if DEBUG else PRODUCTION_URL
 
-    def create_payment(self, amount, currency, user, metadata):
+    def create_payment(self, order:"Order", user:"User"):
         url = f"{self.BASE_URL}/transactions"
+        return {}
 
         payload = {
             "items": [

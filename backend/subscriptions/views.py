@@ -7,13 +7,15 @@ from .models import (
     SubscriptionPlan,
     UserSubscription,
     Order,
+    OrderItem,
 )
+from courses.models import Course
 from .serializers import (
     SubscriptionPlanSerializer,
     UserSubscriptionSerializer,
     OrderSerializer,
 )
-
+from .constants import OrderStatus
 
 # -------------------------------------------------
 # Subscription Plan ViewSet
@@ -29,6 +31,7 @@ class SubscriptionPlanViewSet(viewsets.ReadOnlyModelViewSet):
 # Order ViewSet
 # -------------------------------------------------
 class OrderViewSet(viewsets.ModelViewSet):
+    lookup_field = "public_id"
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -37,6 +40,31 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, date=timezone.now())
+        
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user, date=timezone.now())
+        
+    @action(detail=False, methods=["post"])
+    def create_course_order(self, request):
+        course_id = request.data.get("course_id")
+        course = Course.objects.get(public_id=course_id)
+
+        order = Order.objects.create(
+            user=request.user,
+            date=timezone.now(),
+            status=OrderStatus.DRAFT,
+        )
+        
+        order.items.create(
+            course=course,
+            amount=course.price,
+            order=order,
+        )
+        
+        order.update_total_amount()
+
+        serializer = self.get_serializer(order)
+        return Response(serializer.data)
 
 
 # -------------------------------------------------

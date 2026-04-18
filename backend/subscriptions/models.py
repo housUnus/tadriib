@@ -12,7 +12,6 @@ from enrollments.models import EnrollmentProgress
 from .constants import OrderStatus, PlanStatus, SubscriptionStatus, SubscriptionFrequency
 from core.models import BaseModel
 from enrollments.models import Enrollment
-from subscriptions.payments.models import Payment
 import pydash as __
 
 class SubscriptionPlan(models.Model):
@@ -210,25 +209,30 @@ class Order(BaseModel):
         decimal_places=4,
         help_text=_('how much was billed for the user'),
         max_digits=19,
+        null=True,
+        blank=True,
     )
+    
     status = models.CharField(
         choices=OrderStatus.choices,
-        default=OrderStatus.PAID,
+        default=OrderStatus.DRAFT,
         max_length=128,
         blank=True,
         null=True,
     )
     
-    payment = models.ForeignKey(
-        "subscriptions.Payment",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )
-    
     @property
     def is_paid(self):
         return self.status == OrderStatus.PAID
+    
+    def update_total_amount(self):
+        self.total_amount = sum([item.amount for item in self.items.all()])
+        self.save()
+        
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        for item in self.items.all():
+            item.create_enrollment()
     
 
 class OrderItem(models.Model):

@@ -57,7 +57,7 @@ export function LearnHeader({
         <header className="shrink-0 border-b border-border bg-card">
             <div className="flex h-14 items-center justify-between px-4 rounded">
                 <div className="flex items-center gap-3">
-                    <Link href="/" className="text-xl font-bold text-primary">
+                    <Link href="/account/my-courses" className="text-xl font-bold text-primary">
                         Ruwad Academy
                     </Link>
 

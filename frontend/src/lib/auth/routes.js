@@ -15,7 +15,8 @@ export const PRIVATE_ROUTE_PREFIXES = [
   "/lecture",
   "/account",
   "/settings",
-  "/instructor"
+  "/instructor",
+  "/payments",
 ];
 
 export const AUTH_ROUTES = [

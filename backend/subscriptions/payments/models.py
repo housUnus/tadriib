@@ -10,3 +10,4 @@ class Payment(models.Model):
     status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.PENDING)
     metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey("subscriptions.Order", on_delete=models.SET_NULL, null=True, blank=True)

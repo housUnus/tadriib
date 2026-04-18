@@ -11,10 +11,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from subscriptions.models import Order, OrderItem
 from subscriptions.constants import PaymentStatus, OrderStatus
+from pydash import get
 
 PROVIDERS = {
     # 'stripe': StripeProvider(),
     'paddle': PaddleProvider(),
+    'free': 'free'
 }
 
 class GenericPaymentViewSet(viewsets.GenericViewSet):
@@ -31,33 +33,25 @@ class GenericPaymentViewSet(viewsets.GenericViewSet):
         if not provider:
             return Response({"error": "Invalid provider"}, status=status.HTTP_400_BAD_REQUEST)
 
-        amount = request.data.get('amount')
-        currency = request.data.get('currency', 'usd')
-        metadata = request.data.get('metadata', {})
+
+        order_id = request.data.get("order_id")
+        if not order_id:
+            return Response({"error": "Invalid order"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if float(amount) == 0:
+        order:'Order' = Order.objects.get(public_id=order_id)
+        
+        if float(order.total_amount or 0) == 0:
             payment = Payment.objects.create(
                 user=request.user,
                 amount=0,
-                currency=currency,
+                currency='sar',
                 provider="free",
                 status=PaymentStatus.COMPLETED,
-                metadata=metadata
+                order=order
             )
 
-            course_id = payment.metadata.get("course_id")
-            if course_id:
-                order = Order.objects.get_or_create(
-                    user=payment.user,
-                    payment=payment,
-                    status=OrderStatus.PAID
-                )
-                order_item = OrderItem(
-                    course_id=course_id,
-                    user=payment.user,
-                    order=order,
-                )
-                order_item.save()
+            order.status = OrderStatus.PAID
+            order.save()
                 
             return Response({
                 "status": "completed",
@@ -66,13 +60,12 @@ class GenericPaymentViewSet(viewsets.GenericViewSet):
 
         payment = Payment.objects.create(
             user=request.user,
-            amount=amount,
-            currency=currency,
+            amount=order.total_amount,
+            currency='sar',
             provider=provider_name,
-            metadata=metadata
         )
 
-        result = provider.create_payment(amount, currency, request.user, metadata)
+        result = provider.create_payment(order, request.user)
         payment.provider_payment_id = result['provider_payment_id']
         payment.save()
 

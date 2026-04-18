@@ -143,10 +143,10 @@ class CourseAdmin(ModelAdmin):
 
     fieldsets = (
         ("Basic Info", {
-            "fields": ("title", "slug", "public_id", "short_description", "description", "instructor", "poster")
+            "fields": ("title", "slug", "public_id", "short_description", "description", "instructor", "poster", "type")
         }),
         ("Classification", {
-            "fields": ("status", "level", "language", "category", "sub_category")
+            "fields": ("status", "level", "language", "category", "sub_category", "price")
         }),
         ("Publishing", {
             "fields": ("published_at",)

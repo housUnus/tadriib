@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.utils import timezone
 
+from core.serializers import PublicSerializerMixin
+
 from .models import (
     SubscriptionPlan,
     UserSubscription,
@@ -31,9 +33,10 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
 # -------------------------------------------------
 
 class CourseMinimalSerializer(serializers.ModelSerializer):
+    instructor_name = serializers.CharField(source="instructor.get_full_name", read_only=True)
     class Meta:
         model = Course
-        fields = ("id", "title", "price")
+        fields = ("id", "title", "price", "instructor_name")
 
 
 # -------------------------------------------------
@@ -79,8 +82,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
 # Order Serializer
 # -------------------------------------------------
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+    total_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Order
@@ -88,7 +92,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "date",
-            "amount",
+            "total_amount",
             "status",
             "items",
         )

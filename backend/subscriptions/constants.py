@@ -1,9 +1,10 @@
 from django.db import models
 
 class OrderStatus(models.TextChoices):
+    DRAFT = "draft", "Draft"
     PENDING = "pending", "Pending"
     PAID = "paid", "Paid"
-    Failed = "failed", "Failed"
+    FAILED = "failed", "Failed"
     
 class PlanStatus(models.TextChoices):
     ACTIVE = "active", "Active"

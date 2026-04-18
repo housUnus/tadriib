@@ -1,16 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, CreditCard } from "lucide-react"
 import Link from "next/link"
-import { OrderSummary } from "../components/order-summary"
-import { TrustBadges } from "../components/trust-badges"
-import { PaymentProcessing } from "../components/payment-processing"
-import { LectureCard } from "../components/lecture-card"
+import { OrderSummary } from "../../components/order-summary"
+import { TrustBadges } from "../../components/trust-badges"
+import { PaymentProcessing } from "../../components/payment-processing"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { LectureCard } from "../../components/lecture-card"
+import { useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 // Mock lecture data - in real app, this would come from API
 const lectureData: any = {
@@ -24,21 +26,36 @@ const lectureData: any = {
 }
 
 export default function CheckoutPage() {
+  const { id } = useParams()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
   const client = useClientFetch()
 
+  const { data:order } = useQuery({
+    queryKey: ["order"],
+    queryFn: () => client.get(`/orders/${id}`).then(res => res.data),
+  })
+  console.log("🚀 ~ CheckoutPage ~ order:", order)
+
+  if(!order) {
+    return null
+  }
+  
+
   const handlePayment = async () => {
     setIsProcessing(true)
     // Simulate payment processing
-    await client.post(`/payments/create_payment`, {
-      amount: 49.99,
-      currency: "usd",
-      provider: "stripe",
-      metadata: { course_id: "crs-001" },
+    const {data, error} = await client.post(`/payments/create_payment/`, {
+      provider: "free",
+      order_id: id,
     })
     // In real app: redirect to payment provider or handle payment
-    router.push("/payments/success")
+    if (error) {
+      toast.error(error)
+      setIsProcessing(false)
+      return
+    }
+    router.push(`/payments/success/${id}`)
   }
 
   if (isProcessing) {
@@ -77,13 +94,15 @@ export default function CheckoutPage() {
               <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">
                 Lecture Details
               </h2>
-              <LectureCard lecture={lectureData} />
+              { (order as any)?.items?.map((item: any) => (
+                <LectureCard key={item.id} lecture={item?.course_detail} />
+              ))}
             </section>
             <section className="lg:hidden">
               <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">
                 Order Summary
               </h2>
-              <OrderSummary lecture={lectureData} />
+              <OrderSummary order={order} />
             </section>
 
             <section>
@@ -108,7 +127,7 @@ export default function CheckoutPage() {
           {/* Sidebar */}
           <div className="hidden lg:block lg:col-span-2 space-y-6">
             <div className="sticky top-8 space-y-6">
-              <OrderSummary lecture={lectureData} />
+              <OrderSummary order={order} />
 
               <Button
                 size="lg"

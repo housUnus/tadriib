@@ -1,20 +1,24 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle2, PlayCircle, BookOpen, ArrowRight } from "lucide-react"
-import { LectureCard } from "../components/lecture-card"
-
-// Mock lecture data - in real app, this would come from API/session
-const lectureData: any = {
-  id: "lec-001",
-  title: "Advanced React Patterns & Performance Optimization",
-  instructor: "Dr. Sarah Chen",
-  date: "March 28, 2026",
-  duration: "2 hours",
-  price: 49.99,
-}
+import { LectureCard } from "../../components/lecture-card"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { useQuery } from "@tanstack/react-query"
+import { useParams } from "next/navigation"
 
 export default function SuccessPage() {
+  const { id } = useParams()
+
+  const client = useClientFetch()
+
+  const { data: order } = useQuery({
+    queryKey: ["order"],
+    queryFn: () => client.get(`/orders/${id}`).then(res => res.data),
+  })
+
   return (
     <main className="min-h-screen bg-background">
       <div className="max-w-lg mx-auto px-4 py-12">
@@ -33,13 +37,15 @@ export default function SuccessPage() {
         <Card className="mb-6 border-border/50">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-muted-foreground">Order #12345</span>
+              <span className="text-sm text-muted-foreground">Order #{(order as any)?.id}</span>
               <span className="text-sm font-medium text-emerald-500">Confirmed</span>
             </div>
-            <LectureCard lecture={lectureData} />
+            {(order as any)?.items.map((item: any) => (
+              <LectureCard key={item.id} lecture={item?.course_detail} />
+            ))}
             <div className="mt-4 pt-4 border-t border-border flex justify-between">
               <span className="text-sm text-muted-foreground">Amount paid</span>
-              <span className="font-semibold">${lectureData.price.toFixed(2)}</span>
+              <span className="font-semibold">${(order as any)?.total_amount}</span>
             </div>
           </CardContent>
         </Card>
@@ -47,17 +53,17 @@ export default function SuccessPage() {
         {/* Action Buttons */}
         <div className="space-y-3">
           <Button asChild size="lg" className="w-full">
-            <Link href="/lecture">
+            <Link href="/account/my-courses">
               <PlayCircle className="h-4 w-4 mr-2" />
-              Go to Lecture
+              Go to Lectures
               <ArrowRight className="h-4 w-4 ml-2" />
             </Link>
           </Button>
-          
+
           <Button asChild variant="outline" size="lg" className="w-full">
             <Link href="/courses">
               <BookOpen className="h-4 w-4 mr-2" />
-              View My Courses
+              View Other Courses
             </Link>
           </Button>
         </div>

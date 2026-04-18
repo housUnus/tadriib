@@ -16,17 +16,17 @@ export interface OrderSummary {
 }
 
 interface OrderSummaryProps {
-  lecture: any
+  order: any
   showPromoInput?: boolean
 }
 
-export function OrderSummary({ lecture, showPromoInput = true }: OrderSummaryProps) {
+export function OrderSummary({ order, showPromoInput = false }: OrderSummaryProps) {
   const [promoCode, setPromoCode] = useState("")
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null)
   const [isApplying, setIsApplying] = useState(false)
 
-  const discount = appliedPromo ? lecture.price * 0.1 : 0
-  const total = lecture.price - discount
+  const discount = appliedPromo ? order?.total_amount * 0.1 : 0
+  const total = order?.total_amount - discount
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return
@@ -43,20 +43,22 @@ export function OrderSummary({ lecture, showPromoInput = true }: OrderSummaryPro
         <CardTitle className="text-lg">Order Summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <p className="font-medium text-sm">{lecture.title}</p>
-            <p className="text-xs text-muted-foreground">Access to live lecture</p>
+        {order.items.map((item: any) => (
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
+              <p className="font-medium text-sm">{item?.course_detail.title}</p>
+              <p className="text-xs text-muted-foreground">Access to live lecture</p>
+            </div>
+            <div className="text-right">
+              {item?.course_detail.originalPrice && (
+                <p className="text-sm text-muted-foreground line-through">
+                  ${item?.course_detail.originalPrice.toFixed(2)}
+                </p>
+              )}
+              <p className="font-medium">${item?.course_detail.price}</p>
+            </div>
           </div>
-          <div className="text-right">
-            {lecture.originalPrice && (
-              <p className="text-sm text-muted-foreground line-through">
-                ${lecture.originalPrice.toFixed(2)}
-              </p>
-            )}
-            <p className="font-medium">${lecture.price.toFixed(2)}</p>
-          </div>
-        </div>
+        ))}
 
         {showPromoInput && (
           <>
@@ -68,7 +70,7 @@ export function OrderSummary({ lecture, showPromoInput = true }: OrderSummaryPro
                     <Check className="h-4 w-4 text-primary" />
                     <span className="text-sm font-medium">{appliedPromo}</span>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setAppliedPromo(null)}
                     className="text-xs text-muted-foreground hover:text-foreground"
                   >
@@ -86,8 +88,8 @@ export function OrderSummary({ lecture, showPromoInput = true }: OrderSummaryPro
                       className="pl-9"
                     />
                   </div>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={handleApplyPromo}
                     disabled={isApplying || !promoCode.trim()}
                   >
@@ -104,7 +106,7 @@ export function OrderSummary({ lecture, showPromoInput = true }: OrderSummaryPro
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>${lecture.price.toFixed(2)}</span>
+            <span>${order.total_amount}</span>
           </div>
           {discount > 0 && (
             <div className="flex justify-between text-sm text-primary">

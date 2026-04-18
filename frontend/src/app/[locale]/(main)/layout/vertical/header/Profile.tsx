@@ -53,7 +53,7 @@ const Profile = () => {
                 <div>
                   <h6 className="card-title hover:text-primary">{user?.first_name} {user?.last_name}</h6>
                   <p className="card-subtitle mb-0 flex items-center">
-                   {user?.active_role}
+                    {user?.active_role}
                   </p>
                 </div>
               </div>
@@ -87,12 +87,14 @@ const Profile = () => {
           </SimpleBar>
 
           <div className="border border-t border-b-0">
-            <div className="flex items-center bg-hover group/link px-6">
-              <Icon icon="solar:users-group-rounded-bold" height={14} width={14} className={'text-muted-foreground'} />
-              <ActionButton action={switchRole} onActionDone={()=> window.location.reload()} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
-                Switch Role
-              </ActionButton>
-            </div>
+            {user?.can_switch_role &&
+              <div className="flex items-center bg-hover group/link px-6">
+                <Icon icon="solar:users-group-rounded-bold" height={14} width={14} className={'text-muted-foreground'} />
+                <ActionButton action={switchRole} onActionDone={() => window.location.reload()} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+                  Switch Role
+                </ActionButton>
+              </div>
+            }
             <div className="flex items-center bg-hover group/link px-6">
               <Icon icon="solar:logout-2-line-duotone" height={14} width={14} className={'text-muted-foreground'} />
               <ActionButton action={logoutAction} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
