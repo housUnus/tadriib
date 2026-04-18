@@ -76,7 +76,7 @@ export default function VerifyEmailClient({
   useEffect(() => {
     if (status === "success" || status === "already") {
       setTimeout(() => {
-        router.push(session ? ACCOUNT_ROUTE : "/login");
+        router.push(session ? ACCOUNT_ROUTE : DEFAULT_LOGIN_ROUTE);
       }, 2500);
     }
   }, [status, session]);
