@@ -5,6 +5,7 @@ import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { StarRating } from "../StartRating";
+import BuyButton from "../BuyButton";
 
 function CourseCard({ item }) {
   const t = useTranslations("home");
@@ -65,11 +66,15 @@ function CourseCard({ item }) {
               </span>
             </Link>
             <h3 className="font-bold mb-1">
-              {course.price} <span className="uppercase">{t("sar")}</span>
+              {course.price} <span className="sar">$</span>
               <span className="line-through font-normal text-gray-500 text-xs mx-1">
                 {" "}
-                {course.originalPrice}{" "}
-                <span className="uppercase">{t("sar")}</span>
+                {course.originalPrice && (
+                  <>
+                    {course.originalPrice}{" "}
+                    <span className="uppercase">{t("sar")}</span>
+                  </>
+                )}
               </span>
             </h3>
             <div className="flex items-center justify-between mb-3 sm:mb-4 text-sm text-gray-500">
@@ -95,12 +100,13 @@ function CourseCard({ item }) {
                   <span>{t("details")}</span>
                 </Link>
               </Button>
-              <Button
+              <BuyButton
+                course={course}
                 className="w-full bg-primary text-white border-0 group/btn text-sm py-1 sm:py-2"
                 disabled={course.availablePlaces === 0}
               >
                 <span>{t("buyNow")}</span>
-              </Button>
+              </BuyButton>
             </div>
           </div>
         </CardContent>

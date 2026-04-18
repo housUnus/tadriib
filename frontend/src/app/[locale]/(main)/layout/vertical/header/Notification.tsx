@@ -27,15 +27,15 @@ const MyNotifications = () => {
             <span className="h-10 w-10 hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">
               <Icon icon="solar:bell-bing-line-duotone" height={20} />
             </span>
-            <span className="rounded-full absolute end-1 top-1 bg-error text-[10px] h-4 w-4 flex justify-center items-center text-white">
+            {/* <span className="rounded-full absolute end-1 top-1 bg-error text-[10px] h-4 w-4 flex justify-center items-center text-white">
               5
-            </span>
+            </span> */}
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" w-screen sm:w-[360px] py-6  rounded-sm px-0">
           <div className="flex items-center  px-6 justify-between">
             <h3 className="mb-0 text-lg font-semibold text-ld">Notification</h3>
-            <Badge variant="primary">5 new</Badge>
+            {/* <Badge variant="primary">5 new</Badge> */}
           </div>
           <SimpleBar className="max-h-80 mt-3">
             {Notification.Notification.map((links, index) => (

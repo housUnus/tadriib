@@ -308,7 +308,7 @@ export default function Detail({ course }: { course: any }) {
             {/* Price Section */}
             <div className="mt-auto pt-4 border-t">
               <div className="flex items-baseline gap-2 mb-3">
-                <span className="text-3xl font-bold">${course.price}</span>
+                <span className="text-3xl font-bold sar">${course.price}</span>
                 {/* <span className="text-lg text-muted-foreground line-through">${courseData.originalPrice}</span> */}
                 {/* <Badge variant="secondary" className="text-xs">{courseData.discountPercent}% off</Badge> */}
               </div>

@@ -11,19 +11,20 @@ import {
   CarouselNext,
   CarouselPrevious
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const SliderData = [
   {
-    title: "Feature Rich 3D Charts",
-    desc: "Donec justo tortor, malesuada vitae faucibus ac, tristique sit amet massa. Aliquam dignissim nec felis quis imperdiet.",
+    title: "Track Your Progress with Precision",
+    desc: "Get detailed performance insights, identify weak areas, and focus your preparation where it matters most.",
   },
   {
-    title: "Feature Rich 2D Charts",
-    desc: "Donec justo tortor, malesuada vitae faucibus ac, tristique sit amet massa. Aliquam dignissim nec felis quis imperdiet.",
+    title: "Learn Through Courses & Expert Content",
+    desc: "Strengthen your knowledge with structured courses and supporting materials aligned with your quiz preparation journey.",
   },
   {
-    title: "Feature Rich 1D Charts",
-    desc: "Donec justo tortor, malesuada vitae faucibus ac, tristique sit amet massa. Aliquam dignissim nec felis quis imperdiet.",
+    title: "Prepare with Realistic Exam Simulations",
+    desc: "Experience timed quizzes and mock exams that simulate real fellowship conditions to build confidence and speed.",
   },
 ];
 
@@ -44,7 +45,13 @@ const BoxedAuthSlider = () => {
         className={isSmall ? "max-w-[200px]" : "max-w-[300px]"}
       />
 
-      <Carousel className={isSmall ? "h-[150px]" : "my-4"}>
+      <Carousel
+        className={isSmall ? "h-[150px]" : "my-4"}
+        plugins={[
+          Autoplay({
+            delay: 5000,
+          }),
+        ]}>
         <CarouselContent>
           {SliderData.map((item, index) => (
             <CarouselItem key={index}>
@@ -55,7 +62,7 @@ const BoxedAuthSlider = () => {
                   <p className="text-15 my-6 mt-3 leading-6">{item.desc}</p>
                 )}
 
-                <Button className="w-fit mx-auto">Learn More</Button>
+                {/* <Button className="w-fit mx-auto">Learn More</Button> */}
               </div>
             </CarouselItem>
           ))}
