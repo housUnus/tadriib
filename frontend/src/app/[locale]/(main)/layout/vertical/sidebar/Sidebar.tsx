@@ -62,7 +62,7 @@ const SidebarLayout = () => {
           </div>
 
           <SimpleBar className="h-[calc(100vh-32px)] ">
-            <div className="   ps-4 rtl:pe-4 rtl:ps-0 pe-4">
+            <div className="ps-4 pe-4">
               {SidebarContent?.filter((section) => SECTIONS_INUSE.includes(section?.name || "")).map((section) =>
                 section.items?.map((item) => (
                   <div className="mb-4" key={item.heading}>

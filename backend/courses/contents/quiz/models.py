@@ -17,7 +17,6 @@ class Quiz(BaseModel):
     max_attempts = models.PositiveIntegerField(null=True, blank=True)
     
     can_pause = models.BooleanField(default=False)
-    can_retake = models.BooleanField(default=False)
     require_review = models.BooleanField(default=False)
     time_limit_minutes = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
@@ -104,7 +103,9 @@ class Option(BaseModel):
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
-        related_name="options"
+        related_name="options",
+        null=True,
+        blank=True,
     )
     text = models.CharField(max_length=255)
     label = models.CharField(max_length=10, blank=True)

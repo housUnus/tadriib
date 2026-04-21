@@ -60,7 +60,6 @@ export interface Quiz {
   time_limit_minutes: number
   description: string
   duration:  number
-  can_retake?: boolean
   can_pause?: boolean
   show_correct_answers?: boolean
   questions: Question[]

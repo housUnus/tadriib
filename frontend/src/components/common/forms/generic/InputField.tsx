@@ -23,6 +23,7 @@ type InputFieldProps<T extends FieldValues> = {
   rules?: RegisterOptions<T>;
   disabled?: boolean;
   debounceTime?: number;
+  positiveOnly?: boolean;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "name">;
 
 export default function InputField<T extends FieldValues>({
@@ -35,13 +36,24 @@ export default function InputField<T extends FieldValues>({
   rules,
   disabled,
   debounceTime = 100,
+  positiveOnly = false,
   ...rest
 }: InputFieldProps<T>) {
-  console.log("🚀 ~ InputField ~ type:", type)
   const {
     control,
     formState: { errors },
   } = useFormContext();
+
+  const onChange = (val: any, field: any) => {
+    let value = val;
+
+    if (type === "number" && positiveOnly) {
+      value = Number(value);
+      if (value < 0) value = 0;
+    }
+
+    field.onChange(value);
+  }
 
 
   return (
@@ -64,12 +76,12 @@ export default function InputField<T extends FieldValues>({
             component={Input}
             delay={debounceTime}
             value={field.value ?? ""}
-            onChange={(val: any) => field.onChange(val)}
+            onChange={(value) => onChange(value, field)}
             id={field.name}
             type={type}
             aria-invalid={fieldState.invalid}
             className={cn(`mt-1`, className)}
-            variant={fieldState.error? 'failure':'default'}
+            variant={fieldState.error ? 'failure' : 'default'}
             disabled={disabled}
             {...rest}
           />

@@ -38,7 +38,7 @@ export function MainContent({
   const submissionId = searchParams.get("submission")
   const enrollment_id = useEnrollmentStore((state) => state.id)
 
-  const [activeTab, setActiveTab] = useState("overview")
+  const [activeTab, setActiveTab] = useState("attachments")
 
   const { data } = useQuery({
     queryKey: ['enrollments', activeContent.id],
@@ -65,7 +65,6 @@ export function MainContent({
       hasPrevious,
       hasNext,
     }
-    console.log("🚀 ~ renderContent ~ commonProps:", commonProps)
 
     if(!activeContent) return null
 
@@ -97,7 +96,7 @@ export function MainContent({
         <div className={"bg-background p-2"} >{renderContent()}</div>
 
         <div className="mt-4">
-          <ContentTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <ContentTabs activeTab={activeTab} onTabChange={setActiveTab} item={loaded_content}/>
         </div>
       </div>
     </div>

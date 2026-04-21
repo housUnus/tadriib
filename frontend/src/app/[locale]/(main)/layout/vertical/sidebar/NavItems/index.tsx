@@ -39,26 +39,24 @@ const NavItems: React.FC<NavItemsProps> = ({ item, isInsideCollapse }) => {
     <>
       <SidebarMenuItem
         className={`list-none
-          hover:transform hover:translate-x-1 transition-all duration-200 ease-in-out
-   p-3  mb-1 gap-3 !text-[15px] text-start leading-[normal] rounded-full
-    ${
-      item.disabled
-        ? "opacity-50 cursor-default hover:bg-transparent text-link dark:text-white/70 hover:text-link"
-        : item.url === pathname
-        ? isInsideCollapse
-          ? "!text-primary bg-transparent"
-          : `${item.icon ? "!text-primary" : "!text-link"} bg-lightprimary`
-        : isInsideCollapse
-        ? "text-link dark:text-white hover:text-primary dark:hover:text-primary bg-transparent group/icon"
-        : "text-link dark:text-white hover:text-primary dark:hover:text-primary bg-transparent hover:bg-lightprimary dark:hover:bg-lightprimary group/icon"
-    }
+          hover:transform hover:translate-x-1 transition-all duration-200 ease-in-out p-3  mb-1 gap-3 text-[15px]! text-start leading-[normal] rounded-full
+    ${item.disabled
+            ? "opacity-50 cursor-default hover:bg-transparent text-link dark:text-white/70 hover:text-link"
+            : item.url === pathname
+              ? isInsideCollapse
+                ? "text-primary! bg-transparent"
+                : `${item.icon ? "text-primary!" : "text-link!"} bg-lightprimary`
+              : isInsideCollapse
+                ? "text-link dark:text-white hover:text-primary dark:hover:text-primary bg-transparent group/icon"
+                : "text-link dark:text-white hover:text-primary dark:hover:text-primary bg-transparent hover:bg-lightprimary dark:hover:bg-lightprimary group/icon"
+          }
   `}
       >
         <SidebarMenuButton
           asChild
           className="p-0 !h-auto rounded-none
-           !bg-transparent
-           !text-inherit
+           bg-transparent!
+           text-inherit!
            !hover:bg-transparent
             !hover:text-primary
             !focus-visible:ring-0

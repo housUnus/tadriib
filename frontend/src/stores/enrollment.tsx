@@ -1,3 +1,4 @@
+import { Attachment } from "@/types/course"
 import { create } from "zustand"
 
 export type ContentType = "video" | "quiz" | "article" | "assignment" | "attachment" | "conference"
@@ -41,8 +42,8 @@ export type Content = {
     progress: LectureProgress
     show_correct_answers?: boolean
     can_pause?: boolean
-    can_retake?: boolean
     invalidate: () => void
+    attachments: Attachment[]
 }
 
 export type Section = {

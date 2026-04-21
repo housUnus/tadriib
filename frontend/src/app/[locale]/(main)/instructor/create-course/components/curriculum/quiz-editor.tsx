@@ -40,7 +40,6 @@ console.log("🚀 ~ QuizEditor ~ sectionId:", sectionId)
       show_final_score: content.show_final_score ?? false,
       max_attempts: content.max_attempts || null,
       can_pause: content.can_pause ?? false,
-      can_retake: content.can_retake ?? false,
       require_review: content.require_review ?? false,
       time_limit_minutes: content.time_limit_minutes || null,
     },
@@ -80,6 +79,7 @@ console.log("🚀 ~ QuizEditor ~ sectionId:", sectionId)
                   name="max_attempts"
                   type="number"
                   label="Max Attempts"
+                  positiveOnly
                   placeholder="Leave empty for unlimited"
                 />
                 {/* Time Limit */}
@@ -87,6 +87,7 @@ console.log("🚀 ~ QuizEditor ~ sectionId:", sectionId)
                   debounceTime={1000}
                   name="time_limit_minutes"
                   type="number"
+                  positiveOnly
                   label="Time Limit (minutes)"
                   placeholder="Leave empty for no time limit"
                 />
@@ -113,11 +114,6 @@ console.log("🚀 ~ QuizEditor ~ sectionId:", sectionId)
                   <CheckboxField
                     name="can_pause"
                     label="Allow Pause"
-                  />
-
-                  <CheckboxField
-                    name="can_retake"
-                    label="Allow Retake"
                   />
 
                   <CheckboxField

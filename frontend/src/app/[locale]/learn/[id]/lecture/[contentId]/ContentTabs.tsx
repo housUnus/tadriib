@@ -1,23 +1,27 @@
 "use client"
 
-import { Search, MessageSquare, StickyNote, Bell, Star, Lightbulb } from "lucide-react"
+import { Search, MessageSquare, StickyNote, Bell, Star, Lightbulb, File } from "lucide-react"
 import { cn } from "@/lib/utils/utils"
+import { Content } from "@/stores/enrollment"
+import { AttachmentsManager } from "@/app/[locale]/(main)/instructor/create-course/components/attachments-manager"
+import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 
 interface ContentTabsProps {
+  item: Content
   activeTab: string
   onTabChange: (tab: string) => void
 }
 
 const tabs = [
-  { id: "overview", label: "Overview", icon: null },
-  { id: "qa", label: "Q&A", icon: MessageSquare },
-  { id: "notes", label: "Notes", icon: StickyNote },
-  { id: "announcements", label: "Announcements", icon: Bell },
-  { id: "reviews", label: "Reviews", icon: Star },
+  { id: "attachments", label: "Attachments", icon: File },
+  // { id: "qa", label: "Q&A", icon: MessageSquare },
+  // { id: "notes", label: "Notes", icon: StickyNote },
+  // { id: "announcements", label: "Announcements", icon: Bell },
+  // { id: "reviews", label: "Reviews", icon: Star },
   // { id: "learning-tools", label: "Learning tools", icon: Lightbulb },
 ]
 
-export function ContentTabs({ activeTab, onTabChange }: ContentTabsProps) {
+export function ContentTabs({ activeTab, onTabChange, item }: ContentTabsProps) {
   return (
     <div className="border-b border-border bg-background">
       {/* Tab Bar */}
@@ -41,42 +45,21 @@ export function ContentTabs({ activeTab, onTabChange }: ContentTabsProps) {
 
       {/* Tab Content */}
       <div className="p-6">
-        <TabContent activeTab={activeTab} />
+        <TabContent activeTab={activeTab} item={item} />
       </div>
     </div>
   )
 }
 
-function TabContent({ activeTab }: { activeTab: string }) {
+function TabContent({ activeTab, item }: { activeTab: string, item: Content }) {
+
+  const client = useClientFetch()
+
   switch (activeTab) {
-    case "overview":
+    case "attachments":
       return (
         <div className="max-w-3xl space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-2">About this course</h2>
-            <p className="text-muted-foreground">
-              Learn the fundamentals and advanced concepts in this comprehensive course. You'll gain practical skills
-              through hands-on exercises and real-world projects.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="text-2xl font-bold">12</div>
-              <div className="text-sm text-muted-foreground">Lessons</div>
-            </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="text-2xl font-bold">2.5h</div>
-              <div className="text-sm text-muted-foreground">Video</div>
-            </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="text-2xl font-bold">3</div>
-              <div className="text-sm text-muted-foreground">Quizzes</div>
-            </div>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="text-2xl font-bold">1</div>
-              <div className="text-sm text-muted-foreground">Assignment</div>
-            </div>
-          </div>
+          <AttachmentsManager attachments={item?.attachments} readOnly/>
         </div>
       )
     case "qa":

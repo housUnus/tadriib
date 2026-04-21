@@ -167,7 +167,6 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     rating_distribution = serializers.SerializerMethodField()
     main_preview=serializers.SerializerMethodField()
     is_wishlisted = serializers.SerializerMethodField()
-    language = serializers.CharField(source="get_language_display")
     
     def get_rating_distribution(self, obj: Course):
         return obj.get_rating_distribution()

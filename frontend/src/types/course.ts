@@ -66,7 +66,6 @@ export interface Data {
   show_final_score?: boolean
   max_attempts?: number | null
   can_pause?: boolean
-  can_retake?: boolean
   require_review?: boolean
   time_limit_minutes?: number | null
   // For webinar

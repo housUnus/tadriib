@@ -34,7 +34,7 @@ class Course(BaseModel):
     short_description = models.CharField(max_length=500, blank=True, null=True)
     description = HTMLField(null=True, blank=True)
     category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, related_name="courses")
-    sub_category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, related_name="sub_courses")
+    sub_category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, blank=True, related_name="sub_courses")
     
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="courses")
 

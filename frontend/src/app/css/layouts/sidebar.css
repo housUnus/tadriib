@@ -3,8 +3,7 @@
   z-index: 9;
   transition: 0.2s ease-in;
   position: fixed;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   height: 100%;
   width: 260px;
 }
@@ -103,7 +102,7 @@
 
 @media (min-width: 1199px) {
   [data-sidebar-type="mini-sidebar"] .page-wrapper {
-    margin-left: 80px;
+    margin-inline-start: 80px;
   }
 
   [data-sidebar-type="mini-sidebar"] .menu-sidebar {

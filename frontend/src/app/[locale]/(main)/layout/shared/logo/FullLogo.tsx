@@ -10,7 +10,7 @@ const FullLogo = () => {
         alt="logo"
         width={152}
         height={29}
-        className="block dark:hidden rtl:scale-x-[-1]"
+        className="block dark:hidden"
       />
       {/* Light Logo  */}
       <Image
@@ -18,7 +18,7 @@ const FullLogo = () => {
         alt="logo"
         width={152}
         height={29}
-        className="hidden dark:block rtl:scale-x-[-1]"
+        className="hidden dark:block"
       />
     </Link>
   );

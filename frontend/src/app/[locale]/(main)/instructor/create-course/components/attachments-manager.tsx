@@ -26,8 +26,9 @@ const ALLOWED_TYPES = [
 
 interface AttachmentsManagerProps {
   attachments: Attachment[]
-  onCreate: (attachment: Attachment) => void
-  onDelete: (id: string) => void
+  onCreate?: (attachment: Attachment) => void
+  onDelete?: (id: string) => void
+  readOnly?: boolean
 }
 
 const formatFileSize = (bytes: number) => {
@@ -43,7 +44,7 @@ const getFileIcon = (type: string) => {
   return File
 }
 
-export function AttachmentsManager({ attachments, onCreate, onDelete }: AttachmentsManagerProps) {
+export function AttachmentsManager({ attachments, onCreate, onDelete, readOnly }: AttachmentsManagerProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,31 +71,31 @@ export function AttachmentsManager({ attachments, onCreate, onDelete }: Attachme
       })
     }
 
-    if(validFiles.length === 0) return
-    onCreate(validFiles?.[0])
+    if (validFiles.length === 0) return
+    onCreate?.(validFiles?.[0])
     if (inputRef.current) inputRef.current.value = ""
   }
 
   const removeAttachment = (id: string | undefined) => {
     console.log("🚀 ~ removeAttachment ~ id:", id)
     if (id) {
-      onDelete(id)
+      onDelete?.(id)
     }
   }
 
   return (
     <div className="space-y-3">
-      <input
+      {!readOnly && <input
         ref={inputRef}
         type="file"
         accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.mp3,.mp4,.png,.jpg,.jpeg"
         onChange={handleFileSelect}
         className="hidden"
-      />
+      />}
 
-      {attachments.length > 0 && (
+      {attachments?.length > 0 && (
         <div className="space-y-2">
-          {attachments.map((attachment) => {
+          {attachments?.map((attachment) => {
             const FileIcon = getFileIcon(attachment.type)
             return (
               <div
@@ -117,33 +118,40 @@ export function AttachmentsManager({ attachments, onCreate, onDelete }: Attachme
                   >
                     <Download className="h-4 w-4" />
                   </Button>
-                  <Button
+                  {!readOnly && <Button
                     size="icon"
                     variant="ghost"
                     className="h-8 w-8 text-destructive hover:text-destructive"
                     onClick={() => removeAttachment(attachment?.id)}
                   >
                     <Trash2 className="h-4 w-4" />
-                  </Button>
+                  </Button>}
                 </div>
               </div>
             )
           })}
         </div>
       )}
+      {attachments?.length == 0 && (
+        <p className="text-sm text-muted-foreground">No attachments yet</p>
+      )}
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => inputRef.current?.click()}
-        className="gap-2 border-dashed"
-      >
-        <Paperclip className="h-4 w-4" />
-        Add Attachment
-      </Button>
-      <p className="text-xs text-muted-foreground">
-        Add resources like PDFs, transcripts, slides, or other files
-      </p>
+      {!readOnly &&
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => inputRef.current?.click()}
+            className="gap-2 border-dashed"
+          >
+            <Paperclip className="h-4 w-4" />
+            Add Attachment
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            Add resources like PDFs, transcripts, slides, or other files
+          </p>
+        </>
+      }
     </div>
   )
 }

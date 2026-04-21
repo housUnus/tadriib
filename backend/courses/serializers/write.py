@@ -22,7 +22,7 @@ class OptionSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(WritableNestedModelSerializer):
     correct_answer = serializers.JSONField(allow_null=True, required=False)
-    options = OptionSerializer(many=True)
+    options = OptionSerializer(many=True, required=False, allow_null=True)
 
     class Meta:
         model = Question
@@ -64,7 +64,6 @@ class QuizSerializer(WritableNestedModelSerializer):
             "description",
             "time_limit_minutes",
             "can_pause",
-            "can_retake",
             "show_correct_answers",
             "show_final_score",
             "max_attempts",

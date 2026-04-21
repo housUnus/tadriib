@@ -39,7 +39,6 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions", 
             "total_questions",
             "can_pause",
-            "can_retake",
             "show_correct_answers",
             "show_final_score",
             "max_attempts",

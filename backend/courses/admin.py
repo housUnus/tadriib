@@ -20,7 +20,7 @@ class QuestionInline(TabularInline):
 class QuizInline(TabularInline):
     model = Quiz
     extra = 0
-    fields = ("max_attempts", "can_pause", "can_retake", "show_correct_answers")
+    fields = ("max_attempts", "can_pause", "show_correct_answers")
     show_change_link = True
 
 
@@ -245,7 +245,7 @@ class FileUploadInline(StackedInline):
 
 @admin.register(Quiz)
 class QuizAdmin(ModelAdmin):
-    list_display = ("can_pause", "can_retake", "show_correct_answers")
+    list_display = ("can_pause", "show_correct_answers")
     ordering = ("id",)
     inlines = [QuestionInline]
 

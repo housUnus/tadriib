@@ -1,25 +1,25 @@
-html[dir="rtl"] .page-wrapper {
+/* html[dir="rtl"] .page-wrapper {
     margin-right: calc(240px + 80px);
     margin-left: 0;
-}
+} */
 
-html[dir="rtl"] .menu-sidebar {
+/* html[dir="rtl"] .menu-sidebar {
     left: unset;
     right: 80px;
 }
 html[dir="rtl"] .minisidebar-icon{
     left: unset;
     right: 0;
-}
+} */
 
-html[dir="rtl"][data-sidebar-type="mini-sidebar"] .page-wrapper {
+/* html[dir="rtl"][data-sidebar-type="mini-sidebar"] .page-wrapper {
     margin-left: unset;
     margin-right: 80px;
 }
 
 html[dir="rtl"][data-layout='horizontal'] .page-wrapper{
     margin-right:0 !important
-}
+} */
 
 @media (max-width: 1199px) {
     html[dir="rtl"] [data-sidebar-type="mini-sidebar"] .menu-sidebar{
