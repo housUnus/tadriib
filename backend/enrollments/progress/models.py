@@ -228,7 +228,7 @@ class QuestionSubmission(models.Model):
     def set_validity(self):
         question:"Question" = self.question
         if question.answer_type == AnswerType.MULTIPLE_CHOICE:
-            correct_options = list(question.options.filter(is_correct=True).values_list("label", flat=True))
+            correct_options = list(question.options.filter(is_correct=True).values_list("id", flat=True))
             self.is_correct = correct_options == self.text_answer
         elif question.answer_type == AnswerType.TRUE_FALSE:
             true_false_answer:"TrueFalseAnswer" = question.true_false#type: ignore

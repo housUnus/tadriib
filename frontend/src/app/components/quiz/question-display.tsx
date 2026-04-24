@@ -19,6 +19,42 @@ const getAlphabet = (locale: string) => {
   return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 }
 
+function fixImageStyles(html: string) {
+  return html.replace(
+    /containerstyle="([^"]*)"/g,
+    (_, styles) => {
+      const match = styles.match(/width:\s*(\d+px)/);
+      return match ? `style="width: ${match[1]};"` : "";
+    }
+  );
+}
+
+type OptionState = {
+  isSelected: boolean | null;
+  isCorrect: boolean | null;
+  showCorrectAnswer: boolean | null;
+};
+
+function getOptionStyles({ isSelected, isCorrect, showCorrectAnswer }: OptionState) {
+  // BEFORE submission (no correctness yet)
+  if (!showCorrectAnswer) {
+    if (isSelected) {
+      return "border-primary bg-primary/5 text-foreground hover:border-primary/50 hover:bg-muted/50";
+    }
+    return "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50";
+  }
+
+  // AFTER submission
+  if (isCorrect) {
+    return "border-green-500 bg-green-500 text-white";
+  }
+
+  if (isSelected && !isCorrect) {
+    return "border-red-500 bg-red-500 text-white";
+  }
+
+  return "border-border bg-muted text-muted-foreground";
+}
 
 type AnswerValue =
   | number
@@ -71,6 +107,7 @@ export function QuestionDisplay({
   console.log("🚀 ~ QuestionDisplay ~ correctAnswer:", correctAnswer)
 
   const [value, setValue] = useState((selectedAnswer as string) || "")
+  console.log("🚀 ~ QuestionDisplay ~ selectedAnswer:", selectedAnswer)
   const [showHint, setShowHint] = useState(false)
 
   const [debouncedValue] = useDebounce(value, 500)
@@ -97,9 +134,12 @@ export function QuestionDisplay({
 
             {question.options?.map((option: QuizOption, index: number) => {
               const label = getAlphabet('en')[index]
-              const isSelected = isMultiple
-                ? Array.isArray(selectedAnswer) && selectedAnswer.includes(option.id)
+              const isSelected = Array.isArray(selectedAnswer)
+                ? selectedAnswer.includes(option.id)
                 : selectedAnswer === option.id
+              const isCorrectAnswer = Array.isArray(correctAnswer)
+                ? correctAnswer.includes(option.id)
+                : correctAnswer === option.id
 
               const handleClick = () => {
 
@@ -116,7 +156,7 @@ export function QuestionDisplay({
                   onSelectAnswer(updated)
 
                 } else {
-                  onSelectAnswer(option.id)
+                  onSelectAnswer([option.id])
                 }
               }
 
@@ -128,9 +168,11 @@ export function QuestionDisplay({
                   onClick={handleClick}
                   className={cn(
                     "disabled:opacity-100 disabled:pointer-events-none flex w-full justify-start items-center gap-4 rounded-lg border p-3 h-auto text-left transition-all",
-                    isSelected
-                      ? "border-primary bg-primary/5 text-foreground"
-                      : "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50",
+                    getOptionStyles({
+                      isSelected,
+                      isCorrect: !!isCorrectAnswer,
+                      showCorrectAnswer: !!showAnswers && isReadOnly,
+                    })
                   )}
                 >
 
@@ -156,28 +198,46 @@ export function QuestionDisplay({
         )
       }
 
-      case "true_false":
+      case "true_false": {
+        console.log("🚀 ~ renderAnswerInput ~ selectedAnswer:", selectedAnswer)
         return (
           <div className="flex gap-4">
             <Button
               disabled={isReadOnly}
-              variant={selectedAnswer === true ? "default" : "outline"}
               onClick={() => onSelectAnswer(true)}
-              className="disabled:opacity-100 disabled:pointer-events-none"
+              className={
+                cn(
+                  "disabled:opacity-100 disabled:pointer-events-none border",
+                  getOptionStyles({
+                    isSelected: selectedAnswer === true,
+                    isCorrect: !!correctAnswer === true,
+                    showCorrectAnswer: !!showAnswers && isReadOnly
+                  })
+                )
+              }
             >
               True
             </Button>
 
             <Button
               disabled={isReadOnly}
-              variant={selectedAnswer === false ? "default" : "outline"}
               onClick={() => onSelectAnswer(false)}
-              className="disabled:opacity-100 disabled:pointer-events-none"
+              className={
+                cn(
+                  "disabled:opacity-100 disabled:pointer-events-none border",
+                  getOptionStyles({
+                    isSelected: selectedAnswer === false,
+                    isCorrect: !!correctAnswer === false,
+                    showCorrectAnswer: !!showAnswers && isReadOnly
+                  })
+                )
+              }
             >
               False
             </Button>
           </div>
         )
+      }
 
       case "fill_blank":
         return (
@@ -257,7 +317,7 @@ export function QuestionDisplay({
 
   }
 
-  if(isPaused){
+  if (isPaused) {
     return (
       <div className="flex flex-col gap-6">
         <Card className="border shadow-md bg-muted/50">
@@ -273,12 +333,13 @@ export function QuestionDisplay({
 
   return (<div className="flex flex-col gap-6">
 
-    <Card className={`border shadow-md ${isReadOnly ? "bg-muted/50" : ""} ${isReadOnly && isCorrect !== undefined  &&(isCorrect ? "border-green-500" : "border-red-500")}`}>
+    <Card className={`border shadow-md ${isReadOnly ? "bg-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "border-green-500" : "border-red-500")}`}>
       <CardContent className="p-2 mt-0">
-        
         <div
-          className="leading-relaxed [&_p]:mb-2"
-          dangerouslySetInnerHTML={{ __html: question.text }}
+          className="leading-relaxed [&_p]:mb-2 [&_img]:max-w-full [&_img]:h-auto"
+          dangerouslySetInnerHTML={{
+            __html: fixImageStyles(question.text),
+          }}
         />
       </CardContent>
     </Card>
@@ -336,7 +397,7 @@ export function QuestionDisplay({
                                 : "False"
                               : ans}
                           </span>
-                        ))} 
+                        ))}
                     </span>
                   </span>
                 )}

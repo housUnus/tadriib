@@ -15,6 +15,7 @@ from datetime import timedelta
 from django.utils.timezone import now
 from pydash import get
 from typing import cast
+import json
 
 class EnrollmentViewSet(ListQueryMixin, PublicViewsMixin, ModelViewSet):
     queryset = Enrollment.objects.select_related("course", "progress").all()
@@ -194,7 +195,18 @@ class EnrollmentProgressViewSet(GenericViewSet):
 
         return Response({"status": "completed"})
     
-    
+def parse_answer(value):
+    if isinstance(value, (list, dict, bool)):
+        return value  # already parsed
+
+    if isinstance(value, str):
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError:
+            return value  # fallback to plain string
+
+    return value
+
 class QuizSubmissionViewSet(ModelViewSet):
     queryset = QuizSubmission.objects.all()
     permission_classes = [IsAuthenticated]
@@ -253,7 +265,8 @@ class QuizSubmissionViewSet(ModelViewSet):
         submission = cast(QuizSubmission, self.get_object())
 
         question_id = request.data["question_id"]
-        answer = request.data["answer"]
+
+        answer = parse_answer(request.data["answer"])
         
         question:"Question" = get_object_or_404(
             Question,

@@ -42,7 +42,6 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   const isMobile = useIsMobile()
 
   const isReadOnly: boolean = state.current_submission?.status !== 'in_progress' && state.current_submission?.status !== 'is_paused'
-  console.log("🚀 ~ QuizWrapper ~ state.current_submission?.status:", state.current_submission?.status)
 
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(true)
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
@@ -79,6 +78,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   }
 
 
+                    console.log("🚀 ~ QuizWrapper ~ state:", state)
   return (
     <div className="flex h-full flex-col bg-background">
       <QuizHeader

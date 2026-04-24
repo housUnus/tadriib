@@ -66,7 +66,7 @@ class Question(models.Model):
         if self.answer_type == AnswerType.MULTIPLE_CHOICE:
             return list(
                 self.options.filter(is_correct=True)
-                .values_list("label", flat=True)
+                .values_list("id", flat=True)
             )
 
         elif self.answer_type == AnswerType.TRUE_FALSE:
