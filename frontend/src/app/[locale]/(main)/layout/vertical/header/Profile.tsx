@@ -14,12 +14,13 @@ import {
 import { logoutAction } from "@/lib/actions/auth";
 import { ActionButton } from "@/components/common/forms/generic/action-button";
 import { useUserStore } from "@/stores/user";
-import { switchRole } from "@/lib/actions/users";
+import { getMe, switchRole } from "@/lib/actions/users";
+import { useSession } from "next-auth/react";
 
 const Profile = () => {
 
   const user = useUserStore(s => s.user)
-  console.log("🚀 ~ Profile ~ user:", user)
+  const {data: session, update } = useSession();
 
   return (
     <div className="relative group/menu">
@@ -90,7 +91,11 @@ const Profile = () => {
             {user?.can_switch_role &&
               <div className="flex items-center bg-hover group/link px-6">
                 <Icon icon="solar:users-group-rounded-bold" height={14} width={14} className={'text-muted-foreground'} />
-                <ActionButton action={switchRole} onActionDone={() => window.location.reload()} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+                <ActionButton action={switchRole} onActionDone={async () => {
+                  const new_user = await getMe()
+                  await update({ user: new_user}); 
+                  window.location.reload()
+                }} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
                   Switch Role
                 </ActionButton>
               </div>
