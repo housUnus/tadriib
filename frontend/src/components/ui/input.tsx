@@ -34,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type={type}
-        className={cn(inputVariants({ variant }), className, 'focus-visible:ring-0 focus:ring-0 focus:outline-none')}
+        className={cn(inputVariants({ variant }), className, 'focus-visible:ring-0 focus:ring-0 focus:outline-none disabled:placeholder-transparent')}
         ref={ref}
         {...props}
       />

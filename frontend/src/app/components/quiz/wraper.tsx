@@ -47,6 +47,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
   const [fontSize, setFontSize] = useState(16)
   const [isPaused, setIsPaused] = useState(stats.is_paused)
+  const isLastQuestion = currentQuestion?.order === stats.total - 1
 
   useEffect(() => {
     if (leftSidebarOpen) {
@@ -78,7 +79,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   }
 
 
-                    console.log("🚀 ~ QuizWrapper ~ state:", state)
+  console.log("🚀 ~ QuizWrapper ~ currentQuestion:", currentQuestion)
   return (
     <div className="flex h-full flex-col bg-background">
       <QuizHeader
@@ -141,6 +142,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                     onToggleFlag={() => toggleFlag(currentQuestion.id)}
                     onSaveAndNext={saveAndNext}
                     isPaused={isPaused}
+                    isLastQuestion={isLastQuestion}
                   />
                 </div>
               </ScrollArea>
@@ -182,6 +184,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                 onToggleFlag={() => toggleFlag(currentQuestion.id)}
                 onSaveAndNext={saveAndNext}
                 isPaused={isPaused}
+                isLastQuestion={isLastQuestion}
               />
             </div>
           </div>

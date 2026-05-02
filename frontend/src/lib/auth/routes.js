@@ -6,6 +6,7 @@ export const REDIRECT_AFTER_LOGIN = '/auth/verify-email'
 export const HOME_ROUTE = '/'
 export const AUTH_PREFIX = '/auth'
 export const ACCOUNT_ROUTE = '/dashboards/dashboard1'
+export const MY_COURSES_ROUTE = '/account/my-courses'
 
 export const PRIVATE_ROUTE_PREFIXES = [
   ACCOUNT_ROUTE,

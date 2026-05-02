@@ -95,14 +95,14 @@ const Profile = () => {
                   const new_user = await getMe()
                   await update({ user: new_user}); 
                   window.location.reload()
-                }} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+                }} className="w-full rounded-full no-underline! flex justify-start group-hover/link:text-primary text-muted-foreground!" variant={'link'}>
                   Switch Role
                 </ActionButton>
               </div>
             }
             <div className="flex items-center bg-hover group/link px-6">
               <Icon icon="solar:logout-2-line-duotone" height={14} width={14} className={'text-muted-foreground'} />
-              <ActionButton action={logoutAction} className="w-full rounded-full no-underline! flex justify-start" variant={'link'}>
+              <ActionButton action={logoutAction} className="w-full rounded-full no-underline! flex justify-start group-hover/link:text-primary text-muted-foreground!" variant={'link'}>
                 Logout
               </ActionButton>
             </div>

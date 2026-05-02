@@ -25,7 +25,6 @@ interface QuizHeaderProps {
 }
 
 export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit, onBack, onPause }: QuizHeaderProps) {
-  console.log("🚀 ~ QuizHeader ~ stats:", stats)
   const progress = (stats.answered / stats.total) * 100
   const client = useClientFetch()
 
@@ -37,7 +36,6 @@ export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit
   }, [])
 
   const current_submission = state?.current_submission
-  console.log("🚀 ~ QuizHeader ~ current_submission:", current_submission)
 
   if(!current_submission) return null
 
@@ -46,7 +44,6 @@ export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit
       (
         <header className="border-b bg-card">
           <div className="grid grid-cols-2 md:grid-cols-3 items-center px-4 py-2">
-
             {/* Back */}
             <div>
               <Button variant="ghost" onClick={onBack}>

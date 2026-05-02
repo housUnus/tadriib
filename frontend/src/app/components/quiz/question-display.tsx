@@ -39,9 +39,9 @@ function getOptionStyles({ isSelected, isCorrect, showCorrectAnswer }: OptionSta
   // BEFORE submission (no correctness yet)
   if (!showCorrectAnswer) {
     if (isSelected) {
-      return "border-primary bg-primary/5 text-foreground hover:border-primary/50 hover:bg-muted/50";
+      return "border-primary bg-primary/10 text-foreground hover:border-primary/50 hover:bg-primary/10";
     }
-    return "border-border bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50";
+    return "border-black bg-card text-card-foreground hover:border-primary/50 hover:bg-muted/50";
   }
 
   // AFTER submission
@@ -53,7 +53,7 @@ function getOptionStyles({ isSelected, isCorrect, showCorrectAnswer }: OptionSta
     return "border-red-500 bg-red-500 text-white";
   }
 
-  return "border-border bg-muted text-muted-foreground";
+  return "border-black bg-muted text-muted-foreground";
 }
 
 type AnswerValue =
@@ -74,6 +74,7 @@ interface QuestionDisplayProps {
   isReadOnly?: boolean
   showAnswers?: boolean
   isPaused?: boolean
+  isLastQuestion?:boolean
   onSelectAnswer: (answer: AnswerValue) => void
   onClearAnswer: () => void
   onToggleFlag: () => void
@@ -103,6 +104,7 @@ export function QuestionDisplay({
   isReadOnly = false,
   showAnswers = true,
   isPaused,
+  isLastQuestion,
 }: QuestionDisplayProps) {
   console.log("🚀 ~ QuestionDisplay ~ correctAnswer:", correctAnswer)
 
@@ -167,7 +169,7 @@ export function QuestionDisplay({
                   key={option.id}
                   onClick={handleClick}
                   className={cn(
-                    "disabled:opacity-100 disabled:pointer-events-none flex w-full justify-start items-center gap-4 rounded-lg border p-3 h-auto text-left transition-all",
+                    "disabled:opacity-100 disabled:pointer-events-none flex w-full justify-start items-center gap-4 rounded-lg border p-2 h-auto text-left transition-all",
                     getOptionStyles({
                       isSelected,
                       isCorrect: !!isCorrectAnswer,
@@ -245,7 +247,7 @@ export function QuestionDisplay({
             disabled={isReadOnly}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="w-full border rounded-md p-3"
+            className="w-full border border-black rounded-md p-3 bg-white! dark:bg-white/10!"
             placeholder="Type your answer..."
           />
         )
@@ -332,97 +334,102 @@ export function QuestionDisplay({
   }
 
   return (<div className="flex flex-col gap-6">
-
-    <Card className={`border shadow-md ${isReadOnly ? "bg-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "border-green-500" : "border-red-500")}`}>
-      <CardContent className="p-2 mt-0">
-        <div
-          className="leading-relaxed [&_p]:mb-2 [&_img]:max-w-full [&_img]:h-auto"
-          dangerouslySetInnerHTML={{
-            __html: fixImageStyles(question.text),
-          }}
-        />
-      </CardContent>
-    </Card>
-
-    {renderAnswerInput()}
-
-    {!isReadOnly && question.answer_hint && (
-      <div className="flex flex-col gap-2">
-        <Button
-          variant="ghostwarning"
-          size="sm"
-          className="w-fit"
-          onClick={() => setShowHint(!showHint)}
-        >
-          <Lightbulb className="mr-2 h-4 w-4" /> {showHint ? "Hide hint" : "Show hint"}
-        </Button>
-
-        {showHint && (
-          <div className="p-3 rounded-lg border bg-amber-50 text-amber-800 text-sm">
-            {question.answer_hint}
-          </div>
-        )}
-
-      </div>
-    )}
-
-    {isReadOnly && showAnswers && isCorrect !== undefined &&
-      <div className="">
-        <span className={`text-sm font-semibold ${isCorrect ? "text-green-500" : "text-red-500"}`} >
-          {isCorrect ?
-            <span className="flex items-center">
-              <Check className="mr-2 h-4 w-4" /> Correct
-            </span> :
-            <span className="flex items-center">
-              <X className="mr-2 h-4 w-4" /> Incorrect:
-              {correctAnswer !== null &&
-                correctAnswer !== undefined &&
-                correctAnswer !== "" && (
-                  <span className="text-sm text-muted-foreground ms-1">
-                    Correct answer:{" "}
-                    <span>
-                      {(Array.isArray(correctAnswer)
-                        ? correctAnswer
-                        : [correctAnswer]
-                      )
-                        .filter((ans) => ans !== null && ans !== "")
-                        .map((ans, i) => (
-                          <span
-                            key={i}
-                            className="px-1 py-0.5 font-extrabold"
-                          >
-                            {typeof ans === "boolean"
-                              ? ans
-                                ? "True"
-                                : "False"
-                              : ans}
-                          </span>
-                        ))}
-                    </span>
-                  </span>
-                )}
-            </span>
-          }
-        </span>
-      </div>
-    }
-
-    {isReadOnly && showAnswers && question.answer_explanation && (
-      <div
-        className="mt-0 rounded-lg border border-green-200 bg-green-50 p-4 text-sm
-             dark:border-green-900/40 dark:bg-green-950/30"
-      >
-        <div className="flex items-center gap-2 mb-2 text-green-700 dark:text-green-400">
-          <span className="font-semibold">Answer explanation</span>
+    <div className="">
+      <div className="qs-container mb-4">
+        <span className="font-bold text-black">Question {question.order + 1}: </span>
+        <div className="bg-muted p-3 border border-gray-200 my-4 rounded-md">
+          <div
+            className={cn("leading-relaxed [&_p]:mb-2 [&_img]:max-w-full [&_img]:h-auto text-black mt-2 first-letter:capitalize",
+              `${isReadOnly ? "text-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "text-green-500" : "text-red-500")}`
+            )}
+            dangerouslySetInnerHTML={{
+              __html: fixImageStyles(question.text),
+            }}
+          />
         </div>
-
-        <div
-          className="leading-relaxed [&_p]:mb-2 [&_strong]:text-green-700 dark:[&_strong]:text-green-400"
-          dangerouslySetInnerHTML={{ __html: question.answer_explanation }}
-        />
       </div>
-    )}
 
+      <div className="my-8">
+      {renderAnswerInput()}
+      </div>
+
+      {!isReadOnly && question.answer_hint && (
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="ghostwarning"
+            size="sm"
+            className="w-fit"
+            onClick={() => setShowHint(!showHint)}
+          >
+            <Lightbulb className="mr-2 h-4 w-4" /> {showHint ? "Hide hint" : "Show hint"}
+          </Button>
+
+          {showHint && (
+            <div className="p-3 rounded-lg border bg-amber-50 text-amber-800 text-sm">
+              {question.answer_hint}
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {isReadOnly && showAnswers && isCorrect !== undefined &&
+        <div className="mb-4 my">
+          <span className={`text-sm font-semibold ${isCorrect ? "text-green-500" : "text-red-500"}`} >
+            {isCorrect ?
+              <span className="flex items-center">
+                <Check className="mr-2 h-4 w-4" /> Correct
+              </span> :
+              <span className="flex items-center">
+                <X className="mr-2 h-4 w-4" /> Incorrect:
+                {correctAnswer !== null &&
+                  correctAnswer !== undefined &&
+                  correctAnswer !== "" && (
+                    <span className="text-sm text-muted-foreground ms-1">
+                      Correct answer:{" "}
+                      <span>
+                        {(Array.isArray(correctAnswer)
+                          ? correctAnswer
+                          : [correctAnswer]
+                        )
+                          .filter((ans) => ans !== null && ans !== "")
+                          .map((ans, i) => (
+                            <span
+                              key={i}
+                              className="px-1 py-0.5 font-extrabold"
+                            >
+                              {typeof ans === "boolean"
+                                ? ans
+                                  ? "True"
+                                  : "False"
+                                : (question.answer_type === "multiple_choice" ? question?.options?.find((opt: QuizOption) => opt.id === ans)?.text: ans)}
+                            </span>
+                          ))}
+                      </span>
+                    </span>
+                  )}
+              </span>
+            }
+          </span>
+        </div>
+      }
+
+      {isReadOnly && showAnswers && question.answer_explanation && (
+        <div
+          className="mt-0 rounded-lg border border-green-200 bg-green-50 p-4 text-sm
+             dark:border-green-900/40 dark:bg-green-950/30"
+        >
+          <div className="flex items-center gap-2 mb-2 text-green-700 dark:text-green-400">
+            <span className="font-semibold">Answer explanation</span>
+          </div>
+
+          <div
+            className="leading-relaxed [&_p]:mb-2 [&_strong]:text-green-700 dark:[&_strong]:text-green-400"
+            dangerouslySetInnerHTML={{ __html: question.answer_explanation }}
+          />
+        </div>
+      )}
+    </div>
     <div className="flex items-center justify-between border-t pt-4">
 
       {<div className="flex gap-2">
@@ -450,7 +457,7 @@ export function QuestionDisplay({
         </Button>
       </div>}
 
-      <Button onClick={onSaveAndNext}>
+      <Button onClick={onSaveAndNext} disabled={isLastQuestion}>
         Next
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>

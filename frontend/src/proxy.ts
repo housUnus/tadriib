@@ -10,6 +10,7 @@ import {
   VERIFY_EMAIL_ROUTE,
   AUTH_PREFIX,
   PRIVATE_ROUTE_PREFIXES,
+  MY_COURSES_ROUTE,
 } from "@/lib/auth/routes";
 
 import { AppJWT } from "./lib/schemas/auth";
@@ -56,7 +57,7 @@ async function authMiddleware(request: NextRequest) {
   }
 
   if (!isInstructor && isInstructorRoute(pathname)) {
-    return NextResponse.redirect(new URL('/', nextUrl));
+    return NextResponse.redirect(new URL(MY_COURSES_ROUTE, nextUrl));
   }
 
 

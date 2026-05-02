@@ -1,8 +1,6 @@
 "use server";
 import { useServerFetch } from "@/hooks/auth/user-server-fetch";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { ACCOUNT_ROUTE } from "../auth/routes";
 
 export async function createUser(payload: any) {
     const client = await useServerFetch();
