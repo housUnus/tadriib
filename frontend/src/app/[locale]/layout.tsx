@@ -43,7 +43,7 @@ export default async function LocaleLayout({
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-      <body className={`${manrope.className}`} suppressHydrationWarning>
+      <body className={`${manrope.className} relative`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

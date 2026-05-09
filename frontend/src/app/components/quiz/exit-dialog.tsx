@@ -69,7 +69,7 @@ export function ExitDialog({ stats, onConfirmExit }: ExitDialogProps) {
         </div>
 
         <AlertDialogFooter className="sm:justify-center gap-3">
-          <AlertDialogCancel className="sm:w-32">Continue Quiz</AlertDialogCancel>
+          <AlertDialogCancel className="sm:w-32">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleExit}
             className="sm:w-32 bg-destructive text-destructive-foreground hover:bg-destructive/90"

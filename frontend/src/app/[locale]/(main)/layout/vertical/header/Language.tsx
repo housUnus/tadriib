@@ -3,9 +3,8 @@ import { useContext, useEffect } from "react";
 import { CustomizerContext } from "@/app/context/CustomizerContext";
 import Image from "next/image";
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { useTransition } from 'react';
-import { usePathname } from "@/i18n/navigation";
 import {
   Select,
   SelectContent,
@@ -21,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import ContentLoader from "@/components/common/Loader";
 
 const Languages = [
   {
@@ -48,7 +48,6 @@ export const Language = ({ isHeader = true }) => {
     useContext(CustomizerContext);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("home");
-  const locale = useLocale();
 
   const currentLang =
     Languages.find((_lang) => _lang.value === isLanguage) || Languages[1];
@@ -57,20 +56,17 @@ export const Language = ({ isHeader = true }) => {
   const pathname = usePathname();
 
   const onSelectChange = (code: string) => {
-    setIsLanguage(code)
+    setIsLanguage(code);
+
     startTransition(() => {
-      router.push(`/${code}${pathname}`);
-      router.refresh();
+      router.replace(pathname, { locale: code });
     });
   };
-
-  useEffect(() => {
-    onSelectChange(locale);
-  }, [locale]);
 
   return (
     <>
       {isHeader && <div className="relative group/menu hidden sm:block">
+      {isPending && <ContentLoader title={t('changingLanguage')} fullScreen={true} />}
         <DropdownMenu dir={activeDir === "rtl" ? "rtl" : "ltr"}>
           <DropdownMenuTrigger asChild>
             <span className="hover:bg-lightprimary p-2 rounded flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary">

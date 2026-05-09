@@ -346,7 +346,6 @@ export function QuestionDisplay({
         <div className="bg-muted p-3 border border-gray-200 my-4 rounded-md">
           <div
             className={cn("leading-relaxed [&_p]:mb-2 [&_img]:max-w-full [&_img]:h-auto text-black mt-2 first-letter:capitalize",
-              `${isReadOnly ? "text-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "text-green-400" : "text-red-400")}`
             )}
             dangerouslySetInnerHTML={{
               __html: fixImageStyles(question.text),

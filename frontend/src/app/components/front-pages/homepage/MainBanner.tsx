@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from 'next-intl';
@@ -71,7 +72,7 @@ const MainBanner = () => {
             <ul className="flex flex-wrap lg:justify-start justify-center gap-5 pb-7 md:pt-4 ml-0">
               <TooltipProvider delayDuration={100}>
                 {Certifications.map((item, index) => (
-                  <Tooltip key={index}>
+                  <Tooltip key={item.tooltip}>
                     <TooltipTrigger asChild>
                       <li className="flex justify-center items-center shadow-elevation1">
                         <Image

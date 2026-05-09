@@ -165,5 +165,8 @@
   "linkIsInvalidOrDidntGetTheEmail": "Link is invalid or didn't get the email?",
   "resendEmail": "Resend Email",
   "justClickOnTheLinkInTheEmail": "Just click on the link in the email to complete the verification process.",
-  "viewAllCourses": "View All Courses"
+  "viewAllCourses": "View All Courses",
+  "forExperts": "For Experts",
+  "learnMore": "Learn More",
+  "changingLanguage": "Changing Language..."
 }

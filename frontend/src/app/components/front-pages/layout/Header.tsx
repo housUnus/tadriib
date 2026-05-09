@@ -75,7 +75,7 @@ const FrontHeader = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="cursor-pointer flex items-center gap-2 px-4 xl:px-5 py-2 text-gray-700 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100/50 rounded-lg xl:rounded-xl transition-all duration-300 ease-out group h-9">
                     <GraduationCap className="w-4 h-4 group-hover:text-blue-500 transition-colors" />
-                    <span className="font-medium text-sm">For Experts</span>
+                    <span className="font-medium text-sm">{t('forExperts')}</span>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[200px] gap-2 p-2">
@@ -83,7 +83,7 @@ const FrontHeader = () => {
                         <NavigationMenuLink asChild>
                           <Button variant="outline" asChild className="w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 font-medium">
                             <Link href="#">
-                              Learn More
+                              {t('learnMore')}
                             </Link>
                           </Button>
                         </NavigationMenuLink>
@@ -94,7 +94,7 @@ const FrontHeader = () => {
                             className="w-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 font-medium"
                             onClick={() => { }}
                           >
-                            <span>Get Started</span>
+                            <span>{t('getStarted')}</span>
                           </Button>
                         </NavigationMenuLink>
                       </li>
