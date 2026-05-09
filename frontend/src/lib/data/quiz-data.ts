@@ -1,4 +1,4 @@
-export type QuestionStatus = "not-visited" | "visited" | "answered" | "marked" | "flagged"
+export type QuestionStatus = "not-visited" | "visited" | "answered" | "marked" | "flagged" | "correct" | "incorrect"
 export type SubmissionStatus = "in_progress" | "is_paused" | "completed" | "submitted" | "expired" | "in_review"
 
 export interface Submission {

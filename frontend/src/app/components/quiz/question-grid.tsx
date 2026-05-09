@@ -13,9 +13,11 @@ interface QuestionGridProps {
 }
 
 const statusStyles: Record<QuestionStatus, string> = {
+  "correct": "bg-green-400 text-white border-green-400",
+  "incorrect": "bg-red-400 text-white border-red-400",
   "not-visited": "bg-card border-border text-foreground hover:border-primary/50",
   visited: "bg-muted border-border text-foreground hover:border-primary/50",
-  answered: "bg-success text-white border-success",
+  answered: "bg-primary text-white border-success",
   marked: "bg-info text-info-foreground border-info",
   flagged: "bg-error text-white border-error",
 }

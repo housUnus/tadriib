@@ -81,11 +81,12 @@ const middleware = async (request: NextRequest) => {
     secureCookie: process.env.NODE_ENV === "production",
   }) as AppJWT | null;
 
+  
   // Token & Refresh are expired 
   const RefreshTokenExpired = session?.error === "RefreshTokenExpired"
 
   if (RefreshTokenExpired) {
-    const response = (isPrivateRoute || isAuthRoute)? intlMiddleware(request) : NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
+    const response = (isPrivateRoute || isAuthRoute || isPublicRoute)? intlMiddleware(request) : NextResponse.redirect(new URL(DEFAULT_LOGIN_ROUTE, nextUrl));
     response.cookies.set("authjs.csrf-token", "", { maxAge: 0 });
     response.cookies.set("authjs.session-token", "", { maxAge: 0 });
     return response;

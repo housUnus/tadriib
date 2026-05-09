@@ -380,3 +380,10 @@ class QuizSubmissionViewSet(ModelViewSet):
         submission.save()
 
         return Response({"status": "resumed"})
+    
+    @action(detail=True, methods=["get"], url_path="sync-time")
+    def sync_time(self, request, pk=None):
+
+        submission = cast(QuizSubmission, self.get_object())
+
+        return Response({"computed_remaining": submission.computed_remaining,})

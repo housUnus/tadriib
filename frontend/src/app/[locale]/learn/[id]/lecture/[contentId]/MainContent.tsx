@@ -93,7 +93,7 @@ export function MainContent({
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto scrollbar-hide" ref={scrollRef}>
         {/* Video/Content Player */}
-        <div className={"bg-background p-2"} >{renderContent()}</div>
+        <div className={"bg-background"} >{renderContent()}</div>
 
         <div className="mt-4">
           <ContentTabs activeTab={activeTab} onTabChange={setActiveTab} item={loaded_content}/>

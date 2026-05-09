@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { QuizHeader } from "@/app/components/quiz/quiz-header"
@@ -14,6 +14,9 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { Content } from "@/stores/enrollment"
 import { Quiz, QuizStats } from "@/lib/data/quiz-data"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
+import { ReviewSubmitDialog } from "./review-submit-dialog"
+import { useLocale } from "next-intl"
+import { CustomizerContext } from "@/app/context/CustomizerContext"
 
 interface QuizContentProps {
   content: Content
@@ -25,6 +28,8 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   const router = useRouter()
   const client = useClientFetch()
   const quiz = content.content as Quiz
+  const locale = useLocale()
+  const activeDir = locale === "ar" ? "rtl" : "ltr"
 
   const {
     state,
@@ -34,9 +39,11 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
     clearAnswer,
     toggleFlag,
     saveAndNext,
+    navigateBack,
     getQuestionStatus,
     getStats,
-    submitQuiz
+    submitQuiz,
+    syncTimeWithServer,
   } = useQuiz(quiz, content.invalidate, content.progress.active_quiz_submission || selectedSubmission, client)
   const stats: QuizStats = getStats()
   const isMobile = useIsMobile()
@@ -47,7 +54,9 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
   const [fontSize, setFontSize] = useState(16)
   const [isPaused, setIsPaused] = useState(stats.is_paused)
+  const [isReviewOpen, setIsReviewOpen] = useState(false)
   const isLastQuestion = currentQuestion?.order === stats.total - 1
+  const isFirstQuestion = currentQuestion?.order === 0
 
   useEffect(() => {
     if (leftSidebarOpen) {
@@ -78,10 +87,31 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
     )
   }
 
+  console.log("🚀 ~ QuizWrapper ~ stats:", stats)
+
+  useEffect(() => {
+    if (!stats?.computed_remaining) return
+
+    const interval = setInterval(() => {
+      syncTimeWithServer?.()
+    }, 10000)
+
+    return () => clearInterval(interval)
+  }, [isReadOnly, syncTimeWithServer])
+
+  useEffect(() => {
+    if (isReadOnly) return
+
+    if (stats?.computed_remaining !== undefined && stats?.computed_remaining <= 0) {
+      submitQuiz?.()
+    }
+  }, [stats?.computed_remaining, isReadOnly])
+
 
   console.log("🚀 ~ QuizWrapper ~ currentQuestion:", currentQuestion)
   return (
     <div className="flex h-full flex-col bg-background">
+      <ReviewSubmitDialog stats={stats} onSubmit={submitQuiz} isOpen={isReviewOpen} onReviewSubmit={setIsReviewOpen} />
       <QuizHeader
         content={content}
         state={state}
@@ -89,11 +119,11 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
         isReadOnly={isReadOnly}
         onExit={() => router.replace(`?submission=`)}
         onBack={onBack}
-        onSubmit={submitQuiz}
+        onReviewSubmit={() => setIsReviewOpen(true)}
         onPause={(state) => setIsPaused(state)}
       />
 
-      <div className="relative flex-1 overflow-hidden">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {/* Desktop resizable layout */}
         <div className="hidden lg:block h-full">
           {!leftSidebarOpen && <SidebarExpandButton side="left" onClick={() => setLeftSidebarOpen(true)} />}
@@ -102,8 +132,8 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
           <ResizablePanelGroup direction="horizontal" className="h-full">
             {leftSidebarOpen && (
               <>
-                <ResizablePanel defaultSize={25} minSize={12} maxSize={25}>
-                  <div className="h-full border-r bg-card">
+                <ResizablePanel defaultSize={22} minSize={22} maxSize={22} className="max-w-60 min-w-60">
+                  <div className="h-full border-r bg-card p-2" dir={activeDir}>
                     <QuizSidebarLeft
                       segments={[{ title: "Questions", questions: quiz.questions, id: 1, order: 0 }]}
                       currentQuestion={state.currentQuestion}
@@ -127,22 +157,25 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
               minSize={50}
             >
               <ScrollArea className="h-full">
-                <div className="mx-auto max-w-3xl p-6">
+                <div className="mx-auto max-w-3xl p-6" dir={activeDir}>
                   <QuestionDisplay
                     key={currentQuestion.id}
                     isReadOnly={isReadOnly}
                     question={currentQuestion}
                     selectedAnswer={state.answers[currentQuestion.id]}
                     isFlagged={state.flagged.has(currentQuestion.id)}
-                    isCorrect = {state.answers_is_correct[currentQuestion.id]}
+                    isCorrect={state.answers_is_correct[currentQuestion.id]}
                     correctAnswer={state.correct_answers[currentQuestion.id]}
                     fontSize={fontSize}
                     onSelectAnswer={(answer) => selectAnswer(currentQuestion.id, answer)}
                     onClearAnswer={() => clearAnswer(currentQuestion.id)}
                     onToggleFlag={() => toggleFlag(currentQuestion.id)}
                     onSaveAndNext={saveAndNext}
+                    onNavigateBack={navigateBack}
                     isPaused={isPaused}
                     isLastQuestion={isLastQuestion}
+                    isFirstQuestion={isFirstQuestion}
+                    submitQuiz={() => setIsReviewOpen(true)}
                   />
                 </div>
               </ScrollArea>
@@ -152,7 +185,7 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
               <>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={22} minSize={15} maxSize={28}>
-                  <div className="h-full border-l bg-card">
+                  <div className="h-full border-l bg-card" dir={activeDir}>
                     <QuizSidebarRight
                       stats={stats}
                       fontSize={fontSize}
@@ -176,15 +209,18 @@ export function QuizWrapper({ content, selectedSubmission, onBack }: QuizContent
                 question={currentQuestion}
                 selectedAnswer={state.answers[currentQuestion.id]}
                 isFlagged={state.flagged.has(currentQuestion.id)}
-                isCorrect = {state.answers_is_correct[currentQuestion.id]}
+                isCorrect={state.answers_is_correct[currentQuestion.id]}
                 correctAnswer={state.correct_answers[currentQuestion.id]}
                 fontSize={fontSize}
                 onSelectAnswer={(answer) => selectAnswer(currentQuestion.id, answer)}
                 onClearAnswer={() => clearAnswer(currentQuestion.id)}
                 onToggleFlag={() => toggleFlag(currentQuestion.id)}
                 onSaveAndNext={saveAndNext}
+                onNavigateBack={navigateBack}
                 isPaused={isPaused}
                 isLastQuestion={isLastQuestion}
+                isFirstQuestion={isFirstQuestion}
+                submitQuiz={() => setIsReviewOpen(true)}
               />
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { Quiz, QuizStats, type QuizState } from "@/lib/data/quiz-data"
-import { isNil } from "lodash"
+import { isEmpty, isNil } from "lodash"
 import { useRouter } from "next/navigation"
 
 
@@ -36,6 +36,17 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
 
   const [state, setState] = useState<QuizState>(createInitialState)
 
+  const syncTimeWithServer = useCallback(async () => {
+    try {
+      const { data } = await client.get(`/quiz-submissions/${submissionId}/sync-time`)
+      setState(prev => ({
+        ...prev,
+        computed_remaining: data.computed_remaining,
+      }))
+    } catch (error) {
+      console.error("Failed to sync time with server:", error)
+    }
+  }, [submissionId])
 
   const loadSubmission = useCallback(async () => {
     if (!submissionId) return
@@ -151,8 +162,26 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
     })
   }, [questions])
 
+  const navigateBack = useCallback(() => {
+    setState((prev) => {
+      const index = questions.findIndex(q => q.id === prev.currentQuestion)
+
+      const previousQuestion = questions[Math.max(index - 1, 0)]
+
+      return {
+        ...prev,
+        currentQuestion: previousQuestion.id,
+        visited: new Set([...prev.visited, previousQuestion.id]),
+      }
+    })
+  }, [questions])
+
   const getQuestionStatus = useCallback(
     (questionId: number) => {
+      if(!isEmpty(state.answers_is_correct[questionId])){
+        if (state.answers_is_correct[questionId]) return "correct"
+        else if (questionId in state.answers_is_correct) return "incorrect"
+      }
       if (state.flagged.has(questionId)) return "flagged"
       if (state.marked.has(questionId)) return "marked"
       if (isAnswered(state.answers[questionId])) return "answered"
@@ -197,9 +226,11 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
     toggleMark,
     toggleFlag,
     saveAndNext,
+    navigateBack,
     getQuestionStatus,
     getStats,
     currentQuestion,
     submitQuiz,
+    syncTimeWithServer,
   }
 }

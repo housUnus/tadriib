@@ -85,9 +85,9 @@ export function LearnHeader({
 
                     <Button variant="ghost" size="icon" onClick={onToggleSidebar}>
                         {sidebarOpen ? (
-                            <PanelRightClose className="h-5 w-5" />
+                            <PanelRightClose className="h-5 w-5 rtl:rotate-180" />
                         ) : (
-                            <PanelRightOpen className="h-5 w-5" />
+                            <PanelRightOpen className="h-5 w-5 rtl:rotate-180" />
                         )}
                     </Button>
                 </div>

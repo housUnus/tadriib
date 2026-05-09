@@ -32,7 +32,7 @@ export function VideoContent({ content, onMarkComplete, onPrevious, onNext, hasP
   const timeRef = useRef(0)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-2">
       {/* Video Player */}
 
       <VideoPlayer

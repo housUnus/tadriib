@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils/utils"
-import { RotateCcw, ArrowRight, Flag, Lightbulb, Check, X } from "lucide-react"
+import { RotateCcw, ArrowRight, Flag, Lightbulb, Check, X, ArrowLeft } from "lucide-react"
 import type { Question, QuizOption } from "@/lib/data/quiz-data"
 import { useState } from "react"
 import { useDebounce } from "use-debounce"
@@ -46,11 +46,11 @@ function getOptionStyles({ isSelected, isCorrect, showCorrectAnswer }: OptionSta
 
   // AFTER submission
   if (isCorrect) {
-    return "border-green-500 bg-green-500 text-white";
+    return "border-green-400 bg-green-400 text-white";
   }
 
   if (isSelected && !isCorrect) {
-    return "border-red-500 bg-red-500 text-white";
+    return "border-red-400 bg-red-400 text-white";
   }
 
   return "border-black bg-muted text-muted-foreground";
@@ -74,11 +74,14 @@ interface QuestionDisplayProps {
   isReadOnly?: boolean
   showAnswers?: boolean
   isPaused?: boolean
-  isLastQuestion?:boolean
+  isLastQuestion?: boolean
+  isFirstQuestion?: boolean
   onSelectAnswer: (answer: AnswerValue) => void
   onClearAnswer: () => void
   onToggleFlag: () => void
   onSaveAndNext: () => void
+  onNavigateBack: () => void
+  submitQuiz: () => void
 }
 
 function getFileName(file: File | string | null) {
@@ -101,10 +104,13 @@ export function QuestionDisplay({
   onClearAnswer,
   onToggleFlag,
   onSaveAndNext,
+  onNavigateBack,
   isReadOnly = false,
   showAnswers = true,
   isPaused,
   isLastQuestion,
+  isFirstQuestion,
+  submitQuiz
 }: QuestionDisplayProps) {
   console.log("🚀 ~ QuestionDisplay ~ correctAnswer:", correctAnswer)
 
@@ -340,7 +346,7 @@ export function QuestionDisplay({
         <div className="bg-muted p-3 border border-gray-200 my-4 rounded-md">
           <div
             className={cn("leading-relaxed [&_p]:mb-2 [&_img]:max-w-full [&_img]:h-auto text-black mt-2 first-letter:capitalize",
-              `${isReadOnly ? "text-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "text-green-500" : "text-red-500")}`
+              `${isReadOnly ? "text-muted/50" : ""} ${isReadOnly && isCorrect !== undefined && (isCorrect ? "text-green-400" : "text-red-400")}`
             )}
             dangerouslySetInnerHTML={{
               __html: fixImageStyles(question.text),
@@ -350,7 +356,7 @@ export function QuestionDisplay({
       </div>
 
       <div className="my-8">
-      {renderAnswerInput()}
+        {renderAnswerInput()}
       </div>
 
       {!isReadOnly && question.answer_hint && (
@@ -375,7 +381,7 @@ export function QuestionDisplay({
 
       {isReadOnly && showAnswers && isCorrect !== undefined &&
         <div className="mb-4 my">
-          <span className={`text-sm font-semibold ${isCorrect ? "text-green-500" : "text-red-500"}`} >
+          <span className={`text-sm font-semibold ${isCorrect ? "text-green-400" : "text-red-400"}`} >
             {isCorrect ?
               <span className="flex items-center">
                 <Check className="mr-2 h-4 w-4" /> Correct
@@ -402,7 +408,7 @@ export function QuestionDisplay({
                                 ? ans
                                   ? "True"
                                   : "False"
-                                : (question.answer_type === "multiple_choice" ? question?.options?.find((opt: QuizOption) => opt.id === ans)?.text: ans)}
+                                : (question.answer_type === "multiple_choice" ? question?.options?.find((opt: QuizOption) => opt.id === ans)?.text : ans)}
                             </span>
                           ))}
                       </span>
@@ -457,10 +463,22 @@ export function QuestionDisplay({
         </Button>
       </div>}
 
-      <Button onClick={onSaveAndNext} disabled={isLastQuestion}>
-        Next
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={onNavigateBack} disabled={isFirstQuestion}>
+          <ArrowLeft className="me-2 h-4 w-4 rtl:rotate-180" />
+          Back
+        </Button>
+        {isLastQuestion ?
+          <Button onClick={submitQuiz} disabled={isReadOnly}>
+            Review & Submit
+          </Button>
+          :
+          <Button onClick={onSaveAndNext} disabled={isLastQuestion}>
+            Next
+            <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
+          </Button>
+        }
+      </div>
 
     </div>
 

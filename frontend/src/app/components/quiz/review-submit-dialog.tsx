@@ -18,12 +18,13 @@ interface ReviewSubmitDialogProps {
     marked: number
     visited: number
   }
+  isOpen?: boolean
+  onReviewSubmit?: (open: boolean) => void
   onSubmit?: () => void
 }
 
-export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDialogProps) {
+export function ReviewSubmitDialog({ trigger, stats, onSubmit, isOpen, onReviewSubmit }: ReviewSubmitDialogProps) {
   const [confirmStep, setConfirmStep] = useState(false)
-  const [open, setOpen] = useState(false)
 
   const handleSubmit = () => {
     if (!confirmStep) {
@@ -32,21 +33,15 @@ export function ReviewSubmitDialog({ trigger, stats, onSubmit }: ReviewSubmitDia
     }
     onSubmit?.()
     setConfirmStep(false)
-    setOpen(false)
+    onReviewSubmit?.(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={(value) => {
-      setOpen(value)
+    <Dialog open={isOpen} onOpenChange={(value) => {
+      onReviewSubmit?.(value)
       if (!value) setConfirmStep(false)
     }}>
       <DialogTrigger asChild>
-        {trigger || (
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <span className="hidden md:block">Review and Submit</span>
-            <Send className="md:ml-2 h-4 w-4" />
-          </Button>
-        )}
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>

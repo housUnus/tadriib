@@ -1,8 +1,7 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import { ChevronLeft, ChevronRight, Clock } from "lucide-react"
-import { ReviewSubmitDialog } from "./review-submit-dialog"
+import { ChevronLeft, ChevronRight, Clock, Send } from "lucide-react"
 import { ExitDialog } from "./exit-dialog"
 import { QuizTimer } from "./quiz-timer"
 import { CalculatorDialog } from "./calculator-dialog"
@@ -18,88 +17,80 @@ interface QuizHeaderProps {
   stats: QuizStats
   isReadOnly: boolean
   onExit?: () => void
-  onSubmit?: () => void
   onBack?: () => void
   onPause?: (state: boolean) => void
-
+  onReviewSubmit?: () => void
 }
 
-export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit, onBack, onPause }: QuizHeaderProps) {
+export function QuizHeader({ content, stats, state, isReadOnly, onExit, onBack, onPause, onReviewSubmit }: QuizHeaderProps) {
   const progress = (stats.answered / stats.total) * 100
   const client = useClientFetch()
 
-  useEffect(() => {
-    if (isReadOnly) return
-    if (stats?.computed_remaining !== undefined && stats?.computed_remaining <= 0) {
-      onSubmit?.()
-    }
-  }, [])
-
   const current_submission = state?.current_submission
 
-  if(!current_submission) return null
+  if (!current_submission) return null
 
   if (isReadOnly)
     return (
       (
-        <header className="border-b bg-card">
+        <header className="sticky top-0 z-50 pt-2 border-b bg-card/95 backdrop-blur">
           <div className="grid grid-cols-2 md:grid-cols-3 items-center px-4 py-2">
-            {/* Back */}
-            <div>
-              <Button variant="ghost" onClick={onBack}>
-                <ChevronLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-            </div>
+          {/* Back */}
+          <div>
+            <Button variant="ghost" onClick={onBack}>
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back
+            </Button>
+          </div>
 
-            {/* Center Stats */}
-            <div className="flex justify-center">
-              <div className="flex items-center gap-3 rounded-lg border px-3 py-1.5 text-sm">
+          {/* Center Stats */}
+          <div className="flex justify-center">
+            <div className="flex items-center gap-3 rounded-lg border px-3 py-1.5 text-sm">
 
-                <div className="flex items-center gap-1">
-                  <span className="text-muted-foreground">
-                    {stats.answered}/{stats.total}
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground">
+                  {stats.answered}/{stats.total}
+                </span>
+                <span className="hidden sm:inline text-muted-foreground">
+                  answered
+                </span>
+              </div>
+
+              {current_submission.score_percent !== undefined && (
+                <div className="flex items-center gap-1 border-l pl-3">
+                  <span className="font-medium">
+                    {current_submission.score_percent}%
                   </span>
                   <span className="hidden sm:inline text-muted-foreground">
-                    answered
+                    score
                   </span>
                 </div>
+              )}
 
-                {current_submission.score_percent !== undefined && (
-                  <div className="flex items-center gap-1 border-l pl-3">
-                    <span className="font-medium">
-                      {current_submission.score_percent}%
-                    </span>
-                    <span className="hidden sm:inline text-muted-foreground">
-                      score
-                    </span>
-                  </div>
-                )}
-
-              </div>
             </div>
-
-            {/* Right Dates */}
-            <div className="hidden md:flex justify-end text-xs text-muted-foreground">
-              <div className="flex flex-col items-end leading-tight">
-                <span>
-                  Started: {new Date(current_submission.started_at).toLocaleDateString()}
-                </span>
-                {current_submission.submitted_at && (
-                  <span>
-                    Completed: {new Date(current_submission.submitted_at).toLocaleDateString()}
-                  </span>
-                )}
-              </div>
-            </div>
-
           </div>
+
+          {/* Right Dates */}
+          <div className="hidden md:flex justify-end text-xs text-muted-foreground">
+            <div className="flex flex-col items-end leading-tight">
+              <span>
+                Started: {new Date(current_submission.started_at).toLocaleDateString()}
+              </span>
+              {current_submission.submitted_at && (
+                <span>
+                  Completed: {new Date(current_submission.submitted_at).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+          </div>
+
+        </div>
         </header>
       )
     )
 
   return (
-    <header className="border-b bg-card">
+    <header className="border-b bg-card sticky top-0 z-50 pt-2">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:items-center px-3">
         {/* Left section with breadcrumb */}
         <div className="flex items-center justify-between col-span-2 md:col-span-1">
@@ -134,7 +125,10 @@ export function QuizHeader({ content, stats, state, isReadOnly, onExit, onSubmit
         <div className="flex justify-end items-center md:gap-2">
           <CalculatorDialog variant="icon" />
           <ExitDialog stats={stats} onConfirmExit={onExit || (() => { })} />
-          <ReviewSubmitDialog stats={stats} onSubmit={onSubmit} />
+          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={onReviewSubmit}>
+            <span className="hidden md:block">Review and Submit</span>
+            <Send className="md:ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { PanelLeftClose } from "lucide-react"
 import { QuestionGrid } from "./question-grid"
 import type { Question, QuestionStatus, QuizSegment } from "@/lib/data/quiz-data"
 import { isAnswered } from "@/hooks/use-quiz"
+import { useLocale } from "use-intl/react"
 
 interface QuizSidebarLeftProps {
   segments: QuizSegment[]
@@ -32,6 +33,9 @@ export function QuizSidebarLeft({
   visited,
   onCollapse,
 }: QuizSidebarLeftProps) {
+  console.log("🚀 ~ QuizSidebarLeft ~ answers_is_correct:", answers_is_correct)
+  const locale = useLocale()
+  const activeDir = locale === "ar" ? "rtl" : "ltr"
   const getSectionStats = (questions: Question[]) => ({
     answered: questions.filter((q) => isAnswered(answers[q.id])).length,
     marked: questions.filter((q) => marked.has(q.id)).length,
@@ -50,7 +54,7 @@ export function QuizSidebarLeft({
 
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
-          <div className="space-y-6 p-2">
+          <div className="space-y-6 p-2" dir={activeDir}>
             {segments.map((segment: QuizSegment) => (
               <QuestionGrid
                 key={segment.title}

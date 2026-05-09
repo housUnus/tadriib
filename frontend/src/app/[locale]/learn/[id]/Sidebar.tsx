@@ -85,7 +85,7 @@ export function CourseSidebar({
   if (!isOpen) return null
 
   return (
-    <aside className="w-80 shrink-0 border-l border-border bg-card h-full overflow-hidden flex flex-col lg:static lg:z-auto lg:max-w-none fixed right-0 top-0 bottom-0 z-50 max-w-[85vw]">
+    <aside className="w-80 shrink-0 border-s border-border bg-card h-full overflow-hidden flex flex-col lg:static lg:z-auto lg:max-w-none fixed right-0 top-0 bottom-0 z-50 max-w-[85vw]">
       {/* Header */}
       <div className="shrink-0 border-b border-border p-4">
         <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export function CourseSidebar({
         </div>
 
         <div className="relative mt-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search course content..."
@@ -181,7 +181,7 @@ function SectionItem({
     <div className="border-b border-border">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-accent/50"
+        className="flex w-full items-center justify-between px-4 py-3 text-start hover:bg-accent/50"
       >
         <div className="flex-1 min-w-0">
           <span className="text-sm font-semibold text-foreground">
@@ -241,8 +241,8 @@ function ContentItemButton({
   return (
     <div
       className={cn(
-        "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors border-l-2",
-        isActive ? "border-l-primary bg-primary/10" : "border-l-transparent hover:bg-accent/50",
+        "flex w-full items-start gap-3 px-4 py-3 text-start transition-colors border-s-2",
+        isActive ? "border-s-primary bg-primary/10" : "border-s-transparent hover:bg-accent/50",
       )}
     >
       {/* Checkbox - only toggles completion */}
@@ -255,7 +255,7 @@ function ContentItemButton({
       </button>
 
       {/* Content info - navigates to content */}
-      <button onClick={onSelect} className="flex-1 min-w-0 text-left">
+      <button onClick={onSelect} className="flex-1 min-w-0 text-start">
         <p className={cn("text-sm", isActive ? "text-primary font-medium" : "text-foreground")}>
           <HighlightText text={content.title} query={searchQuery} />
         </p>

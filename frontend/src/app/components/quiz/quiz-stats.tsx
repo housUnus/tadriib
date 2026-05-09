@@ -17,8 +17,8 @@ interface QuizStatsProps {
 export function QuizStats({ stats }: QuizStatsProps) {
   const items = [
     { label: "Total Questions", value: stats.total, color: "text-foreground" },
-    { label: "Visited", value: stats.visited, color: "text-muted-foreground" },
-    { label: "Not Visited", value: stats.notVisited, color: "text-muted-foreground" },
+    // { label: "Visited", value: stats.visited, color: "text-muted-foreground" },
+    // { label: "Not Visited", value: stats.notVisited, color: "text-muted-foreground" },
     { label: "Answered", value: stats.answered, color: "text-success" },
     { label: "Not Answered", value: stats.notAnswered, color: "text-destructive" },
     { label: "Marked to review", value: stats.marked, color: "text-info" },

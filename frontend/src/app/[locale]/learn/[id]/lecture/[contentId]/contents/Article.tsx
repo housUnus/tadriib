@@ -24,7 +24,7 @@ export function ArticleContent({
   hasNext,
 }: ArticleContentProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-2">
       {/* Article Header */}
       <Card className="border-border bg-card">
         <CardHeader>

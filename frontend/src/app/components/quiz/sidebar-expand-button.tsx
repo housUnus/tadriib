@@ -16,7 +16,7 @@ export function SidebarExpandButton({ side, onClick }: SidebarExpandButtonProps)
   const isLeft = isRTL ? !(side === "left"): (side === "left");
 
   return (
-    <div className={cn("absolute top-4 z-10", isLeft ? "left-0" : "right-0")}>
+    <div className={cn("absolute top-40 z-60", isLeft ? "left-0" : "right-0")}>
       <Button
         variant="secondary"
         size="sm"
