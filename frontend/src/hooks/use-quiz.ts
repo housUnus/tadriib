@@ -178,7 +178,7 @@ export function useQuiz(quiz: Quiz, onSubmit: () => void, submissionId: string |
 
   const getQuestionStatus = useCallback(
     (questionId: number) => {
-      if(!isEmpty(state.answers_is_correct[questionId])){
+      if(state.answers_is_correct[questionId] !== undefined && state.answers_is_correct[questionId] !== null) {
         if (state.answers_is_correct[questionId]) return "correct"
         else if (questionId in state.answers_is_correct) return "incorrect"
       }

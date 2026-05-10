@@ -60,7 +60,7 @@ function CourseCard({ item }) {
                 {course.title}
               </h3>
             </Link>
-            <Link href={`/user/${course.instructor_slug}`}>
+            <Link href={`/users/${course.instructor_slug}`}>
               <span className="text-sm text-gray-500 mb-2 block">
                 by {course.instructor_name}
               </span>

@@ -35,13 +35,11 @@ import {
   LectureEditor,
   QuizEditor,
   WebinarEditor,
-  ContentTypePicker,
 } from "./curriculum"
-import type { CurriculumItem, ContentType, Attachment } from "@/types/course"
+import type { CurriculumItem, Attachment } from "@/types/course"
 import { useClientFetch } from "@/hooks/auth/use-client-fetch"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
 
 interface CurriculumItemProps {
   item: CurriculumItem
