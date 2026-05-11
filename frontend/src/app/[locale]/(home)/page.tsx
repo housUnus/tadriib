@@ -23,11 +23,11 @@ const page = async () => {
     <>
       {/* <Hero /> */}
       <MainBanner />
+      <Courses courses={data?.results || []} />
       <OurClients />
       {/* <FeatureTabs /> */}
       <CertificatesSection />
       <StatsSection />
-      <Courses courses={data?.results || []} />
       {/* <OurTeam /> */}
       {/* <ContactBar /> */}
       <Highlights />

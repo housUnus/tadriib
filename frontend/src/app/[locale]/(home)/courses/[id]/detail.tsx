@@ -315,18 +315,25 @@ export default function Detail({ course }: { course: any }) {
               <div className="flex gap-1 flex-col md:flex-row">
                 <div className="cta flex gap-1 flex-1">
                   {/* <Button className="flex-1" size="lg">Add to Cart</Button> */}
-                  <BuyButton course={course} variant="default" className="flex-1" size="lg">Buy Now</BuyButton>
+                  {course.is_enrolled ? (
+                    <Button className="flex-1" size="lg" variant={'success'} asChild>
+                      <Link href={`/courses/${course.slug}/learn`}>Start Learning</Link>
+                    </Button>
+                  ) : (
+                    <BuyButton course={course} variant="default" className="flex-1" size="lg">Buy Now</BuyButton>
+                  )}
                 </div>
                 <div className="flex gap-1 flex-1">
                   <Button
                     variant="outline"
+                    size="lg"
                     className="bg-transparent"
                     onClick={toggleWishlist}
                   >
                     <Heart className={`h-5 w-5 ${isWishlisted ? "fill-red-500 text-red-500" : ""}`} />
                   </Button>
                   <ShareDialog title={courseData.title} description={courseData.subtitle}>
-                    <Button variant="outline" className="bg-transparent">
+                    <Button variant="outline" className="bg-transparent" size="lg">
                       <Share2 className="h-5 w-5" />
                     </Button>
                   </ShareDialog>

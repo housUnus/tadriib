@@ -44,20 +44,19 @@ const Languages = [
 ];
 
 export const Language = ({ isHeader = true }) => {
-  const { isLanguage, setIsLanguage, activeDir } =
-    useContext(CustomizerContext);
+  const { setIsLanguage, activeDir } = useContext(CustomizerContext);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("home");
+  const local = useLocale();
 
-  const currentLang =
-    Languages.find((_lang) => _lang.value === isLanguage) || Languages[1];
+  const currentLang = Languages.find((_lang) => _lang.value === local) || Languages[1];
 
   const router = useRouter();
   const pathname = usePathname();
 
   const onSelectChange = (code: string) => {
     setIsLanguage(code);
-
+    
     startTransition(() => {
       router.replace(pathname, { locale: code });
     });

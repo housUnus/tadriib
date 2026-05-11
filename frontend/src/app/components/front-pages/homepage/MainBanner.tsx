@@ -106,11 +106,11 @@ const MainBanner = () => {
           <div className="lg:col-span-6 col-span-12 xl:block hidden ">
             <div className="flex justify-end min-w-[100px] overflow-hidden">
               <Image
-                src="/images/front-pages/background/hero.png"
+                src="/images/front-pages/background/hero-image.png"
                 alt="banner"
                 className=""
-                width={400}
-                height={300}
+                width={500}
+                height={400}
               />
             </div>
           </div>

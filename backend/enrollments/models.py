@@ -11,7 +11,7 @@ from .progress.models import *
 
 class Enrollment(BaseModel):
     progress: "EnrollmentProgress"
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="enrollments")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     order_item = models.OneToOneField("subscriptions.OrderItem", on_delete=models.CASCADE, related_name="enrollment")
     status = models.CharField(

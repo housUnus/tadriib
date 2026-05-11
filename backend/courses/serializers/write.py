@@ -140,6 +140,7 @@ class CourseCreateUpdateSerializer(PublicSerializerMixin, WritableNestedModelSer
             "learning_outcomes",
             "type",
             "price",
+            "original_price",
             "poster",
         ]
         

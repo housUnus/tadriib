@@ -66,15 +66,9 @@ export default function CourseEditorPage() {
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/">
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
             </Link>
           </Button>
-          <Input
-            value={course.title}
-            onChange={(e) => updateCourseMetadata(client, { title: e.target.value })}
-            className="text-lg font-semibold border-none bg-transparent focus-visible:ring-0 px-0 h-auto max-w-md"
-            placeholder="Course title..."
-          />
         </div>
         <div className="flex items-center gap-2">
           {/* Status Badge */}

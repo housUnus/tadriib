@@ -127,6 +127,7 @@ class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, read_only=True)
+    is_enrolled = serializers.SerializerMethodField()
     class Meta:
         model = Course
         fields = [
@@ -145,7 +146,13 @@ class CourseListSerializer(PublicSerializerMixin, serializers.ModelSerializer):
             "average_rating",
             "poster",
             "price",
+            "original_price",
+            "is_enrolled",
         ]
+        
+    def get_is_enrolled(self, obj:"Course"):
+        user = self.context["request"].user
+        return obj.is_enrolled(user)
         
 class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
@@ -167,6 +174,12 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
     rating_distribution = serializers.SerializerMethodField()
     main_preview=serializers.SerializerMethodField()
     is_wishlisted = serializers.SerializerMethodField()
+    is_enrolled = serializers.SerializerMethodField()
+
+
+    def get_is_enrolled(self, obj:"Course"):
+        user = self.context["request"].user
+        return obj.is_enrolled(user)
     
     def get_rating_distribution(self, obj: Course):
         return obj.get_rating_distribution()
@@ -221,6 +234,8 @@ class CourseDetailSerializer(PublicSerializerMixin, serializers.ModelSerializer)
             "is_wishlisted",
             "type",
             "price",
+            "original_price",
+            "is_enrolled",
             ]
 
 # -----------------------------------------

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from enrollments.constants import EnrollmentStatus
 from core.models import BaseModel
 from courses.constants import CourseStatus, ContentType, CourseLevel, \
     CourseLanguageTypes, AccessTypes, CourseType
@@ -12,6 +13,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ratings.models import Rating
     from wishlist.models import Wishlist
+    from users.models import User
 
 class CourseLearningOutcome(models.Model):
     course = models.ForeignKey("courses.Course", on_delete=models.CASCADE, related_name="learning_outcomes")
@@ -53,6 +55,7 @@ class Course(BaseModel):
     access_duration_days = models.PositiveIntegerField(null=True, blank=True, help_text="Required if access_type is limited")
     access_type = models.CharField(max_length=20, choices=AccessTypes.choices, default=AccessTypes.LIFETIME)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0) #type: ignore
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) #type: ignore
     
     type = models.CharField(max_length=20, choices=CourseType.choices, default=CourseType.COURSE)
     
@@ -140,6 +143,11 @@ class Course(BaseModel):
         
     def __str__(self):
         return self.title
+    
+    def is_enrolled(self, user:"User") -> bool:
+        if user.is_authenticated:
+            return user.enrollments.filter(course=self, status=EnrollmentStatus.ACTIVE).exists()
+        return False
     
 class Section(BaseModel):
     contents: models.Manager[Content]

@@ -56,10 +56,6 @@ export function PricingSection() {
       {/* Pricing Details */}
 
       <Card className="sar">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Base Price</CardTitle>
-          <CardDescription>Set your course price</CardDescription>
-        </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-3">
             <div className="w-32">
@@ -92,6 +88,43 @@ export function PricingSection() {
                   step="0.01"
                   value={course?.price}
                   onChange={(e) => updatePricing("price", parseFloat(e.target.value) || 0)}
+                  className="pl-8"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <div className="w-32">
+              <Label className="text-xs text-muted-foreground">Currency</Label>
+              <Select
+                value={pricing.currency}
+                onValueChange={(value) => updatePricing("currency", value)}
+              >
+                <SelectTrigger className="mt-1.5">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {currencies.map((curr) => (
+                    <SelectItem key={curr.value} value={curr.value}>
+                      {curr.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex-1">
+              <Label className="text-xs text-muted-foreground">Original Price</Label>
+              <div className="relative mt-1.5">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  {currentCurrency.symbol}
+                </span>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={course?.original_price}
+                  onChange={(e) => updatePricing("original_price", parseFloat(e.target.value) || 0)}
                   className="pl-8"
                   placeholder="0.00"
                 />

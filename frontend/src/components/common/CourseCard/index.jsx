@@ -1,13 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { StarRating } from "../StartRating";
 import BuyButton from "../BuyButton";
 
 function CourseCard({ item }) {
+  console.log("🚀 ~ CourseCard ~ item:", item);
   const t = useTranslations("home");
   const course = item;
   return (
@@ -20,11 +20,13 @@ function CourseCard({ item }) {
         <CardContent className="p-0 h-full flex flex-col relative">
           {/* Featured Badge */}
           <div className="absolute top-2 sm:top-3 left-3 sm:left-4 z-10">
-            <Badge
-              className={`bg-success text-white border-0 text-xs uppercase`}
-            >
-              {t("free")}
-            </Badge>
+            {item?.price === 0 && (
+              <Badge
+                className={`bg-success text-white border-0 text-xs uppercase`}
+              >
+                {t("free")}
+              </Badge>
+            )}
           </div>
 
           {/* Image */}
@@ -69,9 +71,9 @@ function CourseCard({ item }) {
               {course.price} <span className="sar">$</span>
               <span className="line-through font-normal text-gray-500 text-xs mx-1">
                 {" "}
-                {course.originalPrice && (
+                {course.origin_price && (
                   <>
-                    {course.originalPrice}{" "}
+                    {course.origin_price}{" "}
                     <span className="uppercase">{t("sar")}</span>
                   </>
                 )}
@@ -100,13 +102,25 @@ function CourseCard({ item }) {
                   <span>{t("details")}</span>
                 </Link>
               </Button>
-              <BuyButton
-                course={course}
-                className="w-full bg-primary text-white border-0 group/btn text-sm py-1 sm:py-2"
-                disabled={course.availablePlaces === 0}
-              >
-                <span>{t("buyNow")}</span>
-              </BuyButton>
+              {item.is_enrolled ? (
+                <Button
+                  asChild
+                  className="w-full bg-green-500 text-white border-0 group/btn text-sm py-1 sm:py-2"
+                  disabled={course.availablePlaces === 0}
+                >
+                  <Link href={`account/my-courses`}>
+                    <span>{t("startLearning")}</span>
+                  </Link>
+                </Button>
+              ) : (
+                <BuyButton
+                  course={course}
+                  className="w-full bg-primary text-white border-0 group/btn text-sm py-1 sm:py-2"
+                  disabled={course.availablePlaces === 0}
+                >
+                  <span>{t("buyNow")}</span>
+                </BuyButton>
+              )}
             </div>
           </div>
         </CardContent>

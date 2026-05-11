@@ -5,12 +5,18 @@ from .managers import UserManager
 from core.constants import RolesTypes
 from core.utils.slugify import generate_unique_slug
 from tinymce.models import HTMLField
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from enrollments.models import Enrollment
 
 # ----------------------------
 # Custom User
 # ----------------------------
 class User(AbstractUser):
     profile: "Profile"
+    enrollments: models.Manager["Enrollment"]
+    
     username = None
     email = models.EmailField(_("Email address"), unique=True)
     phone_number = models.CharField(_("Phone number"), max_length=20, blank=True)

@@ -44,6 +44,7 @@ export interface CourseMetadata {
   level: string
   language: string
   price?: number
+  original_price?: number
   thumbnail: string | null
   poster?: string
   learning_outcomes: CourseLearningOutcomes[]
@@ -120,7 +121,8 @@ export const useCourseStore = create<CourseStore>()(
           "level",
           "language",
           "poster",
-          "price"
+          "price",
+          "original_price",
         ]
 
         if(course.poster && typeof course.poster === "string") {
